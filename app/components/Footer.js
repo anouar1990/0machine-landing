@@ -11,8 +11,10 @@ const footerLinks = {
   Resources: [
     { label: "Start Free Trial", href: "https://app.0machine.com" },
     { label: "Sign In", href: "https://app.0machine.com" },
-    { label: "Privacy Policy", href: "https://0machine.com/privacy.html" },
-    { label: "Terms of Service", href: "https://0machine.com/terms.html" },
+    { label: "About Us", href: "/about" },
+    { label: "Contact Us", href: "/contact" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
   ],
   Tools: [
     { label: "Cost Calculator", href: "#features" },
@@ -51,10 +53,17 @@ export default function Footer() {
                 0Machine
               </span>
             </div>
-            <p className="text-sm text-gray-500 leading-relaxed">
+            <p className="text-sm text-gray-500 leading-relaxed mb-4">
               The all-in-one planner for laser cutters and CNC makers. Track
               everything. Grow your business.
             </p>
+            <div className="space-y-1.5 text-xs text-gray-500">
+              <p className="font-semibold text-gray-400">COOLDELO LABS LLC</p>
+              <p>📍 1209 Mountain Rd Pl NE, Ste R, Albuquerque, NM 87110, United States</p>
+              <p>📞 +1 (917) 814-3657</p>
+              <p>✉️ support@0machine.com</p>
+              <p>🕒 Mon - Fri: 9am - 5pm MST</p>
+            </div>
           </div>
 
           {/* Link columns */}
