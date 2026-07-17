@@ -36,17 +36,14 @@ export default function Footer() {
             <div className="flex items-center gap-2.5 mb-4">
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
                 <svg
-                  className="w-5 h-5 text-white"
+                  className="w-5.5 h-5.5"
+                  viewBox="0 0 28 28"
                   fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
+                  <circle cx="6" cy="22" r="3" fill="#FFFFFF" />
+                  <path d="M9 22L19 6" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" />
+                  <path d="M18 6H24V12" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
               <span className="text-lg font-bold text-white font-[Outfit]">
