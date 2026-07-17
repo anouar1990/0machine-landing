@@ -34,7 +34,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg shadow-accent-500/20 group-hover:shadow-accent-500/40 transition-shadow">
+            <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center shadow-lg shadow-white/5 group-hover:bg-white/15 transition-all">
               <svg
                 className="w-5.5 h-5.5"
                 viewBox="0 0 28 28"
