@@ -1,4 +1,5 @@
 import "./globals.css";
+import { LanguageProvider } from "./context/LanguageContext";
 
 export const metadata = {
   title: "0Machine Planner — Run Your Laser Business Smarter, Faster, Easier",
@@ -37,7 +38,11 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

@@ -1,79 +1,75 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-
-const benefits = [
-  {
-    icon: "⏱",
-    feature: "Cost Calculator",
-    title: "Know your true cost per job — instantly",
-    description:
-      "Input materials, laser time, electricity, labor, and machine wear. Get a real-time cost breakdown with recommended selling price. Never underprice a job again.",
-    outcome: "Stop losing money on jobs you thought were profitable",
-    gradient: "from-orange-500/20 to-amber-500/20",
-    stat: "3x",
-    statLabel: "faster quoting",
-  },
-  {
-    icon: "📦",
-    feature: "Material Inventory",
-    title: "Track every sheet, every cut, every dollar",
-    description:
-      "Manage your plywood, acrylic, MDF, and leather stock with real-time inventory value. Get low-stock alerts before you run out mid-project.",
-    outcome: "Eliminate surprise material shortages during production",
-    gradient: "from-emerald-500/20 to-teal-500/20",
-    stat: "0",
-    statLabel: "stockouts",
-  },
-  {
-    icon: "📋",
-    feature: "Order Management",
-    title: "Every order tracked from request to delivery",
-    description:
-      "See all orders at a glance — Pending, In Progress, Completed. Track client names, due dates, revenue earned, and pending payments in one view.",
-    outcome: "Never miss a deadline or forget a client order",
-    gradient: "from-blue-500/20 to-indigo-500/20",
-    stat: "100%",
-    statLabel: "order visibility",
-  },
-  {
-    icon: "⚡",
-    feature: "Laser Presets",
-    title: "Perfect settings every time, zero guesswork",
-    description:
-      "Save speed, power, frequency, passes, and air assist settings per material. Load presets instantly when switching between plywood, acrylic, or leather.",
-    outcome: "Reduce wasted material from wrong machine settings",
-    gradient: "from-purple-500/20 to-pink-500/20",
-    stat: "10s",
-    statLabel: "to load settings",
-  },
-  {
-    icon: "📄",
-    feature: "Quote Generator",
-    title: "Send professional quotes in under a minute",
-    description:
-      "Create detailed quotes with line items, VAT, and totals. Look professional and close deals faster with client-ready documents.",
-    outcome: "Win more clients with polished, instant quotes",
-    gradient: "from-cyan-500/20 to-sky-500/20",
-    stat: "60s",
-    statLabel: "to send a quote",
-  },
-  {
-    icon: "📐",
-    feature: "Nesting Estimator",
-    title: "Maximize every sheet, minimize every waste",
-    description:
-      "Calculate how many parts fit on a sheet before you cut. Optimize material usage and reduce scrap across every job.",
-    outcome: "Save up to 30% on material costs with smarter nesting",
-    gradient: "from-rose-500/20 to-red-500/20",
-    stat: "30%",
-    statLabel: "less waste",
-  },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Benefits() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const benefits = [
+    {
+      icon: "⏱",
+      feature: t("benefits.calc.feature"),
+      title: t("benefits.calc.title"),
+      description: t("benefits.calc.desc"),
+      outcome: t("benefits.calc.outcome"),
+      gradient: "from-orange-500/20 to-amber-500/20",
+      stat: t("benefits.calc.stat"),
+      statLabel: t("benefits.calc.statLabel"),
+    },
+    {
+      icon: "📦",
+      feature: t("benefits.inv.feature"),
+      title: t("benefits.inv.title"),
+      description: t("benefits.inv.desc"),
+      outcome: t("benefits.inv.outcome"),
+      gradient: "from-emerald-500/20 to-teal-500/20",
+      stat: t("benefits.inv.stat"),
+      statLabel: t("benefits.inv.statLabel"),
+    },
+    {
+      icon: "📋",
+      feature: t("benefits.order.feature"),
+      title: t("benefits.order.title"),
+      description: t("benefits.order.desc"),
+      outcome: t("benefits.order.outcome"),
+      gradient: "from-blue-500/20 to-indigo-500/20",
+      stat: t("benefits.order.stat"),
+      statLabel: t("benefits.order.statLabel"),
+    },
+    {
+      icon: "⚡",
+      feature: t("benefits.presets.feature"),
+      title: t("benefits.presets.title"),
+      description: t("benefits.presets.desc"),
+      outcome: t("benefits.presets.outcome"),
+      gradient: "from-purple-500/20 to-pink-500/20",
+      stat: t("benefits.presets.stat"),
+      statLabel: t("benefits.presets.statLabel"),
+    },
+    {
+      icon: "📄",
+      feature: t("benefits.quote.feature"),
+      title: t("benefits.quote.title"),
+      description: t("benefits.quote.desc"),
+      outcome: t("benefits.quote.outcome"),
+      gradient: "from-cyan-500/20 to-sky-500/20",
+      stat: t("benefits.quote.stat"),
+      statLabel: t("benefits.quote.statLabel"),
+    },
+    {
+      icon: "📐",
+      feature: t("benefits.nest.feature"),
+      title: t("benefits.nest.title"),
+      description: t("benefits.nest.desc"),
+      outcome: t("benefits.nest.outcome"),
+      gradient: "from-rose-500/20 to-red-500/20",
+      stat: t("benefits.nest.stat"),
+      statLabel: t("benefits.nest.statLabel"),
+    },
+  ];
 
   return (
     <section id="benefits" ref={ref} className="relative py-32 overflow-hidden">
@@ -90,16 +86,15 @@ export default function Benefits() {
           className="text-center mb-20"
         >
           <span className="text-xs text-accent-400 tracking-[0.2em] uppercase font-medium">
-            Real Benefits
+            {t("benefits.badge")}
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white mt-4 mb-6">
-            Every Feature Saves You
+            {t("benefits.title")}
             <br />
-            <span className="gradient-text-accent">Time and Money</span>
+            <span className="gradient-text-accent">{t("benefits.titleAccent")}</span>
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-            Built from real workshop pain points. Every tool in 0Machine exists
-            because makers asked for it.
+            {t("benefits.subtitle")}
           </p>
         </motion.div>
 

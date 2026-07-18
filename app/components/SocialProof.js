@@ -1,58 +1,7 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-
-const testimonials = [
-  {
-    name: "Jason R.",
-    role: "Laser Engraving Shop Owner",
-    text: "I used to track everything in a messy Notes app. Now I have full cost breakdowns for every project and I know exactly what to charge. The PDF export alone is worth it.",
-    avatar: "JR",
-    rating: 5,
-  },
-  {
-    name: "Maria C.",
-    role: "Custom Sign Maker",
-    text: "The client manager feature is brilliant. I have 12 repeat customers and I can now see at a glance how much revenue each one brings in. Game changer for my side business.",
-    avatar: "MC",
-    rating: 5,
-  },
-  {
-    name: "Tyler P.",
-    role: "CNC Workshop Owner",
-    text: "Machine profiles changed everything. I have 3 machines with completely different settings — now I load the profile and I'm ready to go. Never mess up settings again.",
-    avatar: "TP",
-    rating: 5,
-  },
-  {
-    name: "Emma K.",
-    role: "Craft Fair Vendor",
-    text: "Super clean UI and super fast. I love that the app works offline too. I use it at craft fairs to show clients exactly what the project will cost before I commit.",
-    avatar: "EK",
-    rating: 5,
-  },
-  {
-    name: "David M.",
-    role: "Etsy Laser Creator",
-    text: "The templates feature is a massive time saver. I have templates set up for my most popular laser cut items and I can start a new job in 10 seconds flat. Love it.",
-    avatar: "DM",
-    rating: 5,
-  },
-  {
-    name: "Rachel S.",
-    role: "Small Batch Producer",
-    text: "3 day free trial sealed the deal. I had it set up with 5 projects within the first hour. By day 2 I already knew I wasn't cancelling. Worth every dollar.",
-    avatar: "RS",
-    rating: 5,
-  },
-];
-
-const stats = [
-  { value: 2400, label: "Projects Tracked", suffix: "+" },
-  { value: 98, label: "Customer Satisfaction", suffix: "%" },
-  { value: 850, label: "Hours Saved Monthly", suffix: "+" },
-  { value: 4.9, label: "App Store Rating", suffix: "/5", decimals: 1 },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 function AnimatedCounter({ value, suffix = "", decimals = 0 }) {
   const [count, setCount] = useState(0);
@@ -82,8 +31,61 @@ function AnimatedCounter({ value, suffix = "", decimals = 0 }) {
 }
 
 export default function SocialProof() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const stats = [
+    { value: 2400, label: t("social.stat.projects"), suffix: "+" },
+    { value: 98, label: t("social.stat.satisfaction"), suffix: "%" },
+    { value: 850, label: t("social.stat.hours"), suffix: "+" },
+    { value: 4.9, label: t("social.stat.rating"), suffix: "/5", decimals: 1 },
+  ];
+
+  const testimonials = [
+    {
+      name: t("social.t1.name"),
+      role: t("social.t1.role"),
+      text: t("social.t1.text"),
+      avatar: "JR",
+      rating: 5,
+    },
+    {
+      name: t("social.t2.name"),
+      role: t("social.t2.role"),
+      text: t("social.t2.text"),
+      avatar: "MC",
+      rating: 5,
+    },
+    {
+      name: t("social.t3.name"),
+      role: t("social.t3.role"),
+      text: t("social.t3.text"),
+      avatar: "TP",
+      rating: 5,
+    },
+    {
+      name: t("social.t4.name"),
+      role: t("social.t4.role"),
+      text: t("social.t4.text"),
+      avatar: "EK",
+      rating: 5,
+    },
+    {
+      name: t("social.t5.name"),
+      role: t("social.t5.role"),
+      text: t("social.t5.text"),
+      avatar: "DM",
+      rating: 5,
+    },
+    {
+      name: t("social.t6.name"),
+      role: t("social.t6.role"),
+      text: t("social.t6.text"),
+      avatar: "RS",
+      rating: 5,
+    },
+  ];
 
   return (
     <section ref={ref} className="relative py-32 overflow-hidden">
@@ -100,7 +102,7 @@ export default function SocialProof() {
         >
           {stats.map((stat, i) => (
             <motion.div
-              key={stat.label}
+              key={stat.label || i}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: i * 0.1, duration: 0.5 }}
@@ -124,12 +126,10 @@ export default function SocialProof() {
           className="text-center mb-16"
         >
           <span className="text-xs text-accent-400 tracking-[0.2em] uppercase font-medium">
-            Trusted by Makers
+            {t("social.badge")}
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white mt-4 mb-6">
-            Makers Love
-            <br />
-            <span className="gradient-text-accent">0Machine</span>
+            {t("social.title")}
           </h2>
         </motion.div>
 
@@ -137,7 +137,7 @@ export default function SocialProof() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
             <motion.div
-              key={t.name}
+              key={t.name || i}
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4 + i * 0.1, duration: 0.6 }}

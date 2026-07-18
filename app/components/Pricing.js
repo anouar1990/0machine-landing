@@ -1,52 +1,61 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-
-const plans = [
-  {
-    name: "Free Trial",
-    price: "$0",
-    period: "for 3 days",
-    description: "Try every feature risk-free. No credit card required to start.",
-    features: [
-      "Unlimited projects",
-      "Cost Calculator",
-      "Material inventory",
-      "Order management",
-      "Laser Presets",
-      "Basic analytics",
-    ],
-    cta: "Start Free Trial",
-    href: "https://app.0machine.com",
-    highlighted: false,
-  },
-  {
-    name: "Pro",
-    price: "$9",
-    period: "/month",
-    description: "Everything you need to run a profitable laser workshop.",
-    features: [
-      "Everything in Free, plus:",
-      "PDF report export",
-      "Advanced analytics & stats",
-      "Client manager",
-      "Project photos",
-      "Project templates",
-      "Machine profiles",
-      "Quote generator",
-      "Nesting estimator",
-      "Priority support",
-    ],
-    cta: "Get Pro Access",
-    href: "https://app.0machine.com",
-    highlighted: true,
-    badge: "Most Popular",
-  },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Pricing() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const plans = [
+    {
+      name: t("price.trial.name"),
+      price: t("price.trial.price"),
+      period: t("price.trial.period"),
+      description: t("price.trial.desc"),
+      features: [
+        t("price.trial.f1"),
+        t("price.trial.f2"),
+        t("price.trial.f3"),
+        t("price.trial.f4"),
+        t("price.trial.f5"),
+        t("price.trial.f6"),
+      ],
+      cta: t("price.trial.cta"),
+      href: "https://app.0machine.com",
+      highlighted: false,
+    },
+    {
+      name: t("price.pro.name"),
+      price: t("price.pro.price"),
+      period: t("price.pro.period"),
+      description: t("price.pro.desc"),
+      features: [
+        t("price.pro.f.title"),
+        t("price.pro.f1"),
+        t("price.pro.f2"),
+        t("price.pro.f3"),
+        t("price.pro.f4"),
+        t("price.pro.f5"),
+        t("price.pro.f6"),
+        t("price.pro.f7"),
+        t("price.pro.f8"),
+        t("price.pro.f9"),
+      ],
+      cta: t("price.pro.cta"),
+      href: "https://app.0machine.com",
+      highlighted: true,
+      badge: t("price.popular"),
+    },
+  ];
+
+  const trustBadges = [
+    t("foot.payments") || "🔒 Secure payment via Stripe",
+    t("foot.cancel") || "📅 Cancel anytime",
+    "⚡ " + (t("price.trial.cta") === "Essai Gratuit" ? "Accès instantané" : t("price.trial.cta") === "Iniciar Prueba Gratis" ? "Acceso instantáneo" : "Instant access"),
+    "💳 " + (t("price.trial.cta") === "Essai Gratuit" ? "Sans carte bancaire" : t("price.trial.cta") === "Iniciar Prueba Gratis" ? "Sin tarjeta para prueba" : "No card for trial"),
+  ];
 
   return (
     <section id="pricing" ref={ref} className="relative py-32 overflow-hidden">
@@ -64,16 +73,15 @@ export default function Pricing() {
           className="text-center mb-16"
         >
           <span className="text-xs text-accent-400 tracking-[0.2em] uppercase font-medium">
-            Simple Pricing
+            {t("price.badge")}
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white mt-4 mb-6">
-            One Plan. Everything
+            {t("price.title")}
             <br />
-            <span className="gradient-text-accent">Included.</span>
+            <span className="gradient-text-accent">{t("price.titleAccent")}</span>
           </h2>
           <p className="text-gray-400 max-w-xl mx-auto text-lg">
-            Start free, upgrade when you're ready. No hidden fees, no feature
-            gates per tier.
+            {t("price.subtitle")}
           </p>
         </motion.div>
 
@@ -81,7 +89,7 @@ export default function Pricing() {
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, i) => (
             <motion.div
-              key={plan.name}
+              key={plan.name || i}
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.15, duration: 0.6 }}
@@ -119,8 +127,8 @@ export default function Pricing() {
 
                 {/* Features */}
                 <div className="flex-1 space-y-3 mb-8">
-                  {plan.features.map((feature) => (
-                    <div key={feature} className="flex items-center gap-3">
+                  {plan.features.map((feature, idx) => (
+                    <div key={feature || idx} className="flex items-center gap-3">
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
                           plan.highlighted
@@ -172,12 +180,7 @@ export default function Pricing() {
           transition={{ delay: 0.6 }}
           className="flex flex-wrap justify-center gap-6 mt-12 text-xs text-gray-600"
         >
-          {[
-            "🔒 Secure payment via Stripe",
-            "📅 Cancel anytime",
-            "⚡ Instant access",
-            "💳 No card for trial",
-          ].map((badge) => (
+          {trustBadges.map((badge) => (
             <span key={badge} className="flex items-center gap-1">
               {badge}
             </span>

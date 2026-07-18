@@ -1,26 +1,10 @@
 "use client";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-
-const screenshots = [
-  {
-    src: "/screenshots/screenshot-dashboard.png",
-    label: "Project Dashboard",
-    desc: "Track every project with cost and time",
-  },
-  {
-    src: "/screenshots/screenshot-detail.png",
-    label: "Project Details",
-    desc: "Full cost breakdown with PDF export",
-  },
-  {
-    src: "/screenshots/screenshot-stats.png",
-    label: "Smart Analytics",
-    desc: "Revenue, completion rates, and trends",
-  },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export default function ProductShowcase() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({
@@ -29,6 +13,24 @@ export default function ProductShowcase() {
   });
 
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-15%"]);
+
+  const screenshots = [
+    {
+      src: "/screenshots/screenshot-dashboard.png",
+      label: t("showcase.label.db"),
+      desc: t("showcase.desc.db"),
+    },
+    {
+      src: "/screenshots/screenshot-detail.png",
+      label: t("showcase.label.detail"),
+      desc: t("showcase.desc.detail"),
+    },
+    {
+      src: "/screenshots/screenshot-stats.png",
+      label: t("showcase.label.stats"),
+      desc: t("showcase.desc.stats"),
+    },
+  ];
 
   return (
     <section ref={ref} className="relative py-32 overflow-hidden">
@@ -42,16 +44,13 @@ export default function ProductShowcase() {
           className="text-center mb-16"
         >
           <span className="text-xs text-accent-400 tracking-[0.2em] uppercase font-medium">
-            Built for Mobile & Desktop
+            {t("showcase.badge")}
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white mt-4 mb-6">
-            Beautiful on
-            <br />
-            <span className="gradient-text-accent">Every Screen</span>
+            {t("showcase.title")}
           </h2>
           <p className="text-gray-400 max-w-xl mx-auto text-lg">
-            Manage your workshop from your desk or on the shop floor. Works
-            beautifully on any device.
+            {t("showcase.subtitle")}
           </p>
         </motion.div>
 
@@ -59,7 +58,7 @@ export default function ProductShowcase() {
         <motion.div style={{ x }} className="flex gap-8 justify-center flex-wrap lg:flex-nowrap">
           {screenshots.map((screen, i) => (
             <motion.div
-              key={screen.label}
+              key={screen.label || i}
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.2, duration: 0.6 }}

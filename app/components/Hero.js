@@ -1,8 +1,10 @@
 "use client";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Hero() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -41,7 +43,7 @@ export default function Hero() {
         >
           <span className="w-2 h-2 rounded-full bg-accent-500 animate-pulse" />
           <span className="text-xs text-accent-400 font-medium tracking-wide">
-            Built for Laser & CNC Makers
+            {t("hero.badge")}
           </span>
         </motion.div>
 
@@ -52,10 +54,10 @@ export default function Hero() {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="text-5xl sm:text-6xl lg:text-8xl font-bold font-[Outfit] leading-[1.05] tracking-tight mb-6"
         >
-          <span className="text-white">Run Your Laser</span>
+          <span className="text-white">{t("hero.title1")}</span>
           <br />
-          <span className="text-white">Business </span>
-          <span className="gradient-text-accent">Smarter.</span>
+          <span className="text-white">{t("hero.title2")}</span>
+          <span className="gradient-text-accent">{t("hero.titleAccent")}</span>
         </motion.h1>
 
         {/* Subheadline */}
@@ -65,9 +67,7 @@ export default function Hero() {
           transition={{ delay: 0.5, duration: 0.8 }}
           className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
         >
-          Track materials, calculate costs, manage clients, and generate
-          quotes — all from one beautiful app designed for laser cutters and CNC
-          makers.
+          {t("hero.subtitle")}
         </motion.p>
 
         {/* CTAs */}
@@ -78,10 +78,10 @@ export default function Hero() {
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6"
         >
           <a href="https://app.0machine.com" className="glow-btn text-base px-8 py-4">
-            ⚡ Start Free Trial
+            {t("hero.ctaTrial")}
           </a>
           <a href="#features" className="glow-btn-outline text-base px-8 py-4">
-            See Features →
+            {t("hero.ctaFeatures")}
           </a>
         </motion.div>
 
@@ -91,7 +91,7 @@ export default function Hero() {
           transition={{ delay: 0.9 }}
           className="text-sm text-gray-600 mb-16"
         >
-          3 days free · then $9/mo · cancel anytime
+          {t("hero.trialNote")}
         </motion.p>
 
         {/* Floating Dashboard Mockup */}

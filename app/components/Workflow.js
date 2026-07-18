@@ -1,61 +1,63 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-
-const steps = [
-  {
-    num: "01",
-    title: "Upload & Organize",
-    desc: "Add your project with materials, photos, and client details. Use templates to start recurring jobs in seconds.",
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-      </svg>
-    ),
-    color: "from-orange-500 to-amber-500",
-    glowColor: "rgba(249,115,22,0.15)",
-  },
-  {
-    num: "02",
-    title: "Calculate & Quote",
-    desc: "Use the Cost Calculator to get your true cost — material, machine time, labor, electricity. Generate a professional quote instantly.",
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008H18v-.008zm0 2.25h.008v.008H18V13.5zM4.5 4.5h15" />
-      </svg>
-    ),
-    color: "from-blue-500 to-indigo-500",
-    glowColor: "rgba(59,130,246,0.15)",
-  },
-  {
-    num: "03",
-    title: "Produce & Track",
-    desc: "Load your Laser Presets, start the built-in timer, and track progress. Move orders from Pending to In Progress automatically.",
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17l-5.16-3.01A1.125 1.125 0 016 11.1V5.29a1.125 1.125 0 011.68-.98l5.16 3.01a1.125 1.125 0 01.56.97v5.82a1.125 1.125 0 01-.98 1.06zM17.42 15.17l-5.16-3.01a1.125 1.125 0 01-.56-.97V5.29a1.125 1.125 0 011.68-.98l5.16 3.01a1.125 1.125 0 01.56.97v5.82a1.125 1.125 0 01-1.68.98z" />
-      </svg>
-    ),
-    color: "from-emerald-500 to-teal-500",
-    glowColor: "rgba(16,185,129,0.15)",
-  },
-  {
-    num: "04",
-    title: "Deliver & Grow",
-    desc: "Export PDF reports for clients, review your analytics, and see which projects drive the most revenue. Grow with data, not guesswork.",
-    icon: (
-      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-      </svg>
-    ),
-    color: "from-purple-500 to-pink-500",
-    glowColor: "rgba(168,85,247,0.15)",
-  },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Workflow() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const steps = [
+    {
+      num: "01",
+      title: t("flow.step1.title"),
+      desc: t("flow.step1.desc"),
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+        </svg>
+      ),
+      color: "from-orange-500 to-amber-500",
+      glowColor: "rgba(249,115,22,0.15)",
+    },
+    {
+      num: "02",
+      title: t("flow.step2.title"),
+      desc: t("flow.step2.desc"),
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008H18v-.008zm0 2.25h.008v.008H18V13.5zM4.5 4.5h15" />
+        </svg>
+      ),
+      color: "from-blue-500 to-indigo-500",
+      glowColor: "rgba(59,130,246,0.15)",
+    },
+    {
+      num: "03",
+      title: t("flow.step3.title"),
+      desc: t("flow.step3.desc"),
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17l-5.16-3.01A1.125 1.125 0 016 11.1V5.29a1.125 1.125 0 011.68-.98l5.16 3.01a1.125 1.125 0 01.56.97v5.82a1.125 1.125 0 01-.98 1.06zM17.42 15.17l-5.16-3.01a1.125 1.125 0 01-.56-.97V5.29a1.125 1.125 0 011.68-.98l5.16 3.01a1.125 1.125 0 01.56.97v5.82a1.125 1.125 0 01-1.68.98z" />
+        </svg>
+      ),
+      color: "from-emerald-500 to-teal-500",
+      glowColor: "rgba(16,185,129,0.15)",
+    },
+    {
+      num: "04",
+      title: t("flow.step4.title"),
+      desc: t("flow.step4.desc"),
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+        </svg>
+      ),
+      color: "from-purple-500 to-pink-500",
+      glowColor: "rgba(168,85,247,0.15)",
+    },
+  ];
 
   return (
     <section id="workflow" ref={ref} className="relative py-32 overflow-hidden">
@@ -71,15 +73,15 @@ export default function Workflow() {
           className="text-center mb-20"
         >
           <span className="text-xs text-accent-400 tracking-[0.2em] uppercase font-medium">
-            How It Works
+            {t("flow.badge")}
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white mt-4 mb-6">
-            From Order to Delivery
+            {t("flow.title")}
             <br />
-            <span className="gradient-text-accent">In Four Steps</span>
+            <span className="gradient-text-accent">{t("flow.titleAccent")}</span>
           </h2>
           <p className="text-gray-400 max-w-xl mx-auto text-lg">
-            A streamlined workflow that mirrors how real laser workshops operate.
+            {t("flow.step1.desc") ? "A streamlined workflow that mirrors how real laser workshops operate." : ""}
           </p>
         </motion.div>
 

@@ -1,28 +1,30 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-
-const withoutItems = [
-  { icon: "📝", text: "Pricing calculated from gut feeling — losing money on every other job" },
-  { icon: "📂", text: "Design files scattered across USB drives, desktop folders, and messaging apps" },
-  { icon: "📊", text: "Revenue tracked in messy spreadsheets — no idea which projects are profitable" },
-  { icon: "⚙️", text: "Laser settings written on sticky notes — wrong power, wasted material" },
-  { icon: "🗓", text: "Orders managed in your head — missed deadlines and forgotten clients" },
-  { icon: "📦", text: "Material shortages discovered mid-job — production halted, clients waiting" },
-];
-
-const withItems = [
-  { icon: "⚡", text: "Cost Calculator shows real production cost and recommended selling price instantly" },
-  { icon: "📁", text: "Every project organized with photos, costs, time, materials, and client info" },
-  { icon: "📈", text: "Smart analytics show revenue, top projects, completion rates, and trends" },
-  { icon: "🎯", text: "Laser Presets loaded in 10 seconds — perfect settings every time" },
-  { icon: "📋", text: "Orders tracked from Pending to Completed with due dates and client names" },
-  { icon: "📦", text: "Material Inventory shows stock levels and total value — never run out" },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Comparison() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const withoutItems = [
+    { icon: "📝", text: t("comp.old.1") },
+    { icon: "📂", text: t("comp.old.2") },
+    { icon: "📊", text: t("comp.old.3") },
+    { icon: "⚙️", text: t("comp.old.4") },
+    { icon: "🗓", text: t("comp.old.5") },
+    { icon: "📦", text: t("comp.old.6") },
+  ];
+
+  const withItems = [
+    { icon: "⚡", text: t("comp.new.1") },
+    { icon: "📁", text: t("comp.new.2") },
+    { icon: "📈", text: t("comp.new.3") },
+    { icon: "🎯", text: t("comp.new.4") },
+    { icon: "📋", text: t("comp.new.5") },
+    { icon: "📦", text: t("comp.new.6") },
+  ];
 
   return (
     <section ref={ref} className="relative py-32 overflow-hidden">
@@ -37,12 +39,12 @@ export default function Comparison() {
           className="text-center mb-16"
         >
           <span className="text-xs text-accent-400 tracking-[0.2em] uppercase font-medium">
-            The Difference
+            {t("comp.badge")}
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white mt-4 mb-6">
-            Before vs After
+            {t("comp.title")}
             <br />
-            <span className="gradient-text-accent">0Machine</span>
+            <span className="gradient-text-accent">{t("comp.titleAccent")}</span>
           </h2>
         </motion.div>
 
@@ -60,10 +62,10 @@ export default function Comparison() {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-white font-[Outfit]">
-                  Without 0Machine
+                  {t("comp.col.old")}
                 </h3>
                 <p className="text-xs text-red-400/60">
-                  Chaos, guesswork, lost revenue
+                  {t("comp.subtitle")}
                 </p>
               </div>
             </div>
@@ -103,10 +105,10 @@ export default function Comparison() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white font-[Outfit]">
-                    With 0Machine
+                    {t("comp.col.new")}
                   </h3>
                   <p className="text-xs text-green-400/60">
-                    Organized, profitable, in control
+                    {t("comp.col.new")}
                   </p>
                 </div>
               </div>

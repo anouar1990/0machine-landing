@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Loader({ onComplete }) {
+  const { t } = useLanguage();
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -97,7 +99,7 @@ export default function Loader({ onComplete }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Loading experience...
+              {t("loader.loading")}
             </motion.p>
           </motion.div>
         </motion.div>

@@ -1,10 +1,25 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function FinalCTA() {
+  const { t } = useLanguage();
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const features = [
+    t("benefits.calc.feature"),
+    t("benefits.inv.feature"),
+    t("benefits.order.feature"),
+    t("benefits.presets.feature"),
+    t("benefits.quote.feature"),
+    t("price.pro.f1"),
+    t("price.trial.f6") || "Analytics",
+    t("price.pro.f3"),
+    t("price.pro.f5"),
+    t("benefits.nest.feature"),
+  ];
 
   return (
     <section ref={ref} className="relative py-32 overflow-hidden">
@@ -42,17 +57,15 @@ export default function FinalCTA() {
           </motion.div>
 
           <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-[Outfit] text-white mb-6 leading-tight">
-            Stop Managing Your
+            {t("final.title")}
             <br />
-            Workshop in
+            {t("final.titleMid")}
             <br />
-            <span className="gradient-text-accent">Spreadsheets.</span>
+            <span className="gradient-text-accent">{t("final.titleAccent")}</span>
           </h2>
 
           <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Join hundreds of laser and CNC makers who switched to 0Machine and
-            finally know their real costs, track every job, and grow their
-            business with confidence.
+            {t("final.subtitle")}
           </p>
 
           {/* CTA buttons */}
@@ -61,15 +74,15 @@ export default function FinalCTA() {
               href="https://app.0machine.com"
               className="glow-btn text-lg px-10 py-5"
             >
-              ⚡ Start Your Free Trial
+              {t("final.cta.trial")}
             </a>
             <a href="#features" className="glow-btn-outline text-lg px-10 py-5">
-              Explore Features
+              {t("final.cta.features")}
             </a>
           </div>
 
           <p className="text-sm text-gray-600">
-            3 days free · $9/mo after · Cancel anytime · No credit card required
+            {t("final.terms")}
           </p>
 
           {/* Feature pills */}
@@ -79,18 +92,7 @@ export default function FinalCTA() {
             transition={{ delay: 0.4 }}
             className="flex flex-wrap justify-center gap-3 mt-12"
           >
-            {[
-              "Cost Calculator",
-              "Material Inventory",
-              "Order Tracking",
-              "Laser Presets",
-              "Quote Generator",
-              "PDF Reports",
-              "Analytics",
-              "Client Manager",
-              "Templates",
-              "Nesting Estimator",
-            ].map((feature) => (
+            {features.map((feature) => (
               <span
                 key={feature}
                 className="text-xs px-3 py-1.5 rounded-full bg-white/[0.03] text-gray-500 border border-white/5"
