@@ -118,6 +118,39 @@ export const translations = {
     "features.presets.h2": "Material thickness tabs",
     "features.presets.h3": "Vector vs. Engrave modes",
     "features.presets.h4": "Instant settings lookup",
+    
+    "features.tab.nesting": "Nesting Estimator",
+    "features.tab.quotes": "Quotes & Invoices",
+    "features.tab.clients": "Client Manager",
+    "features.tab.analytics": "Analytics",
+    
+    "features.nest.title": "Optimize layouts and minimize scrap",
+    "features.nest.subtitle": "Calculate how many items fit onto a sheet of plywood or acrylic before cutting. Save up to 30% on material costs by nesting parts efficiently.",
+    "features.nest.h1": "Visual sheet nesting",
+    "features.nest.h2": "Scrap estimator",
+    "features.nest.h3": "Yield optimization",
+    "features.nest.h4": "Cost savings calculation",
+
+    "features.quotes.title": "Send client-ready PDF quotes and invoices",
+    "features.quotes.subtitle": "Convert project estimates into detailed client documents in seconds. Export PDFs with custom bank details, tax settings, and payment links.",
+    "features.quotes.h1": "PDF invoice export",
+    "features.quotes.h2": "Auto tax calculations",
+    "features.quotes.h3": "Billing status tracking",
+    "features.quotes.h4": "Custom branding",
+
+    "features.clients.title": "Manage repeat clients and balances",
+    "features.clients.subtitle": "Keep track of contact info, orders, and pending payments for every customer. View lifetime value (LTV) to identify your top buyers.",
+    "features.clients.h1": "Client ledger",
+    "features.clients.h2": "Lifetime value (LTV)",
+    "features.clients.h3": "Balance tracking",
+    "features.clients.h4": "Quick billing",
+
+    "features.analytics.title": "Understand your business with smart numbers",
+    "features.analytics.subtitle": "Track total revenue, completion rates, top-earning projects, material usage, and average cost per job. Know exactly where your profits come from.",
+    "features.analytics.h1": "Revenue tracking",
+    "features.analytics.h2": "Completion rates",
+    "features.analytics.h3": "Top projects stats",
+    "features.analytics.h4": "Time & cost analysis",
 
     // Interactive Mockup Texts
     "mock.total": "Total",
@@ -391,6 +424,39 @@ export const translations = {
     "features.presets.h2": "Onglets d'épaisseur matière",
     "features.presets.h3": "Modes Vecteur vs Gravure",
     "features.presets.h4": "Recherche de réglages rapide",
+    
+    "features.tab.nesting": "Nesting / Imbrication",
+    "features.tab.quotes": "Devis & Factures",
+    "features.tab.clients": "Clients CRM",
+    "features.tab.analytics": "Analyses",
+    
+    "features.nest.title": "Optimisez l'imbrication et réduisez les chutes",
+    "features.nest.subtitle": "Calculez comment disposer vos pièces sur une plaque de bois ou d'acrylique avant la découpe. Économisez jusqu'à 30% sur vos plaques.",
+    "features.nest.h1": "Imbrication visuelle",
+    "features.nest.h2": "Calculateur de chutes",
+    "features.nest.h3": "Rendement optimisé",
+    "features.nest.h4": "Économies estimées",
+
+    "features.quotes.title": "Envoyez des devis et factures PDF professionnels",
+    "features.quotes.subtitle": "Convertissez les estimations de projet en documents client détaillés en quelques secondes. Exportez des PDF avec vos coordonnées bancaires, taxes et liens de paiement.",
+    "features.quotes.h1": "Export de factures PDF",
+    "features.quotes.h2": "Calcul automatique des taxes",
+    "features.quotes.h3": "Suivi des statuts de facturation",
+    "features.quotes.h4": "Personnalisation de la marque",
+
+    "features.clients.title": "Gerez vos clients fideles et leurs soldes",
+    "features.clients.subtitle": "Suivez les coordonnées, l'historique des commandes et les paiements en attente de chaque client. Consultez leur valeur à vie (LTV) pour identifier vos meilleurs acheteurs.",
+    "features.clients.h1": "Registre client",
+    "features.clients.h2": "Valeur à vie (LTV)",
+    "features.clients.h3": "Suivi des soldes dus",
+    "features.clients.h4": "Facturation instantanée",
+
+    "features.analytics.title": "Comprenez votre activité grâce à des chiffres clés",
+    "features.analytics.subtitle": "Suivez le chiffre d'affaires, le taux d'achèvement des tâches, les projets phares, l'utilisation des stocks et le coût moyen par tâche.",
+    "features.analytics.h1": "Suivi du chiffre d'affaires",
+    "features.analytics.h2": "Taux de réussite des tâches",
+    "features.analytics.h3": "Statistiques projets phares",
+    "features.analytics.h4": "Analyse temps & coûts",
 
     // Interactive Mockup Texts
     "mock.total": "Total",
@@ -664,6 +730,39 @@ export const translations = {
     "features.presets.h2": "Pestañas de espesores",
     "features.presets.h3": "Modos Vector vs Grabado",
     "features.presets.h4": "Búsqueda rápida de ajustes",
+    
+    "features.tab.nesting": "Estimador de Nesting",
+    "features.tab.quotes": "Presupuestos y Facturas",
+    "features.tab.clients": "Gestor de Clientes",
+    "features.tab.analytics": "Análisis",
+    
+    "features.nest.title": "Optimice las planchas y minimice los recortes",
+    "features.nest.subtitle": "Calcule cuántas piezas caben en una plancha de madera o acrílico antes de cortar. Ahorre hasta un 30% en costos de material optimizando la distribución.",
+    "features.nest.h1": "Nesting de planchas visual",
+    "features.nest.h2": "Estimador de retales",
+    "features.nest.h3": "Rendimiento optimizado",
+    "features.nest.h4": "Cálculo de ahorro de costes",
+
+    "features.quotes.title": "Envíe presupuestos y facturas en PDF profesionales",
+    "features.quotes.subtitle": "Convierta presupuestos en facturas finales detalladas en segundos. Exporte PDF con sus datos bancarios, impuestos locales y enlaces directos de pago.",
+    "features.quotes.h1": "Exportación de facturas PDF",
+    "features.quotes.h2": "Cálculo automático de IVA",
+    "features.quotes.h3": "Seguimiento de estados de cobro",
+    "features.quotes.h4": "Identidad de marca personalizada",
+
+    "features.clients.title": "Gestione clientes recurrentes y saldos",
+    "features.clients.subtitle": "Rastree datos de contacto, pedidos y saldos pendientes de cada comprador. Consulte su valor de por vida (LTV) para identificar a sus clientes estrella.",
+    "features.clients.h1": "Historial de clientes",
+    "features.clients.h2": "Valor de por vida (LTV)",
+    "features.clients.h3": "Rastreador de saldos",
+    "features.clients.h4": "Facturación rápida",
+
+    "features.analytics.title": "Entienda su negocio con números inteligentes",
+    "features.analytics.subtitle": "Rastree ingresos totales, tasas de finalización, proyectos estrella, uso de inventario y coste medio por trabajo.",
+    "features.analytics.h1": "Seguimiento de ingresos",
+    "features.analytics.h2": "Tasas de éxito del proyecto",
+    "features.analytics.h3": "Estadísticas de proyectos estrella",
+    "features.analytics.h4": "Análisis de tiempo y costo",
 
     // Interactive Mockup Texts
     "mock.total": "Total",

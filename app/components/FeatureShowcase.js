@@ -165,6 +165,52 @@ export default function FeatureShowcase() {
       ),
     },
     {
+      id: "orders",
+      label: t("features.tab.orders"),
+      title: t("features.orders.title"),
+      subtitle: t("features.orders.subtitle"),
+      highlights: [
+        t("features.orders.h1"),
+        t("features.orders.h2"),
+        t("features.orders.h3"),
+        t("features.orders.h4"),
+      ],
+      mockup: (
+        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="glass-card p-3">
+              <p className="text-[9px] font-bold text-blue-400 mb-2 uppercase tracking-wider">Pending (2)</p>
+              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5 mb-2">
+                <p className="text-[10px] text-white font-medium">{t("mock.coasters")}</p>
+                <p className="text-[8px] text-gray-500">Due: Jul 21 · John D.</p>
+              </div>
+              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5">
+                <p className="text-[10px] text-white font-medium">Gift Box V3</p>
+                <p className="text-[8px] text-gray-500">Due: Jul 22 · Alice K.</p>
+              </div>
+            </div>
+            <div className="glass-card p-3 border-l border-yellow-500/20">
+              <p className="text-[9px] font-bold text-yellow-400 mb-2 uppercase tracking-wider">In Progress (1)</p>
+              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-yellow-500/20 mb-2">
+                <p className="text-[10px] text-white font-medium">Wedding Arch</p>
+                <p className="text-[8px] text-gray-500">Due: Today · Sarah L.</p>
+                <div className="w-full bg-white/10 h-1 rounded-full mt-2 overflow-hidden">
+                  <div className="bg-yellow-500 h-full w-2/3" />
+                </div>
+              </div>
+            </div>
+            <div className="glass-card p-3 border-l border-green-500/20">
+              <p className="text-[9px] font-bold text-green-400 mb-2 uppercase tracking-wider">Completed (5)</p>
+              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5 opacity-60">
+                <p className="text-[10px] text-white font-medium line-through">Precision Gear Set</p>
+                <p className="text-[8px] text-gray-500">Done yesterday · Tyler P.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
       id: "presets",
       label: t("features.tab.presets"),
       title: t("features.presets.title"),
@@ -207,15 +253,58 @@ export default function FeatureShowcase() {
       ),
     },
     {
-      id: "quotes",
-      label: t("features.tab.orders"), // Note: tab.orders was used as key
-      title: t("features.orders.title"),
-      subtitle: t("features.orders.subtitle"),
+      id: "nesting",
+      label: t("features.tab.nesting"),
+      title: t("features.nest.title"),
+      subtitle: t("features.nest.subtitle"),
       highlights: [
-        t("features.orders.h1"),
-        t("features.orders.h2"),
-        t("features.orders.h3"),
-        t("features.orders.h4"),
+        t("features.nest.h1"),
+        t("features.nest.h2"),
+        t("features.nest.h3"),
+        t("features.nest.h4"),
+      ],
+      mockup: (
+        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
+          <div className="flex gap-4">
+            <div className="flex-1 bg-dark-950 border border-white/5 rounded-xl p-4 flex flex-col justify-between min-h-[180px]">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-[9px] text-gray-500 uppercase tracking-wider">Sheet Nesting (4'x8')</span>
+                <span className="text-[9px] text-green-400 bg-green-500/10 px-2 py-0.5 rounded font-bold">88% Efficiency</span>
+              </div>
+              <div className="flex-1 border border-dashed border-white/10 rounded p-2 flex flex-wrap gap-1.5 items-center justify-center bg-white/[0.01]">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="w-9 h-9 rounded bg-accent-500/20 border border-accent-500/40 flex items-center justify-center text-[8px] text-accent-400 font-bold">#N{i+1}</div>
+                ))}
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-[8px] text-blue-400 font-bold">#C{i+1}</div>
+                ))}
+              </div>
+            </div>
+            <div className="w-40 space-y-2">
+              <div className="glass-card p-3">
+                <p className="text-[8px] text-gray-500">Yield Stats</p>
+                <p className="text-xs font-bold text-white mt-1">12 Parts Nested</p>
+                <p className="text-[9px] text-gray-400 mt-1">Waste: 12%</p>
+              </div>
+              <div className="glass-card p-3 border-green-500/20 bg-green-500/[0.01]">
+                <p className="text-[8px] text-gray-500">Saved Material</p>
+                <p className="text-xs font-bold text-green-400 mt-1">$45.50 / sheet</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "quotes",
+      label: t("features.tab.quotes"),
+      title: t("features.quotes.title"),
+      subtitle: t("features.quotes.subtitle"),
+      highlights: [
+        t("features.quotes.h1"),
+        t("features.quotes.h2"),
+        t("features.quotes.h3"),
+        t("features.quotes.h4"),
       ],
       mockup: (
         <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
@@ -261,11 +350,66 @@ export default function FeatureShowcase() {
       ),
     },
     {
+      id: "clients",
+      label: t("features.tab.clients"),
+      title: t("features.clients.title"),
+      subtitle: t("features.clients.subtitle"),
+      highlights: [
+        t("features.clients.h1"),
+        t("features.clients.h2"),
+        t("features.clients.h3"),
+        t("features.clients.h4"),
+      ],
+      mockup: (
+        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
+          <div className="grid grid-cols-3 gap-2.5 mb-3">
+            <div className="glass-card p-3">
+              <p className="text-[8px] text-gray-500">Total Clients</p>
+              <p className="text-xs font-bold text-white mt-1">42 Active</p>
+            </div>
+            <div className="glass-card p-3">
+              <p className="text-[8px] text-gray-500">Total LTV</p>
+              <p className="text-xs font-bold text-green-400 mt-1">$6,240</p>
+            </div>
+            <div className="glass-card p-3">
+              <p className="text-[8px] text-gray-500">Balances Due</p>
+              <p className="text-xs font-bold text-yellow-400 mt-1">$450</p>
+            </div>
+          </div>
+          <div className="glass-card p-3">
+            <p className="text-[9px] text-gray-500 mb-2">TOP CUSTOMERS</p>
+            <div className="space-y-2">
+              {[
+                { name: "Sarah Lee (Wedding Planner)", orders: 8, ltv: "$1,840.50", c: "bg-accent-500/10 text-accent-400", s: "LTV Leader" },
+                { name: "Tyler Peterson (CNC Craft Co)", orders: 12, ltv: "$1,450.00", c: "bg-blue-500/10 text-blue-400", s: "Active Builder" },
+              ].map((c) => (
+                <div key={c.name} className="flex justify-between items-center py-1 border-b border-white/5 last:border-0 last:pb-0">
+                  <div>
+                    <p className="text-xs text-white font-medium">{c.name}</p>
+                    <p className="text-[8px] text-gray-500">{c.orders} orders processed</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-white font-bold">{c.ltv}</p>
+                    <span className={`text-[7px] px-1.5 py-0.2 rounded ${c.c}`}>{c.s}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
       id: "analytics",
-      label: "Analytics",
-      title: "Understand your business with smart numbers",
-      subtitle: "Track total revenue, completion rates, top-earning projects, material usage, and average cost per job. Know exactly where your profits come from.",
-      highlights: ["Revenue tracking", "Completion rates", "Top projects", "Time analysis"],
+      label: t("features.tab.analytics"),
+      title: t("features.analytics.title"),
+      subtitle: t("features.analytics.subtitle"),
+      highlights: [
+        t("features.analytics.h1"),
+        t("features.analytics.h2"),
+        t("features.analytics.h3"),
+        t("features.analytics.h4"),
+      ],
       mockup: (
         <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
           <div className="grid grid-cols-2 gap-3 mb-4">
