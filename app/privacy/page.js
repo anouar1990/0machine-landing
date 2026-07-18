@@ -68,7 +68,18 @@ export default function PrivacyPolicy() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-white font-[Outfit] mb-3">6. Contact Us</h2>
+            <h2 className="text-xl font-bold text-white font-[Outfit] mb-3">6. Account Deletion and Data Retention</h2>
+            <p>
+              You can permanently delete your account at any time through the Account Settings screen within the application. 
+              Upon initiating account deletion, all your projects, materials logs, client lists, invoice configurations, and presets will be permanently purged from our active databases. 
+            </p>
+            <p className="mt-2 text-amber-400 font-semibold">
+              ⚠️ Warning: For security and privacy reasons, this deletion is absolute. Your data will be deleted forever and cannot be recovered under any circumstances once the deletion process is completed. By confirming deletion, you release 0Machine and COOLDELO LABS LLC from any liability regarding loss of data.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white font-[Outfit] mb-3">7. Contact Us</h2>
             <p>
               If you have any questions about this Privacy Policy, please contact us at:
             </p>
