@@ -47,22 +47,12 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center shadow-lg shadow-white/5 group-hover:bg-white/15 transition-all">
-              <svg
-                className="w-5.5 h-5.5"
-                viewBox="0 0 28 28"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="6" cy="22" r="3" fill="#FFFFFF" />
-                <path d="M9 22L19 6" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" />
-                <path d="M18 6H24V12" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <span className="text-lg font-bold text-white font-[Outfit]">
-              0Machine
-            </span>
+          <a href="#" className="flex items-center group">
+            <img 
+              src="/logo.png" 
+              alt="0Machine Logo" 
+              className="h-9 w-auto object-contain" 
+            />
           </a>
 
           {/* Desktop Links */}

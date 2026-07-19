@@ -53,31 +53,11 @@ export default function Loader({ onComplete }) {
             transition={{ delay: 0.1 }}
             className="relative z-10 mb-12"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg shadow-accent-500/30">
-                <svg
-                  className="w-7 h-7 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <span className="text-2xl font-bold text-white font-[Outfit]">
-                  0Machine
-                </span>
-                <span className="block text-[10px] tracking-[0.3em] text-gray-500 uppercase">
-                  Planner
-                </span>
-              </div>
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="0Machine Logo" 
+              className="h-12 w-auto object-contain" 
+            />
           </motion.div>
 
           {/* Progress bar */}
