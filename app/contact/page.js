@@ -3,6 +3,7 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ParticleField from "../components/ParticleField";
+import { supabase } from "../lib/supabase";
 
 export default function ContactUs() {
   const [name, setName] = useState("");
@@ -10,17 +11,28 @@ export default function ContactUs() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !email || !message) {
       setStatus("error");
       return;
     }
-    // Mock submit success
-    setStatus("success");
-    setName("");
-    setEmail("");
-    setMessage("");
+    setStatus("loading");
+    try {
+      const { error } = await supabase
+        .from("contact_messages")
+        .insert([{ name, email, message, status: 'unread' }]);
+
+      if (error) throw error;
+      
+      setStatus("success");
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (err) {
+      console.error("Error submitting contact form:", err);
+      setStatus("server-error");
+    }
   };
 
   return (
@@ -45,6 +57,7 @@ export default function ContactUs() {
                   onChange={(e) => setName(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-500 transition-colors"
                   placeholder="John Doe"
+                  required
                 />
               </div>
 
@@ -56,6 +69,7 @@ export default function ContactUs() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-500 transition-colors"
                   placeholder="john@example.com"
+                  required
                 />
               </div>
 
@@ -67,11 +81,15 @@ export default function ContactUs() {
                   onChange={(e) => setMessage(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent-500 transition-colors resize-none"
                   placeholder="How can we help you?"
+                  required
                 />
               </div>
 
               {status === "error" && (
                 <p className="text-sm text-red-400">Please fill out all the fields.</p>
+              )}
+              {status === "server-error" && (
+                <p className="text-sm text-red-400">Failed to send message. Please try again later.</p>
               )}
               {status === "success" && (
                 <p className="text-sm text-green-400">Thank you! Your message has been sent successfully.</p>
@@ -79,9 +97,10 @@ export default function ContactUs() {
 
               <button
                 type="submit"
-                className="w-full glow-btn text-base py-3.5"
+                disabled={status === "loading"}
+                className="w-full glow-btn text-base py-3.5 flex justify-center items-center gap-2 disabled:opacity-50"
               >
-                Send Message ✉️
+                {status === "loading" ? "Sending..." : "Send Message ✉️"}
               </button>
             </form>
           </div>
