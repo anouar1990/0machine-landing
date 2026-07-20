@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import ParticleField from "../components/ParticleField";
 import { 
   Users, Mail, Database, Send, Plus, Trash2, FileText, 
-  Settings, LogOut, CheckCircle2, AlertTriangle, Eye, RefreshCw, Layers, Edit
+  Settings, LogOut, CheckCircle2, AlertTriangle, Eye, RefreshCw, Layers, Edit, BarChart2
 } from "lucide-react";
 
 const ADMIN_EMAILS = ["admin@cooldelo.com", "anouarkharbache@gmail.com"];
@@ -25,6 +25,7 @@ export default function AdminDashboard() {
   const [messages, setMessages] = useState([]);
   const [designs, setDesigns] = useState([]);
   const [blogs, setBlogs] = useState([]);
+  const [analyticsEvents, setAnalyticsEvents] = useState([]);
   
   // Form states
   const [loading, setLoading] = useState(false);
@@ -135,6 +136,16 @@ export default function AdminDashboard() {
           .select("*")
           .order("published_at", { ascending: false });
         if (!error && data) setBlogs(data);
+      }
+
+      if (activeTab === "analytics" || activeTab === "overview") {
+        const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+        const { data: eventsData, error: eventsErr } = await supabase
+          .from("analytics_events")
+          .select("event_name, created_at, page_path, referrer, session_id, metadata")
+          .gte("created_at", thirtyDaysAgo)
+          .order("created_at", { ascending: false });
+        if (!eventsErr && eventsData) setAnalyticsEvents(eventsData);
       }
     } catch (err) {
       console.error("Dashboard fetch error:", err);
@@ -410,6 +421,7 @@ export default function AdminDashboard() {
               { id: "overview", label: "Overview", icon: Layers },
               { id: "subscriptions", label: `Subscriptions (${activeSubsCount})`, icon: Users },
               { id: "messages", label: `Inquiries (${unreadMessagesCount})`, icon: Mail },
+              { id: "analytics", label: "Live Analytics", icon: BarChart2 },
               { id: "designs", label: "Design Library", icon: Settings },
               { id: "blogs", label: "SEO Blogs", icon: FileText },
             ].map(t => {
@@ -894,6 +906,197 @@ export default function AdminDashboard() {
 
             </div>
           )}
+
+          {/* 6. ANALYTICS TAB */}
+          {activeTab === "analytics" && (() => {
+            const fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000);
+            
+            // Calculate metrics
+            const liveSessions = new Set(
+              analyticsEvents
+                .filter(e => new Date(e.created_at) >= fiveMinsAgo)
+                .map(e => e.session_id)
+            ).size;
+
+            const totalViews = analyticsEvents.filter(e => e.event_name === 'pageview').length;
+            const uniqueVisitors = new Set(analyticsEvents.map(e => e.session_id)).size;
+            
+            const trialClicks = analyticsEvents.filter(e => 
+              e.event_name === 'cta_click' || 
+              (e.event_name === 'pageview' && e.page_path === '/dashboard?subscription=success')
+            ).length;
+
+            const conversionRate = uniqueVisitors > 0 ? ((trialClicks / uniqueVisitors) * 100).toFixed(1) : 0;
+
+            // Group by pages
+            const pageCounts = {};
+            analyticsEvents
+              .filter(e => e.event_name === 'pageview')
+              .forEach(e => {
+                const path = e.page_path || '/';
+                pageCounts[path] = (pageCounts[path] || 0) + 1;
+              });
+            const topPages = Object.entries(pageCounts)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 7);
+
+            // Group by referrers
+            const referrerCounts = {};
+            analyticsEvents.forEach(e => {
+              let ref = e.referrer || 'direct';
+              if (ref.includes('://')) {
+                ref = ref.split('://')[1].split('/')[0];
+              }
+              if (ref.startsWith('www.')) {
+                ref = ref.substring(4);
+              }
+              referrerCounts[ref] = (referrerCounts[ref] || 0) + 1;
+            });
+            const topReferrers = Object.entries(referrerCounts)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 7);
+
+            // Funnel items
+            const ctaDetails = {};
+            analyticsEvents
+              .filter(e => e.event_name === 'cta_click')
+              .forEach(e => {
+                const btn = e.metadata?.button || 'unknown';
+                ctaDetails[btn] = (ctaDetails[btn] || 0) + 1;
+              });
+
+            return (
+              <div className="space-y-8">
+                {/* Stats row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6 relative overflow-hidden">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Live Active Users</span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-ping mt-1.5" />
+                    </div>
+                    <h3 className="text-3xl font-bold text-white font-[Outfit]">{liveSessions}</h3>
+                    <p className="text-[10px] text-green-400 mt-2">Active sessions (last 5 mins)</p>
+                  </div>
+
+                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Pageviews (30d)</span>
+                      <span className="p-1.5 bg-accent-500/10 rounded-lg text-accent-400"><BarChart2 size={16} /></span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-white font-[Outfit]">{totalViews}</h3>
+                    <p className="text-[10px] text-gray-500 mt-2">Total tracked page loads</p>
+                  </div>
+
+                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Unique Visitors</span>
+                      <span className="p-1.5 bg-purple-500/10 rounded-lg text-purple-400"><Users size={16} /></span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-white font-[Outfit]">{uniqueVisitors}</h3>
+                    <p className="text-[10px] text-gray-500 mt-2">Unique anonymous device IDs</p>
+                  </div>
+
+                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">CTA Conversion Rate</span>
+                      <span className="p-1.5 bg-blue-500/10 rounded-lg text-blue-400"><Eye size={16} /></span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-white font-[Outfit]">{conversionRate}%</h3>
+                    <p className="text-[10px] text-gray-500 mt-2">Unique clicks on trials / visits</p>
+                  </div>
+                </div>
+
+                {/* Double column Page/Referrer tables */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Top Pages */}
+                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6 overflow-hidden">
+                    <h3 className="text-base font-bold text-white font-[Outfit] mb-4">Top Visited Pages</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="border-b border-white/10 text-gray-500 uppercase tracking-wider font-semibold">
+                            <th className="py-2.5 px-4">Page Path</th>
+                            <th className="py-2.5 px-4 text-right">Views</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {topPages.map(([path, count]) => (
+                            <tr key={path} className="border-b border-white/5 hover:bg-white/[0.02]">
+                              <td className="py-3 px-4 font-mono text-gray-300">{path}</td>
+                              <td className="py-3 px-4 text-right text-white font-bold">{count}</td>
+                            </tr>
+                          ))}
+                          {topPages.length === 0 && (
+                            <tr>
+                              <td colSpan="2" className="py-6 text-center text-gray-500">No page views recorded yet.</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Top Referrers */}
+                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6 overflow-hidden">
+                    <h3 className="text-base font-bold text-white font-[Outfit] mb-4">Top Traffic Referrers</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="border-b border-white/10 text-gray-500 uppercase tracking-wider font-semibold">
+                            <th className="py-2.5 px-4">Referrer Source</th>
+                            <th className="py-2.5 px-4 text-right">Visits</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {topReferrers.map(([ref, count]) => (
+                            <tr key={ref} className="border-b border-white/5 hover:bg-white/[0.02]">
+                              <td className="py-3 px-4 font-semibold text-gray-300">
+                                {ref === 'direct' ? '📥 Direct Traffic' : ref}
+                              </td>
+                              <td className="py-3 px-4 text-right text-white font-bold">{count}</td>
+                            </tr>
+                          ))}
+                          {topReferrers.length === 0 && (
+                            <tr>
+                              <td colSpan="2" className="py-6 text-center text-gray-500">No referrer data recorded yet.</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Funnel Click Analysis */}
+                <div className="bg-white/5 border border-white/5 rounded-2xl p-6 overflow-hidden">
+                  <h3 className="text-base font-bold text-white font-[Outfit] mb-4">CTA Button Click Breakdown</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr className="border-b border-white/10 text-gray-500 uppercase tracking-wider font-semibold">
+                          <th className="py-2.5 px-4">Button Identifier (CTA Target)</th>
+                          <th className="py-2.5 px-4 text-right">Click Count</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.entries(ctaDetails).map(([btn, count]) => (
+                          <tr key={btn} className="border-b border-white/5 hover:bg-white/[0.02]">
+                            <td className="py-3 px-4 font-mono text-gray-300">{btn}</td>
+                            <td className="py-3 px-4 text-right text-white font-bold">{count}</td>
+                          </tr>
+                        ))}
+                        {Object.keys(ctaDetails).length === 0 && (
+                          <tr>
+                            <td colSpan="2" className="py-6 text-center text-gray-500">No button clicks tracked yet.</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
         </div>
       </main>

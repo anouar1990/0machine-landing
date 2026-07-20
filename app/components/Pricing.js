@@ -2,6 +2,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { trackEvent } from "../lib/analytics";
 
 export default function Pricing() {
   const { t } = useLanguage();
@@ -189,6 +190,7 @@ export default function Pricing() {
                 {/* CTA */}
                 <a
                   href={plan.href}
+                  onClick={() => trackEvent('cta_click', { button: 'pricing_plan', plan: plan.name })}
                   className={`text-center w-full block text-sm !py-3.5 !px-6 ${
                     plan.highlighted
                       ? "glow-btn"

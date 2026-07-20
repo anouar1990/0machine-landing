@@ -2,6 +2,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { trackEvent } from "../lib/analytics";
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -77,7 +78,11 @@ export default function Hero() {
           transition={{ delay: 0.7 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6"
         >
-          <a href="https://app.0machine.com" className="glow-btn text-base px-8 py-4">
+          <a 
+            href="https://app.0machine.com" 
+            onClick={() => trackEvent('cta_click', { button: 'hero_trial' })}
+            className="glow-btn text-base px-8 py-4"
+          >
             {t("hero.ctaTrial")}
           </a>
           <a href="#features" className="glow-btn-outline text-base px-8 py-4">

@@ -2,6 +2,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { trackEvent } from "../lib/analytics";
 
 export default function FinalCTA() {
   const { t } = useLanguage();
@@ -72,6 +73,7 @@ export default function FinalCTA() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <a
               href="https://app.0machine.com"
+              onClick={() => trackEvent('cta_click', { button: 'final_cta_trial' })}
               className="glow-btn text-lg px-10 py-5"
             >
               {t("final.cta.trial")}

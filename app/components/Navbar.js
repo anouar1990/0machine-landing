@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
+import { trackEvent } from "../lib/analytics";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -123,12 +124,14 @@ export default function Navbar() {
 
             <a
               href="https://app.0machine.com"
+              onClick={() => trackEvent('cta_click', { button: 'navbar_signin' })}
               className="text-sm text-gray-400 hover:text-white transition-colors px-4 py-2"
             >
               {t("nav.signin")}
             </a>
             <a
               href="https://app.0machine.com"
+              onClick={() => trackEvent('cta_click', { button: 'navbar_trial' })}
               className="glow-btn text-sm !py-2.5 !px-6"
             >
               {t("nav.trial")}
@@ -216,6 +219,7 @@ export default function Navbar() {
 
               <motion.a
                 href="https://app.0machine.com"
+                onClick={() => trackEvent('cta_click', { button: 'navbar_trial_mobile' })}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}

@@ -1,5 +1,6 @@
 import "./globals.css";
 import { LanguageProvider } from "./context/LanguageContext";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 
 export const metadata = {
   title: "0Machine Planner — Run Your Laser Business Smarter, Faster, Easier",
@@ -40,6 +41,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className="antialiased">
         <LanguageProvider>
+          <AnalyticsTracker />
           {children}
         </LanguageProvider>
       </body>
