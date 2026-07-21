@@ -6,18 +6,23 @@ import { Calendar, User, ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 
 async function getBlogPost(slug) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const supabase = createClient(supabaseUrl || "", supabaseAnonKey || "");
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://kfydsuuelaxaffntdjxh.supabase.co";
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-anon-key";
+  
+  try {
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const { data, error } = await supabase
+      .from("blogs")
+      .select("*")
+      .eq("slug", slug)
+      .single();
 
-  const { data, error } = await supabase
-    .from("blogs")
-    .select("*")
-    .eq("slug", slug)
-    .single();
-
-  if (error || !data) return null;
-  return data;
+    if (error || !data) return null;
+    return data;
+  } catch (err) {
+    console.error("Error fetching blog post:", err);
+    return null;
+  }
 }
 
 // Generate metadata dynamically for search engines
