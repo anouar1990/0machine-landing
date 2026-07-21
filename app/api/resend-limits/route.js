@@ -1,6 +1,39 @@
 import { NextResponse } from "next/server";
+import { supabase } from "../../lib/supabase";
 
-export async function GET() {
+const ADMIN_EMAILS = ["admin@cooldelo.com", "anouarkharbache@gmail.com"];
+
+export async function GET(request) {
+  // 1. Extract Bearer Token from Authorization Header
+  const authHeader = request.headers.get("authorization");
+  const token = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : null;
+
+  if (!token) {
+    return NextResponse.json(
+      { error: "Unauthorized: Missing authentication token" },
+      { status: 401 }
+    );
+  }
+
+  // 2. Validate token with Supabase Auth
+  const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+  if (authError || !user) {
+    return NextResponse.json(
+      { error: "Unauthorized: Invalid or expired session token" },
+      { status: 401 }
+    );
+  }
+
+  // 3. Verify user is an authorized administrator
+  if (!user.email || !ADMIN_EMAILS.includes(user.email)) {
+    return NextResponse.json(
+      { error: "Forbidden: Administrator privileges required" },
+      { status: 403 }
+    );
+  }
+
+  // 4. Authorized Admin -> Fetch Resend API metrics
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey || apiKey.startsWith("re_placeholder")) {

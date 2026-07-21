@@ -95,7 +95,11 @@ export default function AdminDashboard() {
         }
 
         // 2. Get Resend email API limits
-        const res = await fetch("/api/resend-limits");
+        const res = await fetch("/api/resend-limits", {
+          headers: {
+            Authorization: `Bearer ${session?.access_token || ""}`
+          }
+        });
         const resendData = await res.json();
 
         setStats(prev => ({
