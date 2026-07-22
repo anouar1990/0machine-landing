@@ -210,15 +210,15 @@ export const translations = {
     "flow.step4.desc": "Export PDF reports for clients, review your analytics, and see which projects drive the most revenue. Grow with data, not guesswork.",
 
     // Product Showcase
-    "showcase.badge": "Product Showcase",
-    "showcase.title": "Built for your browser and mobile",
-    "showcase.subtitle": "Access your dashboard from your workshop tablet or phone.",
-    "showcase.label.db": "Project Dashboard",
-    "showcase.desc.db": "Track every project with cost and time",
-    "showcase.label.detail": "Project Details",
-    "showcase.desc.detail": "Full cost breakdown with PDF export",
-    "showcase.label.stats": "Smart Analytics",
-    "showcase.desc.stats": "Revenue, completion rates, and trends",
+    "showcase.badge": "Multi-Device Workshop OS",
+    "showcase.title": "Seamless Across Desktop, Tablet & Mobile",
+    "showcase.subtitle": "Run your workshop from your main computer, control jobs hands-free from your workshop tablet, or manage clients on your phone.",
+    "showcase.label.db": "Desktop Workspace",
+    "showcase.desc.db": "Full control room with project analytics, real-time cost calculator, and client order management.",
+    "showcase.label.detail": "Workshop Tablet Mode",
+    "showcase.desc.detail": "Touch-friendly interface for your laser workbench. Load presets and track active cutting timers.",
+    "showcase.label.stats": "Mobile Companion",
+    "showcase.desc.stats": "Check stock levels, update order statuses, and send PDF quotes to clients on the go.",
     
     // Social Proof
     "social.badge": "Testimonials",
