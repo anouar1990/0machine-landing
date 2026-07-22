@@ -36,23 +36,13 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-white/10 border border-white/15 flex items-center justify-center">
-                <svg
-                  className="w-5.5 h-5.5"
-                  viewBox="0 0 28 28"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="6" cy="22" r="3" fill="#FFFFFF" />
-                  <path d="M9 22L19 6" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" />
-                  <path d="M18 6H24V12" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <span className="text-lg font-bold text-white font-[Outfit]">
-                0Machine
-              </span>
-            </div>
+            <a href="#" className="flex items-center gap-2.5 mb-4 group">
+              <img 
+                src="/logo.png" 
+                alt="0Machine Logo" 
+                className="h-9 w-auto object-contain" 
+              />
+            </a>
             <p className="text-sm text-gray-500 leading-relaxed mb-4">
               {t("foot.desc")}
             </p>
