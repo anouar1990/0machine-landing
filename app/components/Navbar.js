@@ -28,10 +28,11 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: t("nav.features"), href: "#features" },
-    { label: t("nav.benefits"), href: "#benefits" },
-    { label: t("nav.workflow"), href: "#workflow" },
-    { label: t("nav.pricing"), href: "#pricing" },
+    { label: t("nav.features"), href: "/#features" },
+    { label: "Free Calculator", href: "/calculator" },
+    { label: t("nav.benefits"), href: "/#benefits" },
+    { label: t("nav.workflow"), href: "/#workflow" },
+    { label: t("nav.pricing"), href: "/#pricing" },
   ];
 
   return (
