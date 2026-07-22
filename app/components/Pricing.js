@@ -45,30 +45,13 @@ export default function Pricing() {
       highlighted: true,
       badge: t("price.popular"),
     },
-    {
-      name: t("price.biz.name"),
-      price: t("price.biz.price"),
-      period: t("price.biz.period"),
-      description: t("price.biz.desc"),
-      features: [
-        t("price.biz.f1"),
-        t("price.biz.f2"),
-        t("price.biz.f3"),
-        t("price.biz.f4"),
-        t("price.biz.f5"),
-        t("price.biz.f6"),
-      ],
-      cta: t("price.biz.cta"),
-      href: "https://app.0machine.com",
-      highlighted: false,
-    },
   ];
 
   const trustBadges = [
-    t("foot.payments") || "🔒 Secure payment via Stripe & PayPal",
-    t("foot.cancel") || "📅 Cancel anytime",
-    "⚡ " + (t("price.pro.cta") === "Accès Pro" ? "Accès instantané" : t("price.pro.cta") === "Acceso Pro" ? "Acceso instantáneo" : "Instant access"),
-    "💳 " + (t("price.pro.cta") === "Accès Pro" ? "Sans carte pour l'essai" : t("price.pro.cta") === "Acceso Pro" ? "Sin tarjeta para prueba" : "No card for trial"),
+    "🔒 Secure billing via Stripe",
+    "⚡ Instant activation",
+    "💳 No credit card needed for Free account",
+    "📅 Upgrade or cancel anytime",
   ];
 
   return (
@@ -100,8 +83,8 @@ export default function Pricing() {
           </p>
         </motion.div>
 
-        {/* Pricing Cards Grid (3 Columns) */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+        {/* Pricing Cards Grid (2 Columns) */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name || i}
