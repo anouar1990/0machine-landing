@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import ParticleField from "../components/ParticleField";
 import { 
   Users, Mail, Database, Send, Plus, Trash2, FileText, 
-  Settings, LogOut, CheckCircle2, AlertTriangle, Eye, RefreshCw, Layers, Edit, BarChart2
+  Settings, LogOut, CheckCircle2, AlertTriangle, Eye, RefreshCw, Layers, Edit, BarChart2, TrendingUp, Zap, CreditCard, ArrowRight
 } from "lucide-react";
 
 const ADMIN_EMAILS = ["admin@cooldelo.com", "anouarkharbache@gmail.com"];
@@ -18,6 +18,7 @@ export default function AdminDashboard() {
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState("");
   const [activeTab, setActiveTab] = useState("overview");
+  const [funnelDateFilter, setFunnelDateFilter] = useState("30d");
 
   // State data
   const [stats, setStats] = useState({ dbSize: 0, tableSizes: {}, resend: { sent: 0, limit: 3000, remaining: 3000, is_mock: true } });
@@ -142,12 +143,12 @@ export default function AdminDashboard() {
         if (!error && data) setBlogs(data);
       }
 
-      if (activeTab === "analytics" || activeTab === "overview") {
-        const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      if (activeTab === "analytics" || activeTab === "overview" || activeTab === "funnel") {
+        const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
         const { data: eventsData, error: eventsErr } = await supabase
           .from("analytics_events")
           .select("event_name, created_at, page_path, referrer, session_id, metadata")
-          .gte("created_at", thirtyDaysAgo)
+          .gte("created_at", ninetyDaysAgo)
           .order("created_at", { ascending: false });
         if (!eventsErr && eventsData) setAnalyticsEvents(eventsData);
       }
@@ -423,6 +424,7 @@ export default function AdminDashboard() {
           <div className="flex gap-2 overflow-x-auto border-b border-white/5 pb-2 mb-8 scrollbar-thin">
             {[
               { id: "overview", label: "Overview", icon: Layers },
+              { id: "funnel", label: "Conversion Funnel", icon: TrendingUp },
               { id: "subscriptions", label: `Subscriptions (${activeSubsCount})`, icon: Users },
               { id: "messages", label: `Inquiries (${unreadMessagesCount})`, icon: Mail },
               { id: "analytics", label: "Live Analytics", icon: BarChart2 },
@@ -1097,6 +1099,248 @@ export default function AdminDashboard() {
                       </tbody>
                     </table>
                   </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* 7. CONVERSION FUNNEL TAB */}
+          {activeTab === "funnel" && (() => {
+            // Filter events by date range
+            const now = Date.now();
+            let cutoffMs = 0;
+            if (funnelDateFilter === "today") cutoffMs = 24 * 60 * 60 * 1000;
+            else if (funnelDateFilter === "7d") cutoffMs = 7 * 24 * 60 * 60 * 1000;
+            else if (funnelDateFilter === "30d") cutoffMs = 30 * 24 * 60 * 60 * 1000;
+            else if (funnelDateFilter === "90d") cutoffMs = 90 * 24 * 60 * 60 * 1000;
+
+            const filteredEvents = analyticsEvents.filter(e => {
+              if (cutoffMs === 0) return true;
+              return new Date(e.created_at) >= new Date(now - cutoffMs);
+            });
+
+            // Funnel Step 1: Signups
+            const signupsCount = filteredEvents.filter(e => e.event_name === 'signup_completed' || e.event_name === 'sign_up').length || usersList.length;
+            
+            // Funnel Step 2: Activated
+            const activatedCount = filteredEvents.filter(e => e.event_name === 'activated').length;
+
+            // Funnel Step 3: Pro Feature Viewed
+            const proViewsEvents = filteredEvents.filter(e => e.event_name === 'pro_feature_viewed');
+            const proViewsCount = proViewsEvents.length;
+
+            // Breakdown by feature
+            const designLibraryViews = proViewsEvents.filter(e => e.metadata?.feature === 'design_library').length;
+            const nestingViews = proViewsEvents.filter(e => e.metadata?.feature === 'nesting').length;
+            const invoiceViews = proViewsEvents.filter(e => e.metadata?.feature === 'invoice_generator').length;
+
+            // Funnel Step 4: Checkout Started
+            const checkoutsCount = filteredEvents.filter(e => e.event_name === 'checkout_started' || e.event_name === 'purchase_attempt').length;
+
+            // Funnel Step 5: Paid
+            const paidEventsCount = filteredEvents.filter(e => e.event_name === 'subscription_paid').length;
+            const paidCount = Math.max(paidEventsCount, activeSubsCount);
+
+            // Conversion Rates Calculation
+            const signupToActivated = signupsCount > 0 ? ((activatedCount / signupsCount) * 100).toFixed(1) : "0.0";
+            const activatedToProViewed = activatedCount > 0 ? ((proViewsCount / activatedCount) * 100).toFixed(1) : "0.0";
+            const proViewedToCheckout = proViewsCount > 0 ? ((checkoutsCount / proViewsCount) * 100).toFixed(1) : "0.0";
+            const checkoutToPaid = checkoutsCount > 0 ? ((paidCount / checkoutsCount) * 100).toFixed(1) : "0.0";
+            const overallSignupToPaid = signupsCount > 0 ? ((paidCount / signupsCount) * 100).toFixed(1) : "0.0";
+
+            return (
+              <div className="space-y-8">
+                {/* Filter bar */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/5 border border-white/5 p-4 rounded-2xl">
+                  <div>
+                    <h3 className="text-lg font-bold text-white font-[Outfit]">Conversion Funnel & Pixel Analytics</h3>
+                    <p className="text-xs text-gray-400">Track user progression f signup to paid Pro subscription</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 bg-dark-900 border border-white/10 p-1 rounded-xl text-xs">
+                    {[
+                      { id: "today", label: "Today" },
+                      { id: "7d", label: "7 Days" },
+                      { id: "30d", label: "30 Days" },
+                      { id: "90d", label: "90 Days" },
+                      { id: "all", label: "All Time" },
+                    ].map(f => (
+                      <button
+                        key={f.id}
+                        onClick={() => setFunnelDateFilter(f.id)}
+                        className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+                          funnelDateFilter === f.id ? "bg-accent-500 text-white font-semibold" : "text-gray-400 hover:text-white"
+                        }`}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 5-Step Funnel Visual Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                  
+                  {/* Step 1 */}
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5 relative overflow-hidden">
+                    <div className="text-[10px] font-semibold text-accent-400 uppercase tracking-wider mb-1">Step 1 — Signup</div>
+                    <h4 className="text-3xl font-black text-white font-[Outfit]">{signupsCount}</h4>
+                    <p className="text-xs text-gray-400 mt-1">Total Registrations</p>
+                    <div className="mt-4 pt-3 border-t border-white/5 text-[11px] text-gray-500">
+                      Baseline entry point
+                    </div>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5 relative overflow-hidden">
+                    <div className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider mb-1">Step 2 — Activated</div>
+                    <h4 className="text-3xl font-black text-white font-[Outfit]">{activatedCount}</h4>
+                    <p className="text-xs text-gray-400 mt-1">Ran Calculation</p>
+                    <div className="mt-4 pt-3 border-t border-white/5 text-[11px] text-blue-400 font-semibold">
+                      {signupToActivated}% conversion
+                    </div>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5 relative overflow-hidden">
+                    <div className="text-[10px] font-semibold text-purple-400 uppercase tracking-wider mb-1">Step 3 — Pro Viewed</div>
+                    <h4 className="text-3xl font-black text-white font-[Outfit]">{proViewsCount}</h4>
+                    <p className="text-xs text-gray-400 mt-1">Opened Pro Tool</p>
+                    <div className="mt-4 pt-3 border-t border-white/5 text-[11px] text-purple-400 font-semibold">
+                      {activatedToProViewed}% conversion
+                    </div>
+                  </div>
+
+                  {/* Step 4 */}
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-5 relative overflow-hidden">
+                    <div className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider mb-1">Step 4 — Checkout</div>
+                    <h4 className="text-3xl font-black text-white font-[Outfit]">{checkoutsCount}</h4>
+                    <p className="text-xs text-gray-400 mt-1">Clicked Upgrade</p>
+                    <div className="mt-4 pt-3 border-t border-white/5 text-[11px] text-amber-400 font-semibold">
+                      {proViewedToCheckout}% conversion
+                    </div>
+                  </div>
+
+                  {/* Step 5 */}
+                  <div className="bg-white/5 border border-amber-500/30 rounded-2xl p-5 relative overflow-hidden bg-gradient-to-b from-amber-500/10 to-transparent">
+                    <div className="text-[10px] font-semibold text-amber-400 uppercase tracking-wider mb-1">Step 5 — Paid</div>
+                    <h4 className="text-3xl font-black text-amber-400 font-[Outfit]">{paidCount}</h4>
+                    <p className="text-xs text-gray-300 mt-1">Verified Subscribers</p>
+                    <div className="mt-4 pt-3 border-t border-white/10 text-[11px] text-amber-400 font-bold">
+                      {overallSignupToPaid}% overall conv.
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* Conversion Rates & Feature Breakdown */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  
+                  {/* Conversion Funnel Rates */}
+                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                    <h3 className="text-base font-bold text-white font-[Outfit] mb-6 flex items-center gap-2">
+                      <TrendingUp size={18} className="text-accent-400" />
+                      <span>Funnel Conversion Rates</span>
+                    </h3>
+
+                    <div className="space-y-5 text-xs">
+                      <div>
+                        <div className="flex justify-between mb-1.5 font-semibold">
+                          <span className="text-gray-300">Signup → Product Activation</span>
+                          <span className="text-blue-400">{signupToActivated}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-full bg-blue-500 rounded-full" style={{ width: `${Math.min(parseFloat(signupToActivated), 100)}%` }} />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between mb-1.5 font-semibold">
+                          <span className="text-gray-300">Activation → Pro Feature Viewed</span>
+                          <span className="text-purple-400">{activatedToProViewed}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-full bg-purple-500 rounded-full" style={{ width: `${Math.min(parseFloat(activatedToProViewed), 100)}%` }} />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between mb-1.5 font-semibold">
+                          <span className="text-gray-300">Pro Feature Viewed → Checkout Started</span>
+                          <span className="text-amber-400">{proViewedToCheckout}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-full bg-amber-500 rounded-full" style={{ width: `${Math.min(parseFloat(proViewedToCheckout), 100)}%` }} />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between mb-1.5 font-semibold">
+                          <span className="text-gray-300">Checkout Started → Paid Subscription</span>
+                          <span className="text-green-400">{checkoutToPaid}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-full bg-green-500 rounded-full" style={{ width: `${Math.min(parseFloat(checkoutToPaid), 100)}%` }} />
+                        </div>
+                      </div>
+
+                      <div className="pt-3 border-t border-white/10">
+                        <div className="flex justify-between mb-1.5 font-bold text-sm">
+                          <span className="text-white">Overall Signup → Paid Conversion Rate</span>
+                          <span className="text-amber-400">{overallSignupToPaid}%</span>
+                        </div>
+                        <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-accent-500 to-amber-400 rounded-full" style={{ width: `${Math.min(parseFloat(overallSignupToPaid), 100)}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Pro Feature Views Breakdown */}
+                  <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                    <h3 className="text-base font-bold text-white font-[Outfit] mb-6 flex items-center gap-2">
+                      <Zap size={18} className="text-amber-400" />
+                      <span>Pro Feature Conversion Breakdown</span>
+                    </h3>
+
+                    <div className="space-y-4">
+                      
+                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-white text-sm">Design Library</div>
+                          <div className="text-gray-400 text-xs mt-0.5">500+ ready-to-cut vector templates</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-extrabold text-white">{designLibraryViews}</div>
+                          <div className="text-[10px] text-purple-400 font-semibold">Views</div>
+                        </div>
+                      </div>
+
+                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-white text-sm">Nesting Tool</div>
+                          <div className="text-gray-400 text-xs mt-0.5">Sheet layout & material waste optimizer</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-extrabold text-white">{nestingViews}</div>
+                          <div className="text-[10px] text-blue-400 font-semibold">Views</div>
+                        </div>
+                      </div>
+
+                      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-white text-sm">Invoice Generator</div>
+                          <div className="text-gray-400 text-xs mt-0.5">Branded custom PDF client invoices</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-extrabold text-white">{invoiceViews}</div>
+                          <div className="text-[10px] text-green-400 font-semibold">Views</div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
                 </div>
               </div>
             );

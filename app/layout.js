@@ -1,6 +1,7 @@
 import "./globals.css";
 import { LanguageProvider } from "./context/LanguageContext";
 import AnalyticsTracker from "./components/AnalyticsTracker";
+import PixelScripts from "./components/PixelScripts";
 
 export const metadata = {
   title: "0Machine Planner — Run Your Laser Business Smarter, Faster, Easier",
@@ -42,6 +43,7 @@ export default function RootLayout({ children }) {
       <body className="antialiased">
         <LanguageProvider>
           <AnalyticsTracker />
+          <PixelScripts />
           {children}
         </LanguageProvider>
       </body>
