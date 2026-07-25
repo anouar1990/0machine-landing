@@ -23,12 +23,18 @@ export const metadata = {
     siteName: "0Machine",
     type: "website",
   },
+  verification: {
+    other: {
+      "facebook-domain-verification": "nq9iuye9c4rxjv3s1ev6awc05wom58",
+    },
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <meta name="facebook-domain-verification" content="nq9iuye9c4rxjv3s1ev6awc05wom58" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
