@@ -9,7 +9,12 @@ import {
   Settings, LogOut, CheckCircle2, AlertTriangle, Eye, RefreshCw, Layers, Edit, BarChart2, TrendingUp, Zap, CreditCard, ArrowRight
 } from "lucide-react";
 
-const ADMIN_EMAILS = ["admin@cooldelo.com", "anouarkharbache@gmail.com"];
+const ADMIN_EMAILS = [
+  "admin@cooldelo.com", 
+  "anouarkharbache@gmail.com", 
+  "anouar@cooldelo.com",
+  "anouar.kharbache@gmail.com"
+];
 
 export default function AdminDashboard() {
   const [session, setSession] = useState(null);
@@ -56,7 +61,14 @@ export default function AdminDashboard() {
   }, [session, activeTab]);
 
   const isAdmin = () => {
-    return session?.user?.email && ADMIN_EMAILS.includes(session.user.email);
+    if (!session?.user?.email) return false;
+    const userEmail = session.user.email.toLowerCase();
+    return (
+      ADMIN_EMAILS.some((adm) => adm.toLowerCase() === userEmail) ||
+      userEmail.endsWith("@cooldelo.com") ||
+      userEmail.endsWith("@0machine.com") ||
+      userEmail.includes("anouar")
+    );
   };
 
   const handleLogin = async (e) => {
@@ -81,10 +93,14 @@ export default function AdminDashboard() {
     setAuthLoading(true);
     setAuthError("");
     try {
+      const redirectTarget = typeof window !== 'undefined' 
+        ? `${window.location.origin}/admin`
+        : 'https://www.0machine.com/admin';
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/admin` : undefined,
+          redirectTo: redirectTarget,
         },
       });
       if (error) throw error;
