@@ -232,7 +232,7 @@ export default function PublicCalculatorPage() {
                     <span>Save This Calculation for Free</span>
                   </div>
                   <p className="text-xs text-gray-400 mb-4">
-                    Create a free account to save project quotes, track material inventory, and access 500+ vector templates.
+                    Create a free account to save project quotes, track material inventory, and access unlimited vector templates.
                   </p>
                   
                   <a
