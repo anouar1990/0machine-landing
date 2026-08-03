@@ -43,6 +43,7 @@ export default function PixelScripts() {
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', '${META_ID}');
+            fbq('init', '517991158551582');
             fbq('track', 'PageView');
           `}
         </Script>
