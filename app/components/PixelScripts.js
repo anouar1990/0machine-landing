@@ -4,7 +4,7 @@ import Script from "next/script";
 
 export default function PixelScripts() {
   const GA_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || "G-8V921YKC8S";
-  const META_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  const META_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "1429957431108439";
   const TIKTOK_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID;
   const PINTEREST_ID = process.env.NEXT_PUBLIC_PINTEREST_TAG_ID;
   const SNAP_ID = process.env.NEXT_PUBLIC_SNAPCHAT_PIXEL_ID;
