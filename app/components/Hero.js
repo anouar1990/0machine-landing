@@ -129,109 +129,14 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Dashboard content - simulated UI */}
-            <div className="bg-dark-900 p-6 sm:p-8">
-              <div className="flex gap-6">
-                {/* Sidebar */}
-                <div className="hidden sm:block w-48 shrink-0">
-                  <div className="flex items-center gap-2 mb-8">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <span className="text-sm font-bold text-white">0Machine</span>
-                      <span className="block text-[8px] text-gray-500 tracking-wider">PLANNER</span>
-                    </div>
-                  </div>
-
-                  {["Dashboard", "Cost Calculator", "Materials", "Orders", "Laser Presets", "Quote Generator", "Nesting Estimator"].map(
-                    (item, i) => (
-                      <div
-                        key={item}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg mb-1 text-xs transition-colors ${
-                          i === 0
-                            ? "bg-accent-500/15 text-accent-400"
-                            : "text-gray-500 hover:text-gray-300"
-                        }`}
-                      >
-                        <div className={`w-4 h-4 rounded ${i === 0 ? "bg-accent-500/30" : "bg-dark-700"}`} />
-                        {item}
-                      </div>
-                    )
-                  )}
-                </div>
-
-                {/* Main content */}
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">⚡ Welcome back</p>
-                      <h3 className="text-lg font-semibold text-white">Dashboard</h3>
-                    </div>
-                  </div>
-
-                  {/* Stats grid */}
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                    {[
-                      { label: "Total Projects", value: "24", icon: "📊", color: "accent" },
-                      { label: "In Progress", value: "8", icon: "⏱", color: "yellow" },
-                      { label: "Completed", value: "16", icon: "✅", color: "green" },
-                      { label: "Revenue", value: "$2,847", icon: "📈", color: "blue" },
-                    ].map((stat, i) => (
-                      <motion.div
-                        key={stat.label}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.3 + i * 0.1 }}
-                        className="glass-card p-4"
-                      >
-                        <span className="text-lg mb-1 block">{stat.icon}</span>
-                        <p className="text-xl font-bold text-white">{stat.value}</p>
-                        <p className="text-[10px] text-gray-500">{stat.label}</p>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Recent projects */}
-                  <div className="glass-card p-4">
-                    <p className="text-xs text-gray-500 mb-3 tracking-wider uppercase">Recent Projects</p>
-                    {[
-                      { name: "Custom Coaster Set (x12)", client: "John Smith", cost: "$85.00", status: "In Progress" },
-                      { name: "Wedding Decorations", client: "Sarah Lee", cost: "$320.00", status: "Pending" },
-                      { name: "Acrylic Signage Batch", client: "Craft Studio", cost: "$195.00", status: "Completed" },
-                    ].map((project, i) => (
-                      <motion.div
-                        key={project.name}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 1.6 + i * 0.15 }}
-                        className="flex items-center justify-between py-2.5 border-b border-white/5 last:border-0"
-                      >
-                        <div>
-                          <p className="text-xs font-medium text-white">{project.name}</p>
-                          <p className="text-[10px] text-gray-500">{project.client}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs font-semibold text-white">{project.cost}</p>
-                          <span
-                            className={`text-[9px] px-2 py-0.5 rounded-full ${
-                              project.status === "Completed"
-                                ? "bg-green-500/15 text-green-400"
-                                : project.status === "In Progress"
-                                ? "bg-accent-500/15 text-accent-400"
-                                : "bg-yellow-500/15 text-yellow-400"
-                            }`}
-                          >
-                            {project.status}
-                          </span>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            {/* Real App Screenshot Image */}
+            <div className="bg-dark-950 p-2 relative group">
+              <img 
+                src="/screenshots/screenshot-dashboard.png" 
+                alt="0Machine Workshop Real-Time Operational Dashboard" 
+                className="w-full h-auto rounded-xl border border-white/10 shadow-2xl transition-transform duration-500 group-hover:scale-[1.01]" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-950/60 via-transparent to-transparent pointer-events-none rounded-xl" />
             </div>
           </div>
 

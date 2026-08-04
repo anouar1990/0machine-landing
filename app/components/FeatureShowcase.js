@@ -22,27 +22,12 @@ export default function FeatureShowcase() {
         t("features.db.h4"),
       ],
       mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            {[
-              { v: "24", l: t("mock.total"), c: "text-accent-400", icon: "📊" },
-              { v: "8", l: t("mock.inprogress"), c: "text-yellow-400", icon: "⏱" },
-              { v: "16", l: t("mock.completed"), c: "text-green-400", icon: "✅" },
-              { v: "$2,847", l: t("mock.revenue"), c: "text-blue-400", icon: "📈" },
-            ].map((s) => (
-              <div key={s.l} className="glass-card p-4">
-                <span className="text-lg">{s.icon}</span>
-                <p className={`text-2xl font-bold ${s.c} mt-1`}>{s.v}</p>
-                <p className="text-[10px] text-gray-500 mt-0.5">{s.l}</p>
-              </div>
-            ))}
-          </div>
-          <div className="glass-card p-3">
-            <p className="text-[10px] text-gray-500 mb-2 tracking-wider">{t("mock.recent")}</p>
-            {["Precision Gear Set — $145.50", "Architectural Model V2 — $210.75", "Custom Signage — $98.20"].map((p) => (
-              <div key={p} className="py-2 border-b border-white/5 text-xs text-gray-300 last:border-0">{p}</div>
-            ))}
-          </div>
+        <div className="bg-dark-900 rounded-xl overflow-hidden border border-white/10 shadow-2xl p-2 group">
+          <img 
+            src="/screenshots/screenshot-dashboard.png" 
+            alt="0Machine Workshop Dashboard Overview" 
+            className="w-full h-auto rounded-lg transition-transform duration-500 group-hover:scale-[1.01]" 
+          />
         </div>
       ),
     },
@@ -58,63 +43,12 @@ export default function FeatureShowcase() {
         t("features.calc.h4"),
       ],
       mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="flex gap-4">
-            <div className="flex-1 space-y-3">
-              <div className="glass-card p-3">
-                <p className="text-[10px] text-gray-500 mb-2">PROJECT</p>
-                <p className="text-sm text-white font-medium">{t("mock.coasters")}</p>
-                <p className="text-xs text-gray-400 mt-1">{t("mock.birch")}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { l: t("mock.sheet"), v: "$25.00" },
-                  { l: t("mock.usage"), v: "80%" },
-                  { l: t("mock.laser"), v: "45 min" },
-                  { l: t("mock.labor"), v: "$10.00" },
-                ].map((f) => (
-                  <div key={f.l} className="glass-card p-2.5">
-                    <p className="text-[9px] text-gray-500">{f.l}</p>
-                    <p className="text-xs text-white font-medium">{f.v}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="w-40">
-              <div className="glass-card p-3 mb-2">
-                <p className="text-[10px] text-gray-500 mb-2">COST BREAKDOWN</p>
-                {[
-                  { l: "Material", v: "$20.00" },
-                  { l: "Electricity", v: "$1.13" },
-                  { l: "Machine Wear", v: "$2.00" },
-                  { l: "Labor", v: "$10.00" },
-                ].map((c) => (
-                  <div key={c.l} className="flex justify-between py-1">
-                    <span className="text-[9px] text-gray-500">{c.l}</span>
-                    <span className="text-[9px] text-white">{c.v}</span>
-                  </div>
-                ))}
-                <div className="border-t border-white/10 mt-2 pt-2 flex justify-between">
-                  <span className="text-[10px] text-gray-400 font-medium">{t("mock.total")}</span>
-                  <span className="text-xs text-accent-400 font-bold">$33.13</span>
-                </div>
-              </div>
-              <div className="glass-card p-3 text-center border-accent-500/20">
-                <p className="text-[9px] text-gray-500">Selling Price</p>
-                <p className="text-xl font-bold text-accent-400">$49.70</p>
-                <div className="flex gap-2 mt-1">
-                  <div className="flex-1 bg-green-500/10 rounded p-1">
-                    <p className="text-[8px] text-green-400">$16.57</p>
-                    <p className="text-[7px] text-gray-500">Profit</p>
-                  </div>
-                  <div className="flex-1 bg-green-500/10 rounded p-1">
-                    <p className="text-[8px] text-green-400">50%</p>
-                    <p className="text-[7px] text-gray-500">Margin</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="bg-dark-900 rounded-xl overflow-hidden border border-white/10 shadow-2xl p-2 group">
+          <img 
+            src="/screenshots/screenshot-detail.png" 
+            alt="0Machine Smart Cost & Time Calculator" 
+            className="w-full h-auto rounded-lg transition-transform duration-500 group-hover:scale-[1.01]" 
+          />
         </div>
       ),
     },
@@ -130,37 +64,12 @@ export default function FeatureShowcase() {
         t("features.inv.h4"),
       ],
       mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            <div className="glass-card p-3 text-center">
-              <p className="text-xl font-bold text-accent-400">12</p>
-              <p className="text-[9px] text-gray-500">Total SKUs</p>
-            </div>
-            <div className="glass-card p-3 text-center">
-              <p className="text-xl font-bold text-yellow-400">2</p>
-              <p className="text-[9px] text-gray-500">Low Stock</p>
-            </div>
-            <div className="glass-card p-3 text-center">
-              <p className="text-xl font-bold text-green-400">$1,248</p>
-              <p className="text-[9px] text-gray-500">Inventory Value</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { name: t("mock.birch"), type: "Wood", price: "$18/sheet", stock: "10", color: "bg-amber-500/15 text-amber-400" },
-              { name: t("mock.acrylic"), type: "Acrylic", price: "$24/sheet", stock: "5", color: "bg-cyan-500/15 text-cyan-400" },
-              { name: "MDF 6mm", type: "Wood", price: "$14/sheet", stock: "8", color: "bg-amber-500/15 text-amber-400" },
-            ].map((m) => (
-              <div key={m.name} className="glass-card p-3">
-                <span className={`text-[8px] px-1.5 py-0.5 rounded ${m.color}`}>{m.type}</span>
-                <p className="text-xs text-white font-medium mt-1.5">{m.name}</p>
-                <p className="text-[9px] text-gray-500 mt-0.5">{m.price}</p>
-                <div className="mt-2">
-                  <span className="text-[9px] text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded">{m.stock} {t("mock.sheets")}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="bg-dark-900 rounded-xl overflow-hidden border border-white/10 shadow-2xl p-2 group">
+          <img 
+            src="/screenshots/screenshot-stats.png" 
+            alt="0Machine Material Inventory Management" 
+            className="w-full h-auto rounded-lg transition-transform duration-500 group-hover:scale-[1.01]" 
+          />
         </div>
       ),
     },
@@ -176,37 +85,12 @@ export default function FeatureShowcase() {
         t("features.orders.h4"),
       ],
       mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-3 gap-3">
-            <div className="glass-card p-3">
-              <p className="text-[9px] font-bold text-blue-400 mb-2 uppercase tracking-wider">Pending (2)</p>
-              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5 mb-2">
-                <p className="text-[10px] text-white font-medium">{t("mock.coasters")}</p>
-                <p className="text-[8px] text-gray-500">Due: Jul 21 · John D.</p>
-              </div>
-              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5">
-                <p className="text-[10px] text-white font-medium">Gift Box V3</p>
-                <p className="text-[8px] text-gray-500">Due: Jul 22 · Alice K.</p>
-              </div>
-            </div>
-            <div className="glass-card p-3 border-l border-yellow-500/20">
-              <p className="text-[9px] font-bold text-yellow-400 mb-2 uppercase tracking-wider">In Progress (1)</p>
-              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-yellow-500/20 mb-2">
-                <p className="text-[10px] text-white font-medium">Wedding Arch</p>
-                <p className="text-[8px] text-gray-500">Due: Today · Sarah L.</p>
-                <div className="w-full bg-white/10 h-1 rounded-full mt-2 overflow-hidden">
-                  <div className="bg-yellow-500 h-full w-2/3" />
-                </div>
-              </div>
-            </div>
-            <div className="glass-card p-3 border-l border-green-500/20">
-              <p className="text-[9px] font-bold text-green-400 mb-2 uppercase tracking-wider">Completed (5)</p>
-              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5 opacity-60">
-                <p className="text-[10px] text-white font-medium line-through">Precision Gear Set</p>
-                <p className="text-[8px] text-gray-500">Done yesterday · Tyler P.</p>
-              </div>
-            </div>
-          </div>
+        <div className="bg-dark-900 rounded-xl overflow-hidden border border-white/10 shadow-2xl p-2 group">
+          <img 
+            src="/screenshots/screenshot-dashboard.png" 
+            alt="0Machine Orders & Production Job Tracker" 
+            className="w-full h-auto rounded-lg transition-transform duration-500 group-hover:scale-[1.01]" 
+          />
         </div>
       ),
     },
@@ -222,33 +106,12 @@ export default function FeatureShowcase() {
         t("features.presets.h4"),
       ],
       mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { name: t("mock.birch"), speed: "20", power: "85%", freq: "1000", passes: "1", air: true, note: "Clean cut, slight smoke" },
-              { name: t("mock.acrylic"), speed: "15", power: "90%", freq: "1500", passes: "1", air: true, note: "Remove protective film first" },
-              { name: "Birch Plywood Engrave", speed: "200", power: "40%", freq: "500", passes: "1", air: false, note: "Good contrast, medium depth" },
-              { name: "Leather 2mm", speed: "150", power: "25%", freq: "500", passes: "1", air: false, note: "Ventilate well, low power" },
-            ].map((p) => (
-              <div key={p.name} className="glass-card p-3">
-                <div className="flex items-center gap-1 mb-1.5">
-                  <span className="text-accent-400 text-xs">★</span>
-                  <p className="text-xs text-white font-medium truncate">{p.name}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-1 mb-2">
-                  <div className="bg-dark-800 rounded px-2 py-1">
-                    <p className="text-[7px] text-gray-500">{t("mock.speed")}</p>
-                    <p className="text-[10px] text-white">{p.speed} mm/s</p>
-                  </div>
-                  <div className="bg-dark-800 rounded px-2 py-1">
-                    <p className="text-[7px] text-gray-500">{t("mock.power")}</p>
-                    <p className="text-[10px] text-accent-400 font-medium">{p.power}</p>
-                  </div>
-                </div>
-                <p className="text-[8px] text-gray-500 leading-relaxed">{p.note}</p>
-              </div>
-            ))}
-          </div>
+        <div className="bg-dark-900 rounded-xl overflow-hidden border border-white/10 shadow-2xl p-2 group">
+          <img 
+            src="/screenshots/screenshot-detail.png" 
+            alt="0Machine Laser Settings Presets Library" 
+            className="w-full h-auto rounded-lg transition-transform duration-500 group-hover:scale-[1.01]" 
+          />
         </div>
       ),
     },
@@ -264,34 +127,12 @@ export default function FeatureShowcase() {
         t("features.nest.h4"),
       ],
       mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="flex gap-4">
-            <div className="flex-1 bg-dark-950 border border-white/5 rounded-xl p-4 flex flex-col justify-between min-h-[180px]">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-[9px] text-gray-500 uppercase tracking-wider">Sheet Nesting (4'x8')</span>
-                <span className="text-[9px] text-green-400 bg-green-500/10 px-2 py-0.5 rounded font-bold">88% Efficiency</span>
-              </div>
-              <div className="flex-1 border border-dashed border-white/10 rounded p-2 flex flex-wrap gap-1.5 items-center justify-center bg-white/[0.01]">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="w-9 h-9 rounded bg-accent-500/20 border border-accent-500/40 flex items-center justify-center text-[8px] text-accent-400 font-bold">#N{i+1}</div>
-                ))}
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-[8px] text-blue-400 font-bold">#C{i+1}</div>
-                ))}
-              </div>
-            </div>
-            <div className="w-40 space-y-2">
-              <div className="glass-card p-3">
-                <p className="text-[8px] text-gray-500">Yield Stats</p>
-                <p className="text-xs font-bold text-white mt-1">12 Parts Nested</p>
-                <p className="text-[9px] text-gray-400 mt-1">Waste: 12%</p>
-              </div>
-              <div className="glass-card p-3 border-green-500/20 bg-green-500/[0.01]">
-                <p className="text-[8px] text-gray-500">Saved Material</p>
-                <p className="text-xs font-bold text-green-400 mt-1">$45.50 / sheet</p>
-              </div>
-            </div>
-          </div>
+        <div className="bg-dark-900 rounded-xl overflow-hidden border border-white/10 shadow-2xl p-2 group">
+          <img 
+            src="/screenshots/screenshot-stats.png" 
+            alt="0Machine Nesting Yield Estimator" 
+            className="w-full h-auto rounded-lg transition-transform duration-500 group-hover:scale-[1.01]" 
+          />
         </div>
       ),
     },
