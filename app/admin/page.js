@@ -54,9 +54,71 @@ export default function AdminDashboard() {
     return () => subscription.unsubscribe();
   }, []);
 
+  const playChaChingSound = () => {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+
+      const playTone = (freq, startTime, duration, type = "sine", gainVal = 0.3) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+        gain.gain.setValueAtTime(gainVal, ctx.currentTime + startTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + startTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + startTime);
+        osc.stop(ctx.currentTime + startTime + duration);
+      };
+
+      // 4-tone golden coin cash register chime (B5 -> E6 -> G6 -> C7)
+      playTone(987.77, 0.0, 0.4, "sine", 0.3);   // B5
+      playTone(1318.51, 0.07, 0.5, "sine", 0.35); // E6
+      playTone(1567.98, 0.15, 0.7, "sine", 0.4);  // G6
+      playTone(2093.00, 0.23, 1.2, "sine", 0.5);  // C7
+    } catch (err) {
+      console.warn("Cha-ching sound failed to play:", err);
+    }
+  };
+
   useEffect(() => {
     if (session && isAdmin()) {
       fetchDashboardData();
+
+      // Real-time purchase & paid subscription listener
+      const realtimeChannel = supabase
+        .channel("admin-purchase-alerts")
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "analytics_events" },
+          (payload) => {
+            const eventName = payload.new?.event_name;
+            if (eventName === "subscription_paid" || eventName === "purchase" || eventName === "checkout_started") {
+              playChaChingSound();
+              showNotification(`💰 CHA-CHING! New ${eventName.replace("_", " ")} recorded!`, "success");
+              fetchDashboardData();
+            }
+          }
+        )
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "user_subscriptions" },
+          (payload) => {
+            const status = payload.new?.status || payload.new?.subscription_status;
+            if (status === "active" || payload.new?.plan === "pro") {
+              playChaChingSound();
+              showNotification("🎉 CHA-CHING! New Pro Subscription Activated!", "success");
+              fetchDashboardData();
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(realtimeChannel);
+      };
     }
   }, [session, activeTab]);
 
@@ -458,6 +520,18 @@ export default function AdminDashboard() {
             </div>
             
             <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  playChaChingSound();
+                  showNotification("💰 CHA-CHING! Sound test successful 🎉", "success");
+                }}
+                className="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 px-3.5 py-2 rounded-xl text-amber-400 text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/10 cursor-pointer"
+                title="Test Cha-Ching Purchase Sound"
+              >
+                <span>🔔</span>
+                <span>Test Cha-Ching</span>
+              </button>
+
               <button 
                 onClick={fetchDashboardData}
                 className="p-2 border border-white/10 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors"
