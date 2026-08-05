@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { sendSubscriptionReceiptEmail } from '../../../lib/email';
 
 const getStripe = () => {
   const apiKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_key';
@@ -76,6 +77,18 @@ export async function POST(req) {
           status: subscriptionStatus,
           currentPeriodEnd,
         });
+
+        // Send Welcome & Invoice Receipt Email
+        if (customerEmail) {
+          await sendSubscriptionReceiptEmail({
+            userEmail: customerEmail,
+            planName: plan === 'starter' ? '0machine Starter' : '0machine Pro',
+            billingCycle: cycle,
+            amountPaid: cycle === 'annual' ? (plan === 'starter' ? '$59.00' : '$149.00') : (plan === 'starter' ? '$9.00' : '$19.00'),
+            nextBillingDate: currentPeriodEnd,
+            invoiceId: session.invoice || session.id,
+          });
+        }
 
         break;
       }

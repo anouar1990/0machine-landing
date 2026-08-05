@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { sendSubscriptionReceiptEmail } from '../../lib/email';
 
 const getStripe = () => {
   const apiKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder_key';
@@ -37,6 +38,7 @@ export async function GET(req) {
     const cycle = session.metadata?.cycle || 'monthly';
     const customerId = typeof session.customer === 'object' ? session.customer?.id : session.customer;
     const subscriptionId = typeof session.subscription === 'object' ? session.subscription?.id : session.subscription;
+    const customerEmail = session.customer_details?.email || session.customer_email || (typeof session.customer === 'object' ? session.customer?.email : null);
 
     if (!isPaid) {
       return NextResponse.json({
@@ -46,13 +48,13 @@ export async function GET(req) {
       });
     }
 
+    const currentPeriodEnd = session.subscription && typeof session.subscription === 'object' && session.subscription.current_period_end
+      ? new Date(session.subscription.current_period_end * 1000).toISOString()
+      : new Date(Date.now() + (cycle === 'annual' ? 365 : 30) * 24 * 60 * 60 * 1000).toISOString();
+
     // Instant Sync: Ensure user_settings is updated immediately
     if (userId) {
       console.log(`[VERIFY SESSION] Performing instant sync for User ID: ${userId}...`);
-
-      const currentPeriodEnd = session.subscription && typeof session.subscription === 'object' && session.subscription.current_period_end
-        ? new Date(session.subscription.current_period_end * 1000).toISOString()
-        : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
       const { error: upsertErr } = await supabaseAdmin
         .from('user_settings')
@@ -75,6 +77,18 @@ export async function GET(req) {
       } else {
         console.log(`[VERIFY SESSION DB SUCCESS] User ${userId} updated to Plan: ${plan}, Status: active`);
       }
+    }
+
+    // Trigger Receipt Email Async
+    if (customerEmail) {
+      sendSubscriptionReceiptEmail({
+        userEmail: customerEmail,
+        planName: plan === 'starter' ? '0machine Starter' : '0machine Pro',
+        billingCycle: cycle,
+        amountPaid: cycle === 'annual' ? (plan === 'starter' ? '$59.00' : '$149.00') : (plan === 'starter' ? '$9.00' : '$19.00'),
+        nextBillingDate: currentPeriodEnd,
+        invoiceId: session.invoice || session.id,
+      }).catch(err => console.warn('[VERIFY SESSION EMAIL ERROR]:', err));
     }
 
     return NextResponse.json({
