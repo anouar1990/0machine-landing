@@ -139,26 +139,37 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5"
-          >
-            <motion.span
-              animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-              className="w-6 h-0.5 bg-white block"
-            />
-            <motion.span
-              animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
-              className="w-6 h-0.5 bg-white block"
-            />
-            <motion.span
-              animate={
-                mobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
-              }
-              className="w-6 h-0.5 bg-white block"
-            />
-          </button>
+          {/* Mobile Right Controls: Sign In Button + Hamburger Icon */}
+          <div className="flex md:hidden items-center gap-2.5">
+            <a
+              href="https://app.0machine.com"
+              onClick={() => trackEvent('cta_click', { button: 'navbar_signin_mobile_header' })}
+              className="text-xs font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/15 px-3 py-1.5 rounded-lg transition-all font-[Outfit]"
+            >
+              {t("nav.signin")}
+            </a>
+
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none"
+              aria-label="Toggle navigation menu"
+            >
+              <motion.span
+                animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+                className="w-6 h-0.5 bg-white block"
+              />
+              <motion.span
+                animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
+                className="w-6 h-0.5 bg-white block"
+              />
+              <motion.span
+                animate={
+                  mobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
+                }
+                className="w-6 h-0.5 bg-white block"
+              />
+            </button>
+          </div>
         </div>
       </motion.nav>
 
@@ -169,7 +180,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-dark-950/98 backdrop-blur-xl pt-24 px-8 md:hidden"
+            className="fixed inset-0 z-40 bg-dark-950/98 backdrop-blur-xl pt-24 px-8 md:hidden flex flex-col justify-between pb-12"
           >
             <div className="flex flex-col gap-6">
               {navLinks.map((link, i) => (
@@ -179,7 +190,7 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
+                  transition={{ delay: i * 0.08 }}
                   className="text-2xl font-semibold text-white font-[Outfit]"
                 >
                   {link.label}
@@ -190,8 +201,8 @@ export default function Navbar() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="mt-4 border-t border-white/5 pt-6"
+                transition={{ delay: 0.25 }}
+                className="mt-2 border-t border-white/5 pt-5"
               >
                 <p className="text-xs text-gray-500 mb-3 font-medium tracking-wide uppercase">Language</p>
                 <div className="flex gap-2">
@@ -217,16 +228,36 @@ export default function Navbar() {
                   ))}
                 </div>
               </motion.div>
+            </div>
+
+            {/* Mobile CTAs: Sign In & Start Free */}
+            <div className="flex flex-col gap-3 mt-6">
+              <motion.a
+                href="https://app.0machine.com"
+                onClick={() => {
+                  trackEvent('cta_click', { button: 'navbar_signin_mobile_drawer' });
+                  setMobileOpen(false);
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="w-full text-center py-3.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-white font-semibold text-base transition-all font-[Outfit]"
+              >
+                🔑 {t("nav.signin")}
+              </motion.a>
 
               <motion.a
                 href="https://app.0machine.com"
-                onClick={() => trackEvent('cta_click', { button: 'navbar_trial_mobile' })}
+                onClick={() => {
+                  trackEvent('cta_click', { button: 'navbar_trial_mobile' });
+                  setMobileOpen(false);
+                }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="glow-btn text-center mt-6 text-lg"
+                transition={{ delay: 0.35 }}
+                className="glow-btn text-center text-lg w-full"
               >
-                {t("nav.trial")}
+                ⚡ {t("nav.trial")}
               </motion.a>
             </div>
           </motion.div>
