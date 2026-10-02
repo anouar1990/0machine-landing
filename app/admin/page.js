@@ -32,6 +32,10 @@ export default function AdminDashboard() {
   const [designs, setDesigns] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [analyticsEvents, setAnalyticsEvents] = useState([]);
+
+  // Subscriptions & Risk Signal Filter States
+  const [subDateFilter, setSubDateFilter] = useState("30d"); // '7d' | '30d' | '90d' | 'all'
+  const [riskFilter, setRiskFilter] = useState("all"); // 'all' | 'never_returned' | 'never_activated' | 'inactive_pro' | 'highly_active'
   
   // Form states
   const [loading, setLoading] = useState(false);
@@ -240,11 +244,11 @@ export default function AdminDashboard() {
         if (!error && data) setBlogs(data);
       }
 
-      if (activeTab === "analytics" || activeTab === "overview" || activeTab === "funnel") {
+      if (activeTab === "analytics" || activeTab === "overview" || activeTab === "funnel" || activeTab === "subscriptions") {
         const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
         const { data: eventsData, error: eventsErr } = await supabase
           .from("analytics_events")
-          .select("event_name, created_at, page_path, referrer, session_id, metadata")
+          .select("event_name, created_at, page_path, referrer, session_id, metadata, user_id")
           .gte("created_at", ninetyDaysAgo)
           .order("created_at", { ascending: false });
         if (!eventsErr && eventsData) setAnalyticsEvents(eventsData);
@@ -502,6 +506,132 @@ export default function AdminDashboard() {
   const unreadMessagesCount = messages.filter(m => m.status === 'unread').length;
   const activeSubsCount = usersList.filter(u => u.subscription_status === 'active' || u.subscription_status === 'trialing').length;
 
+  // Helper to calculate MRR for individual user
+  const getUserMRR = (user) => {
+    if (!user) return 0;
+    if (user.subscription_status !== 'active' && user.subscription_status !== 'trialing' && user.plan !== 'pro') return 0;
+    if (user.subscription_price_id === 'price_1TuaQVGNkz6GTxuMi59lGKB5' || user.plan === 'industrial') return 69;
+    if (user.subscription_price_id === 'price_1TAtn4GNkz6GTxuMwTn9DjU3' || user.plan === 'starter' || user.plan === 'hobbyist') return 9;
+    return 19; // Standard Pro Workshop price
+  };
+
+  // Helper to analyze activity stats per user
+  const getUserActivityInfo = (user) => {
+    const userId = user.user_id;
+    const email = user.email ? user.email.toLowerCase() : "";
+
+    const userEvents = analyticsEvents.filter(e => 
+      (e.user_id && e.user_id === userId) || 
+      (email && e.metadata?.email && e.metadata.email.toLowerCase() === email)
+    );
+
+    let lastActiveMs = user.updated_at ? new Date(user.updated_at).getTime() : 0;
+    userEvents.forEach(e => {
+      const t = new Date(e.created_at).getTime();
+      if (t > lastActiveMs) lastActiveMs = t;
+    });
+
+    const signupMs = user.created_at ? new Date(user.created_at).getTime() : 0;
+    const nowMs = Date.now();
+    const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+
+    // Return after signup: activity timestamp > signup + 24h
+    const eventsAfter24h = userEvents.filter(e => new Date(e.created_at).getTime() > (signupMs + twentyFourHoursMs));
+    const hasReturnedAfter24h = (lastActiveMs > signupMs + twentyFourHoursMs) || eventsAfter24h.length > 0;
+    const isNeverReturned = signupMs > 0 && (nowMs - signupMs > twentyFourHoursMs) && !hasReturnedAfter24h;
+
+    // Core activation events: cost_calculated, project_created, quote_created, invoice_created, material_added, activated, ai_message_sent
+    const activationEvents = userEvents.filter(e => 
+      ['activated', 'cost_calculated', 'project_created', 'quote_created', 'invoice_created', 'material_added', 'ai_message_sent'].includes(e.event_name)
+    );
+    const isNeverActivated = activationEvents.length === 0;
+
+    // Inactive Pro user (>14 days)
+    const isPro = user.subscription_status === 'active' || user.subscription_status === 'trialing' || user.plan === 'pro';
+    const fourteenDaysMs = 14 * 24 * 60 * 60 * 1000;
+    const isInactivePro = isPro && (lastActiveMs === 0 || (nowMs - lastActiveMs > fourteenDaysMs));
+
+    // Highly active user: active across 3+ distinct days or 8+ events
+    const activeDaysCount = new Set(userEvents.map(e => e.created_at ? e.created_at.slice(0, 10) : '')).size;
+    const isHighlyActive = activeDaysCount >= 3 || userEvents.length >= 8;
+
+    return {
+      lastActiveMs,
+      isNeverReturned,
+      isNeverActivated,
+      isInactivePro,
+      isHighlyActive,
+      mrr: getUserMRR(user)
+    };
+  };
+
+  // Pre-calculate user activity list & risk signals
+  const usersWithStats = usersList.map(u => ({ user: u, stats: getUserActivityInfo(u) }));
+  
+  const neverReturnedUsers = usersWithStats.filter(item => item.stats.isNeverReturned);
+  const neverActivatedUsers = usersWithStats.filter(item => item.stats.isNeverActivated);
+  const inactiveProUsers = usersWithStats.filter(item => item.stats.isInactivePro);
+  const highlyActiveUsers = usersWithStats.filter(item => item.stats.isHighlyActive);
+
+  const inactiveProMRR = inactiveProUsers.reduce((sum, item) => sum + item.stats.mrr, 0);
+
+  // Subscriptions & Revenue Metrics Calculations
+  const freeUsersCount = usersList.filter(u => u.subscription_status !== 'active' && u.subscription_status !== 'trialing' && u.plan !== 'pro').length;
+  const proUsersCount = usersList.filter(u => u.subscription_status === 'active' || u.subscription_status === 'trialing' || u.plan === 'pro').length;
+  const activeSubsCountFull = usersList.filter(u => u.subscription_status === 'active' || u.subscription_status === 'trialing').length;
+  const currentMRR = usersList.reduce((sum, u) => sum + getUserMRR(u), 0);
+
+  // Time Period Filter metrics calculation (7d, 30d, 90d, all)
+  const getPeriodCutoffMs = (filter) => {
+    if (filter === '7d') return 7 * 24 * 60 * 60 * 1000;
+    if (filter === '30d') return 30 * 24 * 60 * 60 * 1000;
+    if (filter === '90d') return 90 * 24 * 60 * 60 * 1000;
+    return 0; // All time
+  };
+
+  const periodCutoffMs = getPeriodCutoffMs(subDateFilter);
+  const isWithinPeriod = (dateStr) => {
+    if (!dateStr || periodCutoffMs === 0) return true;
+    const t = new Date(dateStr).getTime();
+    return Date.now() - t <= periodCutoffMs;
+  };
+
+  const periodNewUpgrades = usersList.filter(u => 
+    (u.subscription_status === 'active' || u.plan === 'pro') && isWithinPeriod(u.created_at || u.updated_at)
+  ).length;
+
+  const periodCancellations = usersList.filter(u => 
+    (u.cancel_at_period_end === true || u.subscription_status === 'canceled') && isWithinPeriod(u.updated_at)
+  ).length;
+
+  const periodFailedPayments = usersList.filter(u => 
+    u.subscription_status === 'past_due' && isWithinPeriod(u.updated_at)
+  ).length;
+
+  const periodRevenue = usersList
+    .filter(u => (u.subscription_status === 'active' || u.plan === 'pro') && isWithinPeriod(u.created_at || u.updated_at))
+    .reduce((sum, u) => sum + getUserMRR(u), 0);
+
+  // Filtered users list for Subscriptions table
+  const getFilteredUsers = () => {
+    if (riskFilter === 'never_returned') return neverReturnedUsers.map(i => i.user);
+    if (riskFilter === 'never_activated') return neverActivatedUsers.map(i => i.user);
+    if (riskFilter === 'inactive_pro') return inactiveProUsers.map(i => i.user);
+    if (riskFilter === 'highly_active') return highlyActiveUsers.map(i => i.user);
+    return usersList;
+  };
+
+  const filteredUsersList = getFilteredUsers();
+
+  const formatLastActive = (ms) => {
+    if (!ms || ms === 0) return "Never";
+    const diffHours = Math.floor((Date.now() - ms) / (1000 * 60 * 60));
+    if (diffHours < 1) return "Just now";
+    if (diffHours < 24) return `${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ago`;
+  };
+
   return (
     <>
       <Navbar />
@@ -596,7 +726,178 @@ export default function AdminDashboard() {
           {/* 1. OVERVIEW TAB */}
           {activeTab === "overview" && (
             <div className="space-y-8">
-              {/* Stat Cards */}
+
+              {/* SECTION 1 — 🧠 USERS AT RISK */}
+              <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 border-b border-white/5 pb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-white font-[Outfit] flex items-center gap-2">
+                      <span>🧠</span> Users At Risk
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-0.5">Real database & activity retention signals for early 0machine users</p>
+                  </div>
+                  <div className="text-[10px] text-gray-500 font-mono">
+                    Click any card to filter users table
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Signal 1: Signed up, never returned */}
+                  <button
+                    type="button"
+                    onClick={() => { setRiskFilter('never_returned'); setActiveTab('subscriptions'); }}
+                    className={`text-left p-5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+                      riskFilter === 'never_returned' && activeTab === 'subscriptions'
+                        ? "bg-amber-500/15 border-amber-500/40 text-white shadow-lg shadow-amber-500/10"
+                        : "bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-amber-500/30"
+                    }`}
+                  >
+                    <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <span>⚠️</span> Signed up, never returned
+                    </div>
+                    <div className="text-3xl font-black text-white font-[Outfit]">{neverReturnedUsers.length}</div>
+                    <p className="text-xs text-gray-400 mt-1.5 leading-snug">Verified email, no activity after 24 hours</p>
+                  </button>
+
+                  {/* Signal 2: Verified but never activated */}
+                  <button
+                    type="button"
+                    onClick={() => { setRiskFilter('never_activated'); setActiveTab('subscriptions'); }}
+                    className={`text-left p-5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+                      riskFilter === 'never_activated' && activeTab === 'subscriptions'
+                        ? "bg-amber-500/15 border-amber-500/40 text-white shadow-lg shadow-amber-500/10"
+                        : "bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-amber-500/30"
+                    }`}
+                  >
+                    <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <span>⚠️</span> Verified, never activated
+                    </div>
+                    <div className="text-3xl font-black text-white font-[Outfit]">{neverActivatedUsers.length}</div>
+                    <p className="text-xs text-gray-400 mt-1.5 leading-snug">Zero core feature/calculator usage</p>
+                  </button>
+
+                  {/* Signal 3: Inactive Pro users */}
+                  <button
+                    type="button"
+                    onClick={() => { setRiskFilter('inactive_pro'); setActiveTab('subscriptions'); }}
+                    className={`text-left p-5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+                      riskFilter === 'inactive_pro' && activeTab === 'subscriptions'
+                        ? "bg-red-500/15 border-red-500/40 text-white shadow-lg shadow-red-500/10"
+                        : "bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-red-500/30"
+                    }`}
+                  >
+                    <div className="text-[11px] font-bold text-red-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <span>⚠️</span> Inactive Pro (14+ days)
+                    </div>
+                    <div className="text-3xl font-black text-white font-[Outfit]">{inactiveProUsers.length}</div>
+                    <p className="text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1">
+                      <span>${inactiveProMRR}</span> MRR from inactive Pro users
+                    </p>
+                  </button>
+
+                  {/* Signal 4: Highly active users */}
+                  <button
+                    type="button"
+                    onClick={() => { setRiskFilter('highly_active'); setActiveTab('subscriptions'); }}
+                    className={`text-left p-5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden ${
+                      riskFilter === 'highly_active' && activeTab === 'subscriptions'
+                        ? "bg-green-500/15 border-green-500/40 text-white shadow-lg shadow-green-500/10"
+                        : "bg-white/[0.02] border-white/5 hover:bg-white/[0.05] hover:border-green-500/30"
+                    }`}
+                  >
+                    <div className="text-[11px] font-bold text-green-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <span>🔥</span> Highly Active Users
+                    </div>
+                    <div className="text-3xl font-black text-white font-[Outfit]">{highlyActiveUsers.length}</div>
+                    <p className="text-xs text-gray-400 mt-1.5 leading-snug">Frequent multi-day workflow activity</p>
+                  </button>
+                </div>
+              </div>
+
+              {/* SECTION 2 — 💰 SUBSCRIPTIONS & REVENUE */}
+              <div className="bg-white/5 border border-white/5 rounded-2xl p-6 space-y-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-white font-[Outfit] flex items-center gap-2">
+                      <span>💰</span> Subscriptions & Revenue
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-0.5">Current subscription state & time-filtered financial performance</p>
+                  </div>
+
+                  {/* Time Filter Controls */}
+                  <div className="flex items-center gap-1 bg-dark-900 border border-white/10 p-1 rounded-xl text-xs">
+                    {[
+                      { id: "7d", label: "7 days" },
+                      { id: "30d", label: "30 days" },
+                      { id: "90d", label: "90 days" },
+                      { id: "all", label: "All time" },
+                    ].map(tf => (
+                      <button
+                        key={tf.id}
+                        type="button"
+                        onClick={() => setSubDateFilter(tf.id)}
+                        className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+                          subDateFilter === tf.id 
+                            ? "bg-accent-500 text-white font-semibold shadow-md shadow-accent-500/20" 
+                            : "text-gray-400 hover:text-white hover:bg-white/5"
+                        }`}
+                      >
+                        {tf.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CURRENT STATE METRICS */}
+                <div>
+                  <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">CURRENT STATE METRICS</div>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Free Users</span>
+                      <div className="text-2xl font-bold text-white font-[Outfit] mt-1">{freeUsersCount}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Pro Users</span>
+                      <div className="text-2xl font-bold text-accent-400 font-[Outfit] mt-1">{proUsersCount}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Active Subscriptions</span>
+                      <div className="text-2xl font-bold text-green-400 font-[Outfit] mt-1">{activeSubsCountFull}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Current MRR</span>
+                      <div className="text-2xl font-bold text-amber-400 font-[Outfit] mt-1">${currentMRR}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* PERIOD METRICS */}
+                <div>
+                  <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                    PERIOD METRICS ({subDateFilter.toUpperCase()})
+                  </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">New Upgrades</span>
+                      <div className="text-2xl font-bold text-blue-400 font-[Outfit] mt-1">{periodNewUpgrades}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Cancellations</span>
+                      <div className="text-2xl font-bold text-red-400 font-[Outfit] mt-1">{periodCancellations}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Failed Payments</span>
+                      <div className="text-2xl font-bold text-yellow-400 font-[Outfit] mt-1">{periodFailedPayments}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Period Revenue</span>
+                      <div className="text-2xl font-bold text-emerald-400 font-[Outfit] mt-1">${periodRevenue}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Stat Cards & Storage Overview */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 
                 {/* Card 1: Subscriptions */}
@@ -687,65 +988,209 @@ export default function AdminDashboard() {
 
           {/* 2. SUBSCRIPTIONS TAB */}
           {activeTab === "subscriptions" && (
-            <div className="bg-white/5 border border-white/5 rounded-2xl p-6 overflow-hidden">
-              <h3 className="text-lg font-bold text-white font-[Outfit] mb-4">User Subscriptions Dashboard</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="border-b border-white/10 text-gray-500 uppercase tracking-wider font-semibold">
-                      <th className="py-3 px-4">User Email</th>
-                      <th className="py-3 px-4">Status</th>
-                      <th className="py-3 px-4">Price ID / Tier</th>
-                      <th className="py-3 px-4">Stripe ID</th>
-                      <th className="py-3 px-4">Last Update</th>
-                      <th className="py-3 px-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {usersList.map((user) => (
-                      <tr key={user.user_id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                        <td className="py-3.5 px-4 font-medium text-white">{user.email || "No Email"}</td>
-                        <td className="py-3.5 px-4">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            user.subscription_status === 'active' || user.subscription_status === 'trialing'
-                              ? "bg-green-500/10 text-green-400" 
-                              : "bg-red-500/10 text-red-400"
-                          }`}>
-                            {user.subscription_status?.toUpperCase() || "INACTIVE"}
-                          </span>
-                        </td>
-                        <td className="py-3.5 px-4 text-gray-400 font-mono">
-                          {user.subscription_price_id === 'price_1TuaQPGNkz6GTxuMEEjO6kny' ? "Pro Workshop ($19)" :
-                           user.subscription_price_id === 'price_1TuaQVGNkz6GTxuMi59lGKB5' ? "Industrial ($69)" :
-                           user.subscription_price_id === 'price_1TAtn4GNkz6GTxuMwTn9DjU3' ? "Hobbyist ($9)" :
-                           "Free/Standard"}
-                        </td>
-                        <td className="py-3.5 px-4 text-gray-500 font-mono">{user.stripe_customer_id || "None"}</td>
-                        <td className="py-3.5 px-4 text-gray-500">{new Date(user.updated_at).toLocaleDateString()}</td>
-                        <td className="py-3.5 px-4 text-right">
-                          {user.stripe_customer_id ? (
-                            <a 
-                              href={getStripePortalLink(user.stripe_customer_id)} 
-                              target="_blank" 
-                              rel="noreferrer"
-                              className="text-accent-400 hover:underline inline-flex items-center gap-1 font-semibold"
-                            >
-                              <span>View Stripe</span>
-                            </a>
-                          ) : (
-                            <span className="text-gray-600">—</span>
-                          )}
-                        </td>
-                      </tr>
+            <div className="space-y-8">
+              
+              {/* SECTION 2 — 💰 SUBSCRIPTIONS & REVENUE BANNER */}
+              <div className="bg-white/5 border border-white/5 rounded-2xl p-6 space-y-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-white font-[Outfit] flex items-center gap-2">
+                      <span>💰</span> Subscriptions & Revenue Metrics
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-0.5">Real Stripe & Supabase user billing analytics</p>
+                  </div>
+
+                  {/* Time Filter Controls */}
+                  <div className="flex items-center gap-1 bg-dark-900 border border-white/10 p-1 rounded-xl text-xs">
+                    {[
+                      { id: "7d", label: "7 days" },
+                      { id: "30d", label: "30 days" },
+                      { id: "90d", label: "90 days" },
+                      { id: "all", label: "All time" },
+                    ].map(tf => (
+                      <button
+                        key={tf.id}
+                        type="button"
+                        onClick={() => setSubDateFilter(tf.id)}
+                        className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+                          subDateFilter === tf.id 
+                            ? "bg-accent-500 text-white font-semibold shadow-md shadow-accent-500/20" 
+                            : "text-gray-400 hover:text-white hover:bg-white/5"
+                        }`}
+                      >
+                        {tf.label}
+                      </button>
                     ))}
-                    {usersList.length === 0 && (
-                      <tr>
-                        <td colSpan="6" className="py-8 text-center text-gray-500">No active subscribers found.</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                  </div>
+                </div>
+
+                {/* CURRENT STATE METRICS */}
+                <div>
+                  <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">CURRENT STATE METRICS</div>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Free Users</span>
+                      <div className="text-2xl font-bold text-white font-[Outfit] mt-1">{freeUsersCount}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Pro Users</span>
+                      <div className="text-2xl font-bold text-accent-400 font-[Outfit] mt-1">{proUsersCount}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Active Subscriptions</span>
+                      <div className="text-2xl font-bold text-green-400 font-[Outfit] mt-1">{activeSubsCountFull}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Current MRR</span>
+                      <div className="text-2xl font-bold text-amber-400 font-[Outfit] mt-1">${currentMRR}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* PERIOD METRICS */}
+                <div>
+                  <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                    PERIOD METRICS ({subDateFilter.toUpperCase()})
+                  </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">New Upgrades</span>
+                      <div className="text-2xl font-bold text-blue-400 font-[Outfit] mt-1">{periodNewUpgrades}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Cancellations</span>
+                      <div className="text-2xl font-bold text-red-400 font-[Outfit] mt-1">{periodCancellations}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Failed Payments</span>
+                      <div className="text-2xl font-bold text-yellow-400 font-[Outfit] mt-1">{periodFailedPayments}</div>
+                    </div>
+                    <div className="bg-white/[0.02] border border-white/5 p-4 rounded-xl">
+                      <span className="text-xs text-gray-400 font-medium">Period Revenue</span>
+                      <div className="text-2xl font-bold text-emerald-400 font-[Outfit] mt-1">${periodRevenue}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* EXTENDED SUBSCRIPTIONS TABLE WITH RISK FILTERS */}
+              <div className="bg-white/5 border border-white/5 rounded-2xl p-6 overflow-hidden space-y-6">
+                
+                {/* Table Header & Risk Filter Tabs */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-4">
+                  <h3 className="text-lg font-bold text-white font-[Outfit]">User Subscriptions Directory</h3>
+                  
+                  {/* Signal Filter Badges */}
+                  <div className="flex flex-wrap gap-1.5 text-xs">
+                    {[
+                      { id: "all", label: `All Users (${usersList.length})` },
+                      { id: "never_returned", label: `⚠️ Never Returned (${neverReturnedUsers.length})` },
+                      { id: "never_activated", label: `⚠️ Never Activated (${neverActivatedUsers.length})` },
+                      { id: "inactive_pro", label: `⚠️ Inactive Pro (${inactiveProUsers.length})` },
+                      { id: "highly_active", label: `🔥 Highly Active (${highlyActiveUsers.length})` },
+                    ].map(f => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => setRiskFilter(f.id)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                          riskFilter === f.id
+                            ? "bg-accent-500/20 border-accent-500/50 text-white shadow-sm"
+                            : "bg-white/[0.02] border-white/5 text-gray-400 hover:text-white hover:bg-white/5"
+                        }`}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="border-b border-white/10 text-gray-500 uppercase tracking-wider font-semibold">
+                        <th className="py-3 px-4">User Email</th>
+                        <th className="py-3 px-4">Company</th>
+                        <th className="py-3 px-4">Plan / Tier</th>
+                        <th className="py-3 px-4">Status</th>
+                        <th className="py-3 px-4">Started</th>
+                        <th className="py-3 px-4">Last Payment / Period End</th>
+                        <th className="py-3 px-4 text-center">MRR</th>
+                        <th className="py-3 px-4 text-center">Last Active</th>
+                        <th className="py-3 px-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredUsersList.map((user) => {
+                        const activityStats = getUserActivityInfo(user);
+                        const userMRR = getUserMRR(user);
+                        const companyName = user.company_name || user.company || "—";
+
+                        return (
+                          <tr key={user.user_id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                            <td className="py-3.5 px-4 font-medium text-white">
+                              {user.email || "No Email"}
+                            </td>
+                            <td className="py-3.5 px-4 text-gray-400 font-medium">{companyName}</td>
+                            <td className="py-3.5 px-4 text-gray-300 font-mono">
+                              {user.subscription_price_id === 'price_1TuaQPGNkz6GTxuMEEjO6kny' ? "Pro Workshop" :
+                               user.subscription_price_id === 'price_1TuaQVGNkz6GTxuMi59lGKB5' ? "Industrial" :
+                               user.subscription_price_id === 'price_1TAtn4GNkz6GTxuMwTn9DjU3' ? "Hobbyist" :
+                               (user.plan?.toUpperCase() || "FREE")}
+                            </td>
+                            <td className="py-3.5 px-4">
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                user.subscription_status === 'active' || user.subscription_status === 'trialing'
+                                  ? "bg-green-500/10 text-green-400 border border-green-500/20" 
+                                  : user.subscription_status === 'past_due'
+                                  ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                  : "bg-red-500/10 text-red-400 border border-red-500/20"
+                              }`}>
+                                {user.subscription_status?.toUpperCase() || "INACTIVE"}
+                              </span>
+                            </td>
+                            <td className="py-3.5 px-4 text-gray-500">
+                              {user.created_at ? new Date(user.created_at).toLocaleDateString() : "—"}
+                            </td>
+                            <td className="py-3.5 px-4 text-gray-500">
+                              {user.current_period_end ? new Date(user.current_period_end).toLocaleDateString() : (user.updated_at ? new Date(user.updated_at).toLocaleDateString() : "—")}
+                            </td>
+                            <td className="py-3.5 px-4 text-center font-bold text-amber-400 font-mono">
+                              ${userMRR}/mo
+                            </td>
+                            <td className="py-3.5 px-4 text-center text-gray-400 font-mono">
+                              {formatLastActive(activityStats.lastActiveMs)}
+                            </td>
+                            <td className="py-3.5 px-4 text-right">
+                              {user.stripe_customer_id ? (
+                                <a 
+                                  href={getStripePortalLink(user.stripe_customer_id)} 
+                                  target="_blank" 
+                                  rel="noreferrer"
+                                  className="text-accent-400 hover:underline inline-flex items-center gap-1 font-semibold"
+                                >
+                                  <span>View Stripe</span>
+                                </a>
+                              ) : (
+                                <span className="text-gray-600">—</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+
+                      {filteredUsersList.length === 0 && (
+                        <tr>
+                          <td colSpan="9" className="py-12 text-center text-gray-400 font-medium">
+                            ✓ No users currently matching this signal.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
             </div>
           )}
 
