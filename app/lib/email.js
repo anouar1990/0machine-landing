@@ -22,10 +22,10 @@ export async function sendSubscriptionReceiptEmail({
 <head>
   <meta charset="utf-8">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0F1117; color: #F1F5F9; margin: 0; padding: 40px 20px; }
-    .container { max-width: 600px; margin: 0 auto; background: #1C2030; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #111317; color: #F1F5F9; margin: 0; padding: 40px 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: #1A1D21; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
     .header { text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 24px; margin-bottom: 24px; }
-    .logo { font-size: 24px; font-weight: 900; color: #FF6B35; text-transform: uppercase; letter-spacing: 2px; }
+    .logo { font-size: 24px; font-weight: 900; color: #FE7733; text-transform: uppercase; letter-spacing: 2px; }
     .badge { display: inline-block; background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 700; font-size: 11px; padding: 4px 12px; border-radius: 50px; text-transform: uppercase; margin-top: 8px; }
     .title { font-size: 22px; font-weight: 800; color: #FFFFFF; margin-top: 16px; margin-bottom: 8px; }
     .text { font-size: 14px; color: #94A3B8; line-height: 1.6; margin-bottom: 20px; }
@@ -34,11 +34,11 @@ export async function sendSubscriptionReceiptEmail({
     .row:last-child { border-bottom: none; }
     .label { color: #8B95A8; }
     .value { font-weight: 700; color: #FFFFFF; text-align: right; }
-    .highlight { color: #FF6B35; }
+    .highlight { color: #FE7733; }
     .section-title { font-size: 15px; font-weight: 700; color: #FFFFFF; margin-top: 24px; margin-bottom: 8px; }
-    .btn { display: block; width: 100%; text-align: center; background: #FF6B35; color: #FFFFFF; font-weight: 700; font-size: 14px; padding: 14px 0; border-radius: 12px; text-decoration: none; margin-top: 24px; }
+    .btn { display: block; width: 100%; text-align: center; background: #FE7733; color: #FFFFFF; font-weight: 700; font-size: 14px; padding: 14px 0; border-radius: 12px; text-decoration: none; margin-top: 24px; }
     .footer { text-align: center; font-size: 12px; color: #64748B; margin-top: 32px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; }
-    .support-link { color: #FF6B35; text-decoration: none; font-weight: 600; }
+    .support-link { color: #FE7733; text-decoration: none; font-weight: 600; }
   </style>
 </head>
 <body>

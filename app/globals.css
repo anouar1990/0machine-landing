@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-dark-950: #030712;
-  --color-dark-900: #0a0f1a;
-  --color-dark-800: #111827;
-  --color-dark-700: #1a2332;
-  --color-dark-600: #243044;
-  --color-dark-500: #374151;
-  --color-accent-500: #e8622c;
-  --color-accent-400: #f07a48;
-  --color-accent-600: #d4531f;
-  --color-accent-300: #f5a070;
-  --color-glow: rgba(232, 98, 44, 0.4);
-  --color-glow-subtle: rgba(232, 98, 44, 0.15);
+  --color-dark-950: #111317;
+  --color-dark-900: #1A1D21;
+  --color-dark-800: #23262C;
+  --color-dark-700: #2B2F37;
+  --color-dark-600: #333842;
+  --color-dark-500: #444A57;
+  --color-accent-500: #FE7733;
+  --color-accent-400: #FF925C;
+  --color-accent-600: #E85F20;
+  --color-accent-300: #FFB189;
+  --color-glow: rgba(254, 119, 51, 0.4);
+  --color-glow-subtle: rgba(254, 119, 51, 0.15);
   --color-glass: rgba(255, 255, 255, 0.05);
   --color-glass-border: rgba(255, 255, 255, 0.08);
   --font-sans: 'Inter', 'system-ui', sans-serif;
@@ -26,7 +26,7 @@ html {
 }
 
 body {
-  background-color: #030712;
+  background-color: #111317;
   color: #e5e7eb;
   font-family: 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
@@ -39,14 +39,14 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0f1a;
+  background: #1A1D21;
 }
 ::-webkit-scrollbar-thumb {
-  background: #374151;
+  background: #444A57;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #e8622c;
+  background: #FE7733;
 }
 
 /* Custom utilities */
@@ -58,9 +58,9 @@ body {
 /* Animated gradient mesh background */
 .gradient-mesh {
   background: 
-    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(232, 98, 44, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(254, 119, 51, 0.08) 0%, transparent 70%),
     radial-gradient(ellipse 60% 40% at 80% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 60% at 50% 80%, rgba(232, 98, 44, 0.04) 0%, transparent 70%);
+    radial-gradient(ellipse 50% 60% at 50% 80%, rgba(254, 119, 51, 0.04) 0%, transparent 70%);
 }
 
 /* Glassmorphism card */
@@ -83,15 +83,15 @@ body {
 
 .glass-card-hover:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(232, 98, 44, 0.2);
-  box-shadow: 0 0 40px rgba(232, 98, 44, 0.08);
+  border-color: rgba(254, 119, 51, 0.2);
+  box-shadow: 0 0 40px rgba(254, 119, 51, 0.08);
   transform: translateY(-4px);
 }
 
 /* Glowing CTA Button */
 .glow-btn {
   position: relative;
-  background: linear-gradient(135deg, #e8622c, #d4531f);
+  background: linear-gradient(135deg, #FE7733, #E85F20);
   color: white;
   font-weight: 600;
   padding: 14px 32px;
@@ -106,7 +106,7 @@ body {
   content: '';
   position: absolute;
   inset: -2px;
-  background: linear-gradient(135deg, #e8622c, #f07a48, #e8622c);
+  background: linear-gradient(135deg, #FE7733, #FF925C, #FE7733);
   border-radius: 16px;
   z-index: -1;
   opacity: 0;
@@ -116,7 +116,7 @@ body {
 
 .glow-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(232, 98, 44, 0.4);
+  box-shadow: 0 8px 32px rgba(254, 119, 51, 0.4);
 }
 
 .glow-btn:hover::before {
@@ -136,8 +136,8 @@ body {
 }
 
 .glow-btn-outline:hover {
-  border-color: rgba(232, 98, 44, 0.5);
-  background: rgba(232, 98, 44, 0.08);
+  border-color: rgba(254, 119, 51, 0.5);
+  background: rgba(254, 119, 51, 0.08);
   transform: translateY(-2px);
 }
 
@@ -171,14 +171,14 @@ body {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #e8622c 50%, #f07a48 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #FE7733 50%, #FF925C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-accent {
-  background: linear-gradient(135deg, #e8622c, #f5a070);
+  background: linear-gradient(135deg, #FE7733, #FFB189);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -211,7 +211,7 @@ body {
 
 /* Section divider glow */
 .section-glow-top {
-  background: linear-gradient(to bottom, rgba(232, 98, 44, 0.06), transparent);
+  background: linear-gradient(to bottom, rgba(254, 119, 51, 0.06), transparent);
   height: 200px;
   position: absolute;
   top: 0;
@@ -263,7 +263,7 @@ body {
   content: '';
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, #e8622c, #f07a48, #e8622c);
+  background: linear-gradient(135deg, #FE7733, #FF925C, #FE7733);
   border-radius: 21px;
   z-index: -1;
 }
