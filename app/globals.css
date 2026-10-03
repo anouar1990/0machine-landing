@@ -11,8 +11,10 @@
   --color-accent-400: #FF925C;
   --color-accent-600: #E85F20;
   --color-accent-300: #FFB189;
+  --color-neon-sprout: #B1FA63;
   --color-glow: rgba(254, 119, 51, 0.4);
   --color-glow-subtle: rgba(254, 119, 51, 0.15);
+  --color-glow-neon: rgba(177, 250, 99, 0.3);
   --color-glass: rgba(255, 255, 255, 0.05);
   --color-glass-border: rgba(255, 255, 255, 0.08);
   --font-sans: 'Inter', 'system-ui', sans-serif;

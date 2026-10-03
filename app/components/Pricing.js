@@ -75,7 +75,7 @@ export default function Pricing() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <span className="text-xs text-[#FE7733] tracking-[0.2em] uppercase font-bold">
+          <span className="text-xs text-[#B1FA63] tracking-[0.2em] uppercase font-bold">
             TRANSPARENT PRICING
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-3 mb-4 font-[Outfit]">
@@ -108,7 +108,7 @@ export default function Pricing() {
               }`}
             >
               Annual Billing
-              <span className="absolute -top-3 -right-3 bg-emerald-500 text-white text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full shadow">
+              <span className="absolute -top-3 -right-3 bg-[#B1FA63] text-[#111317] text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full shadow">
                 Save 45%
               </span>
             </button>
@@ -125,12 +125,12 @@ export default function Pricing() {
               transition={{ delay: i * 0.12, duration: 0.6 }}
               className={`relative flex flex-col h-full rounded-2xl p-8 border transition-all ${
                 plan.highlighted
-                  ? "bg-[#23262C] border-[#FE7733] shadow-2xl shadow-[#FE7733]/10 scale-105"
+                  ? "bg-[#23262C] border-[#B1FA63] shadow-2xl shadow-[#B1FA63]/10 scale-105"
                   : "bg-[#1A1D21] border-white/10 hover:border-white/20"
               }`}
             >
               {plan.badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#FE7733] text-white text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#B1FA63] text-[#111317] text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
                   {plan.badge}
                 </div>
               )}
