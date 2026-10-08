@@ -1,3 +1,5 @@
+import { EmailService } from "./email-service";
+
 export async function sendSubscriptionReceiptEmail({
   userEmail,
   planName = '0machine Pro',
@@ -6,7 +8,6 @@ export async function sendSubscriptionReceiptEmail({
   nextBillingDate,
   invoiceId = ''
 }) {
-  const apiKey = process.env.RESEND_API_KEY;
   if (!userEmail) return;
 
   const formattedCycle = billingCycle === 'annual' ? 'Annual (1 Year)' : 'Monthly (1 Month)';
@@ -74,52 +75,21 @@ export async function sendSubscriptionReceiptEmail({
       If you ever experience any issue, need help setting up your laser machine presets or material stock inventory, our team is here for you. Simply contact us anytime at <a href="mailto:0machine@cooldelo.com" class="support-link">0machine@cooldelo.com</a>.
     </div>
 
-    <div class="section-title">💡 Have Feature Ideas for 0Machine?</div>
-    <div class="text">
-      We build 0Machine specifically for makers and workshop owners! If there's a feature, tool, or calculator you'd love to see added inside the app, send your suggestions directly to our support team at <a href="mailto:0machine@cooldelo.com" class="support-link">0machine@cooldelo.com</a> — we review every idea carefully!
-    </div>
-
     <a href="https://app.0machine.com" class="btn">Launch Workshop Dashboard →</a>
 
     <div class="footer">
-      0Machine SaaS Workshop Operating System · <a href="https://app.0machine.com" class="support-link">app.0machine.com</a><br>
-      Support & Feature Requests: <a href="mailto:0machine@cooldelo.com" class="support-link">0machine@cooldelo.com</a>
+      0Machine SaaS Workshop Operating System · <a href="https://app.0machine.com" class="support-link">app.0machine.com</a>
     </div>
   </div>
 </body>
 </html>
   `;
 
-  console.log(`[EMAIL RECEIPT] Processing receipt email for: ${userEmail}`);
-
-  if (!apiKey || apiKey.startsWith('re_placeholder')) {
-    console.log(`[EMAIL RECEIPT] Resend API key missing or placeholder. Logging receipt details:\nTarget: ${userEmail}\nNext Billing: ${formattedDate}\nSupport: 0machine@cooldelo.com`);
-    return { success: true, mock: true };
-  }
-
-  try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        from: '0Machine Support <0machine@cooldelo.com>',
-        to: [userEmail],
-        subject: `🎉 Welcome to ${planName} — Subscription Receipt & Next Renewal Date`,
-        html: htmlContent,
-      }),
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      console.warn('[EMAIL RECEIPT WARNING] Resend API error response:', data);
-    } else {
-      console.log(`[EMAIL RECEIPT SUCCESS] Receipt email sent to ${userEmail}. ID: ${data.id}`);
-    }
-    return data;
-  } catch (err) {
-    console.error('[EMAIL RECEIPT ERROR]:', err);
-  }
+  console.log(`[EMAIL SERVICE RECEIPT] Routing subscription receipt email for: ${userEmail}`);
+  return await EmailService.send({
+    to: userEmail,
+    subject: `🎉 Welcome to ${planName} — Subscription Receipt & Next Renewal Date`,
+    html: htmlContent,
+    purpose: "transactional"
+  });
 }
