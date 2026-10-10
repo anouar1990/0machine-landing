@@ -1,11 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
 import { AwsSesProvider } from "./providers/ses.js";
 import { ResendProvider } from "./providers/resend.js";
 import { SmtpProvider } from "./providers/smtp.js";
+import { supabaseAdmin as supabase } from "../supabase-admin.js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://kfydsuuelaxaffntdjxh.supabase.co";
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseServiceKey || "");
 
 export class ProviderManager {
   static getProviderInstance(record) {
