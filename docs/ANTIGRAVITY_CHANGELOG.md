@@ -517,7 +517,18 @@
 - **Tests Performed**:
   - `git commit --allow-empty`: PASS
   - `git push origin main`: PASS (`13e2f7a..5fdf87c` and `5fdf87c..21c62f4`)
-- **Test Results**:
-  - Fresh commits delivered to GitHub `main` branch.
+- **Known Issues**: None
+
+## [2026-10-10 23:26:00] - Configure allowScripts for sharp & unrs-resolver in package.json
+- **Task**: Address `npm warn install-scripts` lifecycle scripts warning by explicitly adding `allowScripts` configuration in `0machine-landing/package.json` for `sharp` and `unrs-resolver`.
+- **Files Modified**:
+  - `0machine-landing/package.json`
+  - `0machine-landing/docs/ANTIGRAVITY_CHANGELOG.md`
+  - `docs/ANTIGRAVITY_CHANGELOG.md`
+- **Tests Performed**:
+  - `npm run build` in `0machine-landing`: PASS (All 38 static/dynamic routes compiled in 3.2s)
+  - `git push origin main`: PASS
+- **Test Results**: Clean production build with approved lifecycle scripts configuration.
 - **Current Status**: COMPLETE
 - **Known Issues**: None
+
