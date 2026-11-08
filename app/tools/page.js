@@ -2,19 +2,19 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ParticleField from "../components/ParticleField";
-import { Box, Calculator, Layers, Cpu, ArrowRight, ShieldCheck, Zap, Download, Sparkles } from "lucide-react";
+import { Box, Calculator, Layers, Cpu, ArrowRight, ShieldCheck, Zap, Download, Sparkles, Grid } from "lucide-react";
 import Link from "next/link";
 
 export default function ToolsHubPage() {
   const tools = [
     {
-      title: "LaserAI Prompt-to-Vector Studio",
-      desc: "Turn text prompts into production-ready closed vector contours with separate Cut (#EF4444) and Engrave (#000000) layers in under 3 seconds.",
-      href: "/#laser-ai",
-      icon: Sparkles,
-      badge: "⚡ AI Vector Engine",
-      action: "Generate Vector Now →",
-      features: ["Prompt-to-SVG in 2.1s", "Automatic Kerf Compensation", "Keychain & Stencil Modes", "Direct LightBurn C00/C01 Layers"],
+      title: "Job Cost & Quote Calculator",
+      desc: "Calculate true production costs by factoring cutting speeds, pierce times, material unit cost, gas consumption, electricity, and labor.",
+      href: "/calculator",
+      icon: Calculator,
+      badge: "💰 Profit Optimizer",
+      action: "Open Cost Calculator →",
+      features: ["Real-Time Selling Price Formula", "Electricity & Machine Wear Rates", "Dynamic Margin Percentage", "Client-Ready PDF Estimates & WhatsApp"],
     },
     {
       title: "Free Laser Box Generator",
@@ -26,40 +26,40 @@ export default function ToolsHubPage() {
       features: ["Custom W × H × D & Thickness", "Automatic Kerf Offset (0.15mm)", "1-Click DXF & SVG Export", "100% Free · No Sign Up"],
     },
     {
-      title: "Job Cost & Quote Calculator",
-      desc: "Calculate true production costs by factoring cutting speeds, pierce times, material unit cost, gas consumption, electricity, and labor.",
-      href: "/calculator",
-      icon: Calculator,
-      badge: "💰 Profit Optimizer",
-      action: "Open Cost Calculator →",
-      features: ["Real-Time Selling Price Formula", "Electricity & Machine Wear Rates", "Dynamic Margin Percentage", "Client-Ready PDF Estimates"],
+      title: "Laser Power & Speed Test Matrix",
+      desc: "Generate custom speed vs. power calibration grids with kerf test slits for CO2, Fiber, and Diode lasers. Zero test waste on new material batches.",
+      href: "/tools/test-matrix",
+      icon: Grid,
+      badge: "⚡ Zero Guesswork",
+      action: "Generate Test Matrix →",
+      features: ["Speed & Power Step Grids", "Kerf Slits for Friction Fit", "LightBurn C00/C01 Layer Export", "CO2, Fiber & Diode Calibrated"],
     },
     {
-      title: "Commercial Vector Designs Vault",
-      desc: "Browse 5,000+ battle-tested commercial laser design packs with full resale rights. 3D multilayer shadowboxes, living hinges, earrings, and wall clocks.",
-      href: "/#designs-vault",
-      icon: Sparkles,
-      badge: "💎 5,000+ Packs",
-      action: "Explore Vault Packs →",
-      features: ["Commercial Resale License", "SVG · DXF · PDF · AI", "Color-Coded CAM Layers", "Tested on CO2 & Fiber Lasers"],
+      title: "Laser Living Hinge Generator",
+      desc: "Parametric flexible wood lattice patterns. Bend rigid 3mm–6mm plywood and acrylic into smooth curved boxes, notebook spines, and lamps.",
+      href: "/tools/living-hinge",
+      icon: Layers,
+      badge: "🌀 Flexible Wood CAD",
+      action: "Generate Living Hinge →",
+      features: ["Custom Width, Height & Cut Length", "Staggered Lattice Slit Layout", "Instant LightBurn SVG & DXF", "3-6mm Plywood Tolerances"],
     },
     {
-      title: "True-Shape Sheet Nesting",
-      desc: "ClipperLib polygon collision detection packs irregular shapes tightly on full sheets and remnant off-cuts to save 30-40% in scrap.",
-      href: "https://app.0machine.com",
+      title: "Laser & CNC Sheet Nesting Estimator",
+      desc: "Calculate exact parts per sheet, sheet yield percentage, scrap waste, and material costs. Stop guessing sheet quantities on production runs.",
+      href: "/tools/nesting",
       icon: Layers,
       badge: "🧩 Scrap Reducer",
-      action: "Launch Nesting Studio →",
-      features: ["Multi-Sheet Packing", "Remnant Off-Cut Utilization", "LightBurn & Ruida Ready", "Immediate SVG/DXF Export"],
+      action: "Estimate Sheet Yield →",
+      features: ["Standard Bed Presets (600×400, 1200×600)", "90° Rotational Optimization", "Total Material Cost & Gross Profit", "Instant Scrap Waste %"],
     },
     {
-      title: "Laser Speed & Power Presets",
-      desc: "Zero-guesswork machine database for CO2, Fiber, and Diode lasers across plywood, acrylic, MDF, leather, and stainless steel.",
-      href: "https://app.0machine.com",
-      icon: Cpu,
-      badge: "⚡ Zero Test Waste",
-      action: "Explore Presets Hub →",
-      features: ["Material Thickness Lookup (3-12mm)", "Frequency & Assist Gas Settings", "LightBurn Layer Color Sync", "Custom Machine Profiles"],
+      title: "LaserAI Prompt-to-Vector Studio",
+      desc: "Turn text prompts into production-ready closed vector contours with separate Cut (#EF4444) and Engrave (#000000) layers in under 3 seconds.",
+      href: "/#laser-ai",
+      icon: Sparkles,
+      badge: "🤖 AI Vector Engine",
+      action: "Generate Vector Now →",
+      features: ["Prompt-to-SVG in 2.1s", "Automatic Kerf Compensation", "Keychain & Stencil Modes", "Direct LightBurn C00/C01 Layers"],
     },
   ];
 
@@ -86,31 +86,31 @@ export default function ToolsHubPage() {
           </div>
 
           {/* Tools Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-20">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
             {tools.map((tool) => {
               const Icon = tool.icon;
               return (
                 <div
                   key={tool.title}
-                  className="bg-[#1A1D21] border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all flex flex-col justify-between group"
+                  className="bg-[#1A1D21] border border-white/10 rounded-2xl p-6 sm:p-7 hover:border-white/20 transition-all flex flex-col justify-between group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-5">
                       <div className="w-12 h-12 rounded-xl bg-[#23262C] border border-white/10 flex items-center justify-center text-[#FE7733] group-hover:scale-110 transition-transform">
                         <Icon size={24} />
                       </div>
-                      <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-[#B1FA63]/10 text-[#B1FA63] border border-[#B1FA63]/20">
+                      <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#B1FA63]/10 text-[#B1FA63] border border-[#B1FA63]/20">
                         {tool.badge}
                       </span>
                     </div>
 
-                    <h2 className="text-2xl font-bold text-white mb-2 font-[Outfit]">{tool.title}</h2>
-                    <p className="text-gray-400 text-sm leading-relaxed mb-6">{tool.desc}</p>
+                    <h2 className="text-xl font-bold text-white mb-2 font-[Outfit]">{tool.title}</h2>
+                    <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-6">{tool.desc}</p>
 
-                    <ul className="space-y-2.5 mb-8">
+                    <ul className="space-y-2 mb-6">
                       {tool.features.map((feat, idx) => (
-                        <li key={idx} className="flex items-center gap-2.5 text-xs text-gray-300">
-                          <ShieldCheck size={14} className="text-[#10B981] flex-shrink-0" />
+                        <li key={idx} className="flex items-center gap-2 text-xs text-gray-300">
+                          <ShieldCheck size={13} className="text-[#10B981] flex-shrink-0" />
                           <span>{feat}</span>
                         </li>
                       ))}
@@ -119,7 +119,7 @@ export default function ToolsHubPage() {
 
                   <Link
                     href={tool.href}
-                    className="w-full text-center py-3.5 px-6 rounded-xl font-bold text-sm bg-white/5 hover:bg-[#FE7733] hover:text-white text-gray-200 border border-white/10 transition-all flex items-center justify-center gap-2 group-hover:border-[#FE7733]"
+                    className="w-full text-center py-3 px-4 rounded-xl font-bold text-xs bg-white/5 hover:bg-[#FE7733] hover:text-white text-gray-200 border border-white/10 transition-all flex items-center justify-center gap-1.5 group-hover:border-[#FE7733]"
                   >
                     <span>{tool.action}</span>
                   </Link>
@@ -135,7 +135,7 @@ export default function ToolsHubPage() {
               Manage Your Whole Workshop From One Screen
             </h3>
             <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto mb-8">
-              Keep your inventory synchronized, save client quotes, track live machine jobs, and export nested sheets directly to LightBurn.
+              Keep your inventory synchronized, save client quotes, track live machine jobs, and export nested sheets directly to LightBurn with 0Machine Pro.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
@@ -160,4 +160,3 @@ export default function ToolsHubPage() {
     </>
   );
 }
-

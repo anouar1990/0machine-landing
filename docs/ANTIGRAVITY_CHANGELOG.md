@@ -1415,3 +1415,47 @@
 - **Test Results**: All pre- and post-deployment checks PASS (100%).
 - **Current Status**: COMPLETE
 - **Known Issues**: None
+
+## [2026-11-08 19:20:00] - 0Machine SEO Content Engine: Free Tools to SEO Blogs to Paid Tool Conversions
+- **Task**: Design and implement a complete organic SEO acquisition engine for 0Machine: audit all free tools, author 12 comprehensive SEO articles (2 per free tool: High Search Intent + Educational), generate 12 original AI visuals with Nano Banana, deploy 3 new dedicated free web tools with CAD export, and implement dynamic XML sitemaps and schema markup.
+- **Architectural Deliverables**:
+  - **Master Free Tools Inventory**: Audited and documented all 6 free tools: Job Cost Calculator (`/calculator`), Laser Box Generator (`/tools/box-generator`), Laser Power & Speed Test Matrix (`/tools/test-matrix`), Laser Living Hinge Generator (`/tools/living-hinge`), Sheet Nesting Estimator (`/tools/nesting`), and LaserAI Prompt-to-Vector Studio (`/#laser-ai`).
+  - **3 New Dedicated Free Web Tools Built**:
+    - `0machine-landing/app/tools/test-matrix/page.js`: Speed vs. power calibration grid with kerf test slits and DXF/SVG export.
+    - `0machine-landing/app/tools/living-hinge/page.js`: Parametric flexible wood lattice generator with kerf allowances and DXF/SVG export.
+    - `0machine-landing/app/tools/nesting/page.js`: Sheet yield, parts-per-sheet, scrap waste %, and material profit calculator with 90° rotational optimization.
+    - `0machine-landing/app/lib/cad-export.js`: AutoCAD R12 DXF and LightBurn C00/C01 layer vector export engine.
+    - `0machine-landing/app/tools/page.js`: Re-engineered Tools Hub connecting all 6 free tools directly.
+  - **12 Original SEO Featured Images**: Generated via `image-generator` (Nano Banana) in 16:9 photorealistic industrial SaaS aesthetic and saved to `0machine-landing/public/assets/blog/`.
+  - **12 Authoritative SEO Articles Written & Seeded**:
+    - 6 High Search Intent + 6 Educational articles authored with mathematical shop formulas, LightBurn layer guidelines, step-by-step instructions, and FAQ sections.
+    - Strategic 4-stage CTAs linking free tools to 0Machine Pro capabilities (WhatsApp Invoices, CRM, True-Shape Polygon Nesting, Materials Inventory).
+    - Seeded into Supabase `blogs` table (12 live records) and committed to `0machine-landing/app/content/blogs.json` for resilient fallback.
+  - **Technical SEO Infrastructure**:
+    - `0machine-landing/app/sitemap.js`: Dynamic Next.js sitemap generator yielding `/sitemap.xml` across all core routes, tools, and 12 blog posts with daily change frequency.
+    - `0machine-landing/app/robots.js`: Dynamic `/robots.txt` referencing sitemap.
+    - `0machine-landing/app/blog/[slug]/page.js`: Upgraded with JSON-LD `BlogPosting`, `BreadcrumbList`, and `FAQPage` structured data, canonical tags, reading time, author bio, and related resources.
+    - `0machine-landing/app/blog/page.js`: Upgraded with category filters ("Cost & Quoting", "Boxes & Kerf", "Test & Calibration", "Living Hinges", "Nesting & Scrap", "AI & Vectors"), live search, and featured hero article.
+- **Files Created**:
+  - `0machine-landing/app/tools/test-matrix/page.js`
+  - `0machine-landing/app/tools/living-hinge/page.js`
+  - `0machine-landing/app/tools/nesting/page.js`
+  - `0machine-landing/app/lib/cad-export.js`
+  - `0machine-landing/app/sitemap.js`
+  - `0machine-landing/app/robots.js`
+  - `0machine-landing/app/content/blogs.json`
+  - `0machine-landing/public/assets/blog/*` (12 images)
+- **Files Modified**:
+  - `0machine-landing/app/tools/page.js`
+  - `0machine-landing/app/blog/page.js`
+  - `0machine-landing/app/blog/[slug]/page.js`
+  - `docs/ANTIGRAVITY_CHANGELOG.md`
+  - `0machine-landing/docs/ANTIGRAVITY_CHANGELOG.md`
+- **Tests Performed**:
+  - Full Next.js production build (`npm run build` in `0machine-landing`): PASS (63/63 static & SSG routes compiled cleanly in 4.1s).
+  - Supabase database sync script: PASS (12 articles upserted, count verified).
+  - Local HTTP status checks on `/sitemap.xml`, `/robots.txt`, `/tools/*`, `/blog/*`: PASS (All HTTP 200 OK).
+  - JSON-LD structured data schema validation: PASS (`BlogPosting`, `BreadcrumbList`, `FAQPage`).
+- **Test Results**: All tests PASS (100% success rate).
+- **Current Status**: COMPLETE
+- **Known Issues**: None
