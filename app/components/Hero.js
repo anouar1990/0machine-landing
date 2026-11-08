@@ -1,49 +1,105 @@
 "use client";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { trackEvent } from "../lib/analytics";
 
+const HERO_TABS = [
+  {
+    id: "vault",
+    label: "💎 Designs Vault",
+    shortLabel: "Designs",
+    path: "app.0machine.com/library",
+    src: "/screenshots/screenshot-designs-vault.png",
+    alt: "0Machine Commercial Designs Vault with 5,000+ Ready-to-Cut Vector Packs",
+    tag: "5,000+ Ready-to-Cut",
+    badge: "Commercial License",
+  },
+  {
+    id: "laser-ai",
+    label: "🤖 LaserAI Studio",
+    shortLabel: "LaserAI",
+    path: "app.0machine.com/laser-ai",
+    src: "/screenshots/screenshot-laser-ai.png",
+    alt: "0Machine LaserAI Studio Text-to-Vector Generator for laser cut designs",
+    tag: "Prompt to SVG/DXF",
+    badge: "Kerf-Compensated",
+  },
+  {
+    id: "nesting",
+    label: "🧩 Nesting Studio",
+    shortLabel: "Nesting",
+    path: "app.0machine.com/nesting",
+    src: "/screenshots/screenshot-nesting.png",
+    alt: "0Machine True-Shape Nesting Studio with ClipperLib collision detection and sheet yield HUD",
+    tag: "30-40% Less Scrap",
+    badge: "ClipperLib Engine",
+  },
+  {
+    id: "dashboard",
+    label: "📊 Workshop Hub",
+    shortLabel: "Dashboard",
+    path: "app.0machine.com/dashboard",
+    src: "/screenshots/screenshot-dashboard.png",
+    alt: "0Machine Workshop Hub with live revenue analytics, order status, and inventory alerts",
+    tag: "Workshop Hub",
+    badge: "Live Telemetry",
+  },
+];
+
 export default function Hero() {
   const { t } = useLanguage();
+  const [activeTab, setActiveTab] = useState(0);
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
-  const mockupY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
+  const mockupY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+
+  const currentTab = HERO_TABS[activeTab];
 
   return (
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-20"
     >
-      {/* Background effects */}
-      <div className="absolute inset-0 gradient-mesh" />
-      <div className="absolute inset-0 grid-pattern" />
+      {/* Background AI Workshop Visual Integration */}
+      <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none">
+        <img
+          src="/assets/hero-laser-workshop.jpg"
+          alt="0Machine Fiber Laser Precision Workshop Cutting Nested Sheets"
+          className="w-full h-full object-cover object-center opacity-20 mix-blend-luminosity filter blur-[1px] scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-950/85 via-dark-950/80 to-dark-950" />
+        <div className="absolute inset-0 bg-gradient-to-r from-dark-950 via-transparent to-dark-950 opacity-90" />
+      </div>
 
-      {/* Radial glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-accent-500/5 rounded-full blur-[120px]" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[100px]" />
+      {/* Ambient glowing meshes */}
+      <div className="absolute inset-0 gradient-mesh opacity-70 pointer-events-none -z-10" />
+      <div className="absolute inset-0 grid-pattern opacity-40 pointer-events-none -z-10" />
+
+      {/* Radial soft laser ambient glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-accent-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 left-1/4 w-[450px] h-[450px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       <motion.div
         style={{ opacity, scale }}
-        className="relative z-10 max-w-7xl mx-auto px-6 text-center"
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center"
       >
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-500/20 bg-accent-500/5 mb-8"
+          transition={{ delay: 0.15 }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-500/30 bg-accent-500/10 backdrop-blur-md mb-8 shadow-lg shadow-accent-500/10"
         >
-          <span className="w-2 h-2 rounded-full bg-accent-500 animate-pulse" />
-          <span className="text-xs text-accent-400 font-medium tracking-wide">
+          <span className="w-2 h-2 rounded-full bg-accent-400 animate-pulse" />
+          <span className="text-xs text-accent-300 font-semibold tracking-wide">
             {t("hero.badge")}
           </span>
         </motion.div>
@@ -52,11 +108,11 @@ export default function Hero() {
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-5xl sm:text-6xl lg:text-8xl font-bold font-[Outfit] leading-[1.05] tracking-tight mb-6"
+          transition={{ delay: 0.25, duration: 0.8 }}
+          className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black font-[Outfit] leading-[1.06] tracking-tight mb-6"
         >
           <span className="text-white">{t("hero.title1")}</span>
-          <br />
+          <br className="hidden sm:inline" />{" "}
           <span className="text-white">{t("hero.title2")}</span>
           <span className="gradient-text-accent">{t("hero.titleAccent")}</span>
         </motion.h1>
@@ -65,8 +121,8 @@ export default function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal"
         >
           {t("hero.subtitle")}
         </motion.p>
@@ -75,187 +131,167 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6"
+          transition={{ delay: 0.55 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-4"
         >
-          <a 
-            href="https://app.0machine.com" 
-            onClick={() => trackEvent('cta_click', { button: 'hero_trial' })}
-            className="glow-btn text-base px-8 py-4"
+          <a
+            href="#designs-vault"
+            onClick={() => trackEvent("cta_click", { button: "hero_designs_vault" })}
+            className="glow-btn text-base px-8 py-4 w-full sm:w-auto shadow-xl shadow-accent-500/25 flex items-center justify-center gap-2 font-semibold"
           >
-            {t("hero.ctaTrial")}
+            <span>💎 {t("hero.ctaVault")}</span>
+            <span className="text-xs">↓</span>
           </a>
-          <a href="#features" className="glow-btn-outline text-base px-8 py-4">
-            {t("hero.ctaFeatures")}
+          <a
+            href="#laser-ai-video"
+            onClick={() => trackEvent("cta_click", { button: "hero_laser_ai" })}
+            className="glow-btn-outline text-base px-8 py-4 w-full sm:w-auto text-gray-200 border-white/20 hover:border-accent-500/50 flex items-center justify-center gap-2 font-semibold"
+          >
+            <span>🤖 {t("hero.ctaLaserAi")}</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FE7733]/20 text-[#FE7733] border border-[#FE7733]/30 font-bold ml-1">
+              ▶ 5s Video
+            </span>
           </a>
         </motion.div>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.9 }}
-          className="text-sm text-gray-600 mb-16"
+          transition={{ delay: 0.7 }}
+          className="text-xs sm:text-sm text-gray-400 mb-12"
         >
           {t("hero.trialNote")}
         </motion.p>
 
-        {/* Floating Dashboard Mockup */}
+        {/* MOCKUP SECTION WITH SCREENSHOT TABS */}
         <motion.div
           style={{ y: mockupY }}
-          initial={{ opacity: 0, y: 60 }}
+          initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ delay: 0.8, duration: 1, ease: [0.4, 0, 0.2, 1] }}
           className="relative max-w-5xl mx-auto"
         >
-          {/* Glow behind mockup */}
-          <div className="absolute inset-0 bg-accent-500/10 rounded-3xl blur-[60px] -z-10 scale-90" />
-
-          {/* Main mockup card */}
-          <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50">
-            {/* Browser chrome */}
-            <div className="bg-dark-800 px-4 py-3 flex items-center gap-2 border-b border-white/5">
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-red-500/60" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
-                <div className="w-3 h-3 rounded-full bg-green-500/60" />
-              </div>
-              <div className="flex-1 flex justify-center">
-                <div className="bg-dark-700 rounded-lg px-4 py-1 text-xs text-gray-500 flex items-center gap-2">
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  app.0machine.com
-                </div>
-              </div>
-            </div>
-
-            {/* Dashboard content - simulated UI */}
-            <div className="bg-dark-900 p-6 sm:p-8">
-              <div className="flex gap-6">
-                {/* Sidebar */}
-                <div className="hidden sm:block w-48 shrink-0">
-                  <div className="flex items-center gap-2 mb-8">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <span className="text-sm font-bold text-white">0Machine</span>
-                      <span className="block text-[8px] text-gray-500 tracking-wider">PLANNER</span>
-                    </div>
-                  </div>
-
-                  {["Dashboard", "Cost Calculator", "Materials", "Orders", "Laser Presets", "Quote Generator", "Nesting Estimator"].map(
-                    (item, i) => (
-                      <div
-                        key={item}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg mb-1 text-xs transition-colors ${
-                          i === 0
-                            ? "bg-accent-500/15 text-accent-400"
-                            : "text-gray-500 hover:text-gray-300"
-                        }`}
-                      >
-                        <div className={`w-4 h-4 rounded ${i === 0 ? "bg-accent-500/30" : "bg-dark-700"}`} />
-                        {item}
-                      </div>
-                    )
-                  )}
-                </div>
-
-                {/* Main content */}
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <p className="text-xs text-gray-500 mb-1">⚡ Welcome back</p>
-                      <h3 className="text-lg font-semibold text-white">Dashboard</h3>
-                    </div>
-                  </div>
-
-                  {/* Stats grid */}
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                    {[
-                      { label: "Total Projects", value: "24", icon: "📊", color: "accent" },
-                      { label: "In Progress", value: "8", icon: "⏱", color: "yellow" },
-                      { label: "Completed", value: "16", icon: "✅", color: "green" },
-                      { label: "Revenue", value: "$2,847", icon: "📈", color: "blue" },
-                    ].map((stat, i) => (
-                      <motion.div
-                        key={stat.label}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.3 + i * 0.1 }}
-                        className="glass-card p-4"
-                      >
-                        <span className="text-lg mb-1 block">{stat.icon}</span>
-                        <p className="text-xl font-bold text-white">{stat.value}</p>
-                        <p className="text-[10px] text-gray-500">{stat.label}</p>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Recent projects */}
-                  <div className="glass-card p-4">
-                    <p className="text-xs text-gray-500 mb-3 tracking-wider uppercase">Recent Projects</p>
-                    {[
-                      { name: "Custom Coaster Set (x12)", client: "John Smith", cost: "$85.00", status: "In Progress" },
-                      { name: "Wedding Decorations", client: "Sarah Lee", cost: "$320.00", status: "Pending" },
-                      { name: "Acrylic Signage Batch", client: "Craft Studio", cost: "$195.00", status: "Completed" },
-                    ].map((project, i) => (
-                      <motion.div
-                        key={project.name}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 1.6 + i * 0.15 }}
-                        className="flex items-center justify-between py-2.5 border-b border-white/5 last:border-0"
-                      >
-                        <div>
-                          <p className="text-xs font-medium text-white">{project.name}</p>
-                          <p className="text-[10px] text-gray-500">{project.client}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs font-semibold text-white">{project.cost}</p>
-                          <span
-                            className={`text-[9px] px-2 py-0.5 rounded-full ${
-                              project.status === "Completed"
-                                ? "bg-green-500/15 text-green-400"
-                                : project.status === "In Progress"
-                                ? "bg-accent-500/15 text-accent-400"
-                                : "bg-yellow-500/15 text-yellow-400"
-                            }`}
-                          >
-                            {project.status}
-                          </span>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+          {/* Mockup Quick Toggle Tabs */}
+          <div className="flex items-center justify-center mb-4">
+            <div className="inline-flex p-1.5 rounded-2xl bg-dark-900/90 border border-white/10 backdrop-blur-xl shadow-2xl gap-1 max-w-full overflow-x-auto scrollbar-none">
+              {HERO_TABS.map((tab, idx) => {
+                const isActive = activeTab === idx;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(idx)}
+                    className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
+                      isActive
+                        ? "bg-accent-500 text-white shadow-lg shadow-accent-500/30"
+                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    {isActive && (
+                      <span className="hidden md:inline-block text-[10px] px-2 py-0.5 rounded-full bg-black/25 text-white font-medium border border-white/15">
+                        {tab.tag}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Floating elements around mockup */}
+          {/* Glow behind mockup */}
+          <div className="absolute inset-0 bg-accent-500/15 rounded-3xl blur-[70px] -z-10 scale-95" />
+
+          {/* Mac Browser Frame with Real Screenshot */}
+          <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-2xl shadow-black/90 bg-dark-950">
+            {/* Mac Browser Chrome Header */}
+            <div className="bg-dark-900/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                </div>
+                <div className="hidden sm:flex items-center gap-2 ml-4 text-[11px] font-mono text-gray-500">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                  <span>app.0machine.com</span>
+                </div>
+              </div>
+
+              {/* Realistic SSL Address Pill */}
+              <div className="bg-dark-950/90 border border-white/10 rounded-lg px-4 py-1 text-xs text-gray-300 font-mono flex items-center gap-2 max-w-sm sm:max-w-md w-full justify-center">
+                <span className="text-green-400 text-[10px]">🔒 https://</span>
+                <span className="text-white font-medium truncate">{currentTab.path}</span>
+              </div>
+
+              {/* Live Link Button */}
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://app.0machine.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold text-accent-400 hover:text-accent-300 bg-accent-500/10 border border-accent-500/20 px-3 py-1 rounded-lg transition-colors"
+                >
+                  <span>Launch Live</span>
+                  <span>↗</span>
+                </a>
+              </div>
+            </div>
+
+            {/* High-Resolution Screenshot Frame */}
+            <div className="relative aspect-[16/10] w-full overflow-hidden bg-dark-950">
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={currentTab.id}
+                  src={currentTab.src}
+                  alt={currentTab.alt}
+                  initial={{ opacity: 0, scale: 0.99 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  className="w-full h-full object-cover object-top block"
+                  loading="eager"
+                />
+              </AnimatePresence>
+
+              {/* Bottom depth subtle fade */}
+              <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-dark-950/80 to-transparent pointer-events-none" />
+            </div>
+          </div>
+
+          {/* Floating HUD Card 1: Commercial Designs Vault */}
           <motion.div
-            animate={{ y: [-10, 10, -10] }}
-            transition={{ duration: 4, repeat: Infinity }}
-            className="absolute -right-8 top-20 glass-card p-3 hidden lg:block"
+            animate={{ y: [-8, 8, -8] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -right-4 -bottom-6 sm:-right-8 sm:bottom-12 glass-card p-3.5 hidden sm:block border-accent-500/30 shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
           >
-            <p className="text-[10px] text-gray-500 mb-1">Material Cost</p>
-            <p className="text-sm font-bold text-white">$45.00</p>
-            <p className="text-[9px] text-green-400">Oak 6mm · 3 sheets</p>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-ping" />
+              <p className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase">
+                Commercial Designs Vault
+              </p>
+            </div>
+            <p className="text-sm font-bold text-white">5,000+ Ready-to-Cut Vectors</p>
+            <p className="text-[10px] text-accent-400 font-semibold mt-0.5">
+              Full Resale License · SVG, DXF, PDF, AI
+            </p>
           </motion.div>
 
+          {/* Floating HUD Card 2: LaserAI Engine */}
           <motion.div
-            animate={{ y: [10, -10, 10] }}
-            transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-            className="absolute -left-6 bottom-32 glass-card p-3 hidden lg:block"
+            animate={{ y: [8, -8, 8] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+            className="absolute -left-4 -top-6 sm:-left-8 sm:top-28 glass-card p-3.5 hidden sm:block border-purple-500/30 shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
           >
-            <p className="text-[10px] text-gray-500 mb-1">Time Tracked</p>
-            <p className="text-sm font-bold text-white">3h 15m</p>
-            <div className="w-16 h-1 bg-dark-700 rounded-full mt-1">
-              <div className="w-3/4 h-full bg-accent-500 rounded-full" />
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xs">⚡</span>
+              <p className="text-[10px] text-purple-400 font-semibold tracking-wider uppercase">
+                LaserAI Vector Studio
+              </p>
             </div>
+            <p className="text-sm font-bold text-white">Prompt → Closed SVG/DXF</p>
+            <p className="text-[10px] text-gray-400 font-medium mt-0.5">
+              Cut (Red) + Engrave (Black) split layers
+            </p>
           </motion.div>
         </motion.div>
       </motion.div>
@@ -264,17 +300,21 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        transition={{ delay: 1.6 }}
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-10"
       >
-        <span className="text-[10px] text-gray-600 tracking-wider">SCROLL TO EXPLORE</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-5 h-8 rounded-full border border-gray-700 flex items-start justify-center p-1"
-        >
-          <div className="w-1 h-2 rounded-full bg-accent-500" />
-        </motion.div>
+        <a href="#designs-vault" className="flex flex-col items-center gap-1.5 group cursor-pointer">
+          <span className="text-[10px] text-gray-500 group-hover:text-accent-400 tracking-wider transition-colors">
+            EXPLORE DESIGNS VAULT
+          </span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-4 h-7 rounded-full border border-gray-700 group-hover:border-accent-500/50 flex items-start justify-center p-1 transition-colors"
+          >
+            <div className="w-1 h-1.5 rounded-full bg-accent-400" />
+          </motion.div>
+        </a>
       </motion.div>
     </section>
   );

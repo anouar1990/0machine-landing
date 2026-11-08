@@ -28,10 +28,12 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
+    { label: "💎 Designs Vault", href: "/#designs-vault" },
+    { label: "🤖 LaserAI", href: "/#laser-ai" },
     { label: t("nav.features"), href: "/#features" },
-    { label: "Free Calculator", href: "/calculator" },
+    { label: "Free Tools", href: "/tools" },
+    { label: "Calculator", href: "/calculator" },
     { label: t("nav.benefits"), href: "/#benefits" },
-    { label: t("nav.workflow"), href: "/#workflow" },
     { label: t("nav.pricing"), href: "/#pricing" },
   ];
 
@@ -49,7 +51,7 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center group">
+          <a href="/" className="flex items-center group">
             <img 
               src="/logo.png" 
               alt="0Machine Logo" 

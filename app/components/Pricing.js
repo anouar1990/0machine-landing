@@ -4,6 +4,19 @@ import { motion, useInView } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
 import { Check, Zap } from "lucide-react";
 
+function WhatsAppIcon({ className = "w-4 h-4", ...props }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      {...props}
+    >
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662a11.838 11.838 0 005.711 1.458h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+    </svg>
+  );
+}
+
 export default function Pricing() {
   const { t } = useLanguage();
   const ref = useRef(null);
@@ -14,14 +27,15 @@ export default function Pricing() {
     {
       name: t("price.free.name") || "Free Forever",
       price: "$0",
-      period: "forever",
+      period: t("price.period.forever") || "forever",
+      billingNote: t("price.free.billed_note") || "Free forever · No credit card required",
       description: t("price.free.desc") || "Perfect for hobbyists discovering 0Machine.",
       features: [
-        t("price.free.f1") || "3 Projects per Month",
-        t("price.free.f2") || "1 Machine Profile",
+        t("price.free.f1") || "5 LaserAI Vector Generations (Trial)",
+        t("price.free.f2") || "3 Free Commercial Design Packs",
         t("price.free.f3") || "Basic Job Cost Calculator",
-        t("price.free.f4") || "PDF Quote Export",
-        t("price.free.f5") || "Community Support",
+        t("price.free.f4") || "1 Machine Profile & PDF Quotes",
+        t("price.free.f5") || "Community Maker Support",
       ],
       cta: t("price.free.cta") || "Start Free",
       href: "https://app.0machine.com",
@@ -29,38 +43,50 @@ export default function Pricing() {
     },
     {
       name: t("price.starter.name") || "Starter",
-      price: cycle === "annual" ? "$59" : "$9",
-      period: cycle === "annual" ? "/year" : "/month",
+      price: cycle === "annual" ? (t("price.starter.price_yr") || "$7.90") : (t("price.starter.price_mo") || "$9"),
+      originalPrice: cycle === "annual" ? (t("price.starter.original_yr") || "$9") : null,
+      period: t("price.period.mo") || "/month",
+      billingNote:
+        cycle === "annual"
+          ? (t("price.starter.billed_yr") || "Billed annually at $79/yr (Save ~15%)")
+          : (t("price.billed_mo") || "Billed monthly"),
       description: t("price.starter.desc") || "Perfect for makers and small workshops.",
       features: [
-        t("price.starter.f1") || "Unlimited Projects & Machine Profiles",
-        t("price.starter.f2") || "Material Inventory & Laser Presets",
-        t("price.starter.f3") || "PDF Quotes & Invoices",
-        t("price.starter.f4") || "Design Library Access",
-        t("price.starter.f5") || "Basic Dashboard & Email Support",
+        t("price.starter.f1") || "⚡ 50 LaserAI Vector Generations / mo",
+        t("price.starter.f2") || "💎 50 Commercial Design Packs / mo",
+        t("price.starter.f3") || "🧩 True-Shape Sheet Nesting (Up to 25 parts)",
+        t("price.starter.f4") || "Unlimited Projects & Machine Profiles",
+        t("price.starter.f5") || "Material Inventory & Laser Presets",
+        t("price.starter.f6") || "PDF Quotes & Client Invoices",
       ],
       cta: t("price.starter.cta") || "Upgrade to Starter",
       href: "https://app.0machine.com",
       highlighted: true,
-      badge: "⭐ Most Popular",
+      badge: t("price.popular") || "⭐ Most Popular",
     },
     {
       name: t("price.pro.name") || "Workshop Pro",
-      price: cycle === "annual" ? "$149" : "$19",
-      period: cycle === "annual" ? "/year" : "/month",
+      price: cycle === "annual" ? (t("price.pro.price_yr") || "$14.90") : (t("price.pro.price_mo") || "$19"),
+      originalPrice: cycle === "annual" ? (t("price.pro.original_yr") || "$19") : null,
+      period: t("price.period.mo") || "/month",
+      billingNote:
+        cycle === "annual"
+          ? (t("price.pro.billed_yr") || "Billed annually at $149/yr (Save ~25%)")
+          : (t("price.billed_mo") || "Billed monthly"),
       description: t("price.pro.desc") || "Everything in Starter plus advanced production optimization.",
       features: [
-        t("price.pro.f1") || "Everything in Starter +",
-        t("price.pro.f2") || "Nesting Yield Calculator",
-        t("price.pro.f3") || "1-Click WhatsApp Sharing",
-        t("price.pro.f4") || "CSV & Excel Data Exports",
-        t("price.pro.f5") || "Team Workspace (3 Users)",
-        t("price.pro.f6") || "Commercial Vector Packs & Priority Support",
+        t("price.pro.f1") || "⚡ 300 LaserAI Vector Generations / mo",
+        t("price.pro.f2") || "💎 Unlimited Commercial Vault (5,000+ Packs)",
+        t("price.pro.f3") || "🧩 Unlimited Multi-Sheet Nesting (ClipperLib)",
+        t("price.pro.f4") || "⏱️ Kerf Compensation & Speed/Pierce Math",
+        t("price.pro.f5") || "📲 1-Click WhatsApp Client Quote Sharing",
+        t("price.pro.f6") || "🚀 Direct LightBurn & xTool DXF Export",
+        t("price.pro.f7") || "🔥 Priority Server AI Pipeline",
       ],
       cta: t("price.pro.cta") || "Upgrade to Pro",
       href: "https://app.0machine.com",
       highlighted: false,
-      badge: "🔥 Best Value",
+      badge: t("price.best_value") || "🔥 Best Value",
     },
   ];
 
@@ -76,14 +102,14 @@ export default function Pricing() {
           className="text-center mb-12"
         >
           <span className="text-xs text-[#B1FA63] tracking-[0.2em] uppercase font-bold">
-            TRANSPARENT PRICING
+            {t("price.badge") || "TRANSPARENT PRICING"}
           </span>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-3 mb-4 font-[Outfit]">
-            Run Your Entire Laser Workshop <br />
-            <span className="text-[#FE7733]">From One Dashboard.</span>
+            {t("price.title") || "Run Your Entire Laser Workshop"} <br />
+            <span className="text-[#FE7733]">{t("price.titleAccent") || "From One Dashboard."}</span>
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-base">
-            Start free forever. Upgrade anytime as your workshop grows.
+            {t("price.subtitle") || "Start free forever. Upgrade anytime as your workshop grows."}
           </p>
 
           {/* Monthly vs Annual Cycle Toggle */}
@@ -96,7 +122,7 @@ export default function Pricing() {
                   : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10"
               }`}
             >
-              Monthly Billing
+              {t("price.cycle.monthly") || "Monthly Billing"}
             </button>
 
             <button
@@ -107,9 +133,9 @@ export default function Pricing() {
                   : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10"
               }`}
             >
-              Annual Billing
+              {t("price.cycle.annual") || "Annual Billing"}
               <span className="absolute -top-3 -right-3 bg-[#B1FA63] text-[#111317] text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full shadow">
-                Save 45%
+                {t("price.cycle.save_badge") || "Save up to 35%"}
               </span>
             </button>
           </div>
@@ -141,19 +167,46 @@ export default function Pricing() {
               </div>
 
               <div className="mb-6">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold text-white">{plan.price}</span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-extrabold text-white tracking-tight">{plan.price}</span>
+                  {plan.originalPrice && (
+                    <span className="text-lg line-through text-gray-500 font-semibold">{plan.originalPrice}</span>
+                  )}
                   <span className="text-gray-400 text-sm font-medium">{plan.period}</span>
                 </div>
+                {plan.billingNote && (
+                  <p className={`text-xs mt-2 font-medium tracking-wide ${plan.highlighted ? "text-[#B1FA63]" : "text-gray-400"}`}>
+                    {plan.billingNote}
+                  </p>
+                )}
               </div>
 
               <ul className="space-y-3.5 mb-8 flex-1">
-                {plan.features.map((feat, idx) => (
-                  <li key={idx} className="flex items-center gap-3 text-sm text-gray-300">
-                    <Check className="w-4 h-4 text-[#FE7733] flex-shrink-0" />
-                    <span>{feat}</span>
-                  </li>
-                ))}
+                {plan.features.map((feat, idx) => {
+                  const isWhatsApp =
+                    feat.toLowerCase().includes("whatsapp") ||
+                    feat.toLowerCase().includes("quote") ||
+                    feat.toLowerCase().includes("invoice");
+                  return (
+                    <li key={idx} className="flex items-center gap-3 text-sm text-gray-300">
+                      {isWhatsApp ? (
+                        <span className="w-4 h-4 flex items-center justify-center text-[#25D366] flex-shrink-0">
+                          <WhatsAppIcon className="w-4 h-4 fill-current" />
+                        </span>
+                      ) : (
+                        <Check className="w-4 h-4 text-[#FE7733] flex-shrink-0" />
+                      )}
+                      <span className="flex items-center flex-wrap gap-1.5">
+                        <span>{feat}</span>
+                        {isWhatsApp && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-[#25D366]/15 text-[#25D366] border border-[#25D366]/30 px-1.5 py-0.5 rounded-full">
+                            WhatsApp
+                          </span>
+                        )}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
 
               <a

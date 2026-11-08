@@ -85,7 +85,7 @@ export async function GET(req) {
         userEmail: customerEmail,
         planName: plan === 'starter' ? '0machine Starter' : '0machine Pro',
         billingCycle: cycle,
-        amountPaid: cycle === 'annual' ? (plan === 'starter' ? '$59.00' : '$149.00') : (plan === 'starter' ? '$9.00' : '$19.00'),
+        amountPaid: cycle === 'annual' ? (plan === 'starter' ? '$79.00' : '$149.00') : (plan === 'starter' ? '$9.00' : '$19.00'),
         nextBillingDate: currentPeriodEnd,
         invoiceId: session.invoice || session.id,
       }).catch(err => console.warn('[VERIFY SESSION EMAIL ERROR]:', err));

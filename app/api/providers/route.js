@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { maskProviderCredentials } from "../../lib/email-service/crypto";
 import { supabaseAdmin as supabase } from "@/app/lib/supabase-admin";
+import { verifyAdminAuth } from "@/app/lib/admin-auth";
 
+export async function GET(request) {
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
 
-export async function GET() {
   try {
     const { data: providers, error } = await supabase
       .from("email_providers")
@@ -27,7 +32,13 @@ export async function GET() {
 }
 
 export async function POST(request) {
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
+
   try {
+
     const body = await request.json();
     const {
       name,
@@ -92,6 +103,11 @@ export async function POST(request) {
 }
 
 export async function PUT(request) {
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
+
   try {
     const body = await request.json();
     const { id, credentials, ...updates } = body;
@@ -140,7 +156,13 @@ export async function PUT(request) {
 }
 
 export async function DELETE(request) {
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
+
   try {
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 

@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/app/lib/supabase-admin";
-
+import { verifyServiceOrAdminAuth } from "@/app/lib/admin-auth";
 
 export async function POST(request) {
+  // 0. Enforce Service or Administrator Authentication
+  const auth = await verifyServiceOrAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
+
   try {
-    const authHeader = request.headers.get("authorization") || request.headers.get("x-api-key");
     // Validate request body
     const body = await request.json().catch(() => null);
+
 
     if (!body || !body.event_id || !body.email || !body.event) {
       return NextResponse.json(

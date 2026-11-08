@@ -6,24 +6,54 @@ export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || 'G-8V921
 const firedEventsCache = new Set();
 
 /**
- * Capture and store UTM parameters from URL query params.
+ * Capture and store UTM parameters and experiment variant from URL query params.
  */
 export function captureUTMs() {
   if (!IS_BROWSER) return;
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const utms = {};
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach((key) => {
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'variant'].forEach((key) => {
       const val = urlParams.get(key);
       if (val) utms[key] = val;
     });
 
+    const v = urlParams.get('variant')?.toUpperCase();
+    if (v && ['A', 'B', 'C', 'D', 'E'].includes(v)) {
+      utms.variant = v;
+      localStorage.setItem('0machine_variant', v);
+      document.cookie = `0machine_variant=${v}; path=/; max-age=31536000; SameSite=Lax`;
+    }
+
     if (Object.keys(utms).length > 0) {
-      localStorage.setItem('0machine_utm', JSON.stringify(utms));
+      const existing = getSavedUTMs();
+      localStorage.setItem('0machine_utm', JSON.stringify({ ...existing, ...utms }));
     }
   } catch (e) {
     // Ignore storage errors
   }
+}
+
+/**
+ * Retrieve the active experiment variant.
+ */
+export function getSavedVariant() {
+  if (!IS_BROWSER) return 'A';
+  try {
+    // 1. URL search param
+    const urlParams = new URLSearchParams(window.location.search);
+    const vParam = urlParams.get('variant')?.toUpperCase();
+    if (['A', 'B', 'C', 'D', 'E'].includes(vParam)) return vParam;
+
+    // 2. Cookie
+    const match = document.cookie.match(/(?:^|;\s*)0machine_variant=([A-Ea-e])/);
+    if (match && match[1]) return match[1].toUpperCase();
+
+    // 3. localStorage
+    const stored = localStorage.getItem('0machine_variant')?.toUpperCase();
+    if (['A', 'B', 'C', 'D', 'E'].includes(stored)) return stored;
+  } catch (e) {}
+  return 'A';
 }
 
 /**
@@ -33,9 +63,13 @@ export function getSavedUTMs() {
   if (!IS_BROWSER) return {};
   try {
     const raw = localStorage.getItem('0machine_utm');
-    return raw ? JSON.parse(raw) : {};
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (!parsed.variant) {
+      parsed.variant = getSavedVariant();
+    }
+    return parsed;
   } catch (e) {
-    return {};
+    return { variant: getSavedVariant() };
   }
 }
 

@@ -61,9 +61,18 @@ export class SmtpProvider {
     }
   }
 
-  async sendEmail({ to, subject, html, text, fromName, fromEmail }) {
+  async sendEmail({ to, subject, html, text, fromName, fromEmail, headers, unsubscribeToken, unsubscribeUrl }) {
     const recipient = Array.isArray(to) ? to[0] : to;
     const sender = `${fromName || this.fromName} <${fromEmail || this.fromEmail}>`;
+
+    const mailHeaders = {
+      ...(headers || {})
+    };
+    if (unsubscribeToken || unsubscribeUrl) {
+      const unsubUrl = unsubscribeUrl || `https://app.0machine.com/api/email/unsubscribe?token=${unsubscribeToken}`;
+      mailHeaders["List-Unsubscribe"] = `<${unsubUrl}>`;
+      mailHeaders["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click";
+    }
 
     const transporter = this.createTransporter();
     const info = await transporter.sendMail({
@@ -71,14 +80,16 @@ export class SmtpProvider {
       to: recipient,
       subject: subject,
       html: html,
-      text: text
+      text: text,
+      ...(Object.keys(mailHeaders).length > 0 ? { headers: mailHeaders } : {})
     });
 
     return {
       success: true,
       provider: "smtp",
       messageId: info.messageId || `smtp-${Date.now()}`,
-      recipient
+      recipient,
+      headers: mailHeaders
     };
   }
 }

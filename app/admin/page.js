@@ -6,8 +6,9 @@ import Footer from "../components/Footer";
 import ParticleField from "../components/ParticleField";
 import { 
   Users, Mail, Database, Send, Plus, Trash2, FileText, 
-  Settings, LogOut, CheckCircle2, AlertTriangle, Eye, RefreshCw, Layers, Edit, BarChart2, TrendingUp, Zap, CreditCard, ArrowRight
+  Settings, LogOut, CheckCircle2, AlertTriangle, Eye, RefreshCw, Layers, Edit, BarChart2, TrendingUp, Zap, CreditCard, ArrowRight, FlaskConical
 } from "lucide-react";
+import ExperimentDashboardTab from "./components/ExperimentDashboardTab";
 
 const ADMIN_EMAILS = [
   "admin@cooldelo.com", 
@@ -44,6 +45,14 @@ export default function AdminDashboard() {
   const [notification, setNotification] = useState({ text: "", type: "" });
 
   useEffect(() => {
+    // Check URL tab parameter
+    if (typeof window !== "undefined") {
+      const tabParam = new URLSearchParams(window.location.search).get("tab");
+      if (tabParam && ["overview", "funnel", "subscriptions", "messages", "analytics", "designs", "blogs", "experiment"].includes(tabParam)) {
+        setActiveTab(tabParam);
+      }
+    }
+
     // Check initial auth state
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -244,7 +253,7 @@ export default function AdminDashboard() {
         if (!error && data) setBlogs(data);
       }
 
-      if (activeTab === "analytics" || activeTab === "overview" || activeTab === "funnel" || activeTab === "subscriptions") {
+      if (activeTab === "analytics" || activeTab === "overview" || activeTab === "funnel" || activeTab === "subscriptions" || activeTab === "experiment") {
         const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
         const { data: eventsData, error: eventsErr } = await supabase
           .from("analytics_events")
@@ -696,6 +705,7 @@ export default function AdminDashboard() {
           <div className="flex gap-2 overflow-x-auto border-b border-white/5 pb-2 mb-8 scrollbar-thin">
             {[
               { id: "overview", label: "Overview", icon: Layers },
+              { id: "experiment", label: "🧪 Split Test (5 Variants)", icon: FlaskConical },
               { id: "funnel", label: "Conversion Funnel", icon: TrendingUp },
               { id: "subscriptions", label: `Subscriptions (${activeSubsCount})`, icon: Users },
               { id: "messages", label: `Inquiries (${unreadMessagesCount})`, icon: Mail },
@@ -1895,7 +1905,7 @@ export default function AdminDashboard() {
                       <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 flex items-center justify-between">
                         <div>
                           <div className="font-bold text-white text-sm">Design Library</div>
-                          <div className="text-gray-400 text-xs mt-0.5">500+ ready-to-cut vector templates</div>
+                          <div className="text-gray-400 text-xs mt-0.5">5,000+ ready-to-cut vector templates</div>
                         </div>
                         <div className="text-right">
                           <div className="text-lg font-extrabold text-white">{designLibraryViews}</div>
@@ -1932,6 +1942,13 @@ export default function AdminDashboard() {
               </div>
             );
           })()}
+
+          {activeTab === "experiment" && (
+            <ExperimentDashboardTab
+              analyticsEvents={analyticsEvents}
+              usersList={usersList}
+            />
+          )}
 
         </div>
       </main>

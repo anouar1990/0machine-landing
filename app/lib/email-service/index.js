@@ -51,7 +51,7 @@ export class EmailService {
   /**
    * Centralized Email Send Method with Suppression Safeguards & Provider Fallback
    */
-  static async send({ to, subject, html, text, purpose = "marketing", fromName, fromEmail }) {
+  static async send({ to, subject, html, text, purpose = "marketing", fromName, fromEmail, headers, unsubscribeToken, unsubscribeUrl }) {
     const recipient = (Array.isArray(to) ? to[0] : to).toLowerCase().trim();
 
     // 1. SUPPRESSION PROTECTION: Pre-send suppression check
@@ -67,7 +67,8 @@ export class EmailService {
         success: false,
         error: `Recipient is suppressed (${suppressed.reason})`,
         code: "RECIPIENT_SUPPRESSED",
-        recipient
+        recipient,
+        suppressed: true
       };
     }
 
@@ -78,13 +79,27 @@ export class EmailService {
       .eq("email", recipient)
       .single();
 
-    if (contact && ["unsubscribed", "bounced", "complained"].includes(contact.status)) {
+    // NEW (EMAIL-008): Check for deleted status OR missing contact
+    if (!contact || contact.status === "deleted") {
+      console.warn(`[EMAIL SERVICE ABORTED] Contact ${recipient} is ${contact ? "marked deleted" : "missing/deleted from contacts"}.`);
+      return {
+        success: false,
+        error: contact ? "Contact status is deleted" : "Contact record not found",
+        code: "RECIPIENT_SUPPRESSED",
+        recipient,
+        suppressed: true,
+        deleted: true
+      };
+    }
+
+    if (["unsubscribed", "bounced", "complained"].includes(contact.status)) {
       console.warn(`[EMAIL SERVICE ABORTED] Contact ${recipient} status is ${contact.status}.`);
       return {
         success: false,
         error: `Contact status is ${contact.status}`,
         code: "RECIPIENT_SUPPRESSED",
-        recipient
+        recipient,
+        suppressed: true
       };
     }
 
@@ -103,8 +118,15 @@ export class EmailService {
           html,
           text,
           fromName,
-          fromEmail
+          fromEmail,
+          headers,
+          unsubscribeToken,
+          unsubscribeUrl
         });
+
+        if (!result || !result.success || !result.messageId) {
+          throw new Error(result?.error || `Provider '${provider.name}' did not return a valid send confirmation.`);
+        }
 
         // Log successful send activity
         await supabase.from("email_activity_logs").insert([{

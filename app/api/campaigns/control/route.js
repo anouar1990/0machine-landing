@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/app/lib/supabase-admin";
-
+import { verifyAdminAuth } from "@/app/lib/admin-auth";
 
 export async function POST(request) {
+  // 0. Enforce Server-Side Administrator Authentication
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
+
   try {
     const body = await request.json();
     const { campaign_id, action } = body; // pause, resume, cancel
+
 
     if (!campaign_id || !["pause", "resume", "cancel"].includes(action)) {
       return NextResponse.json({ error: "Invalid campaign_id or action (pause, resume, cancel)" }, { status: 400 });

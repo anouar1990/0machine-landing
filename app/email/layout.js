@@ -24,12 +24,13 @@ import {
   Bell
 } from "lucide-react";
 
-const ADMIN_EMAILS = [
-  "admin@cooldelo.com",
-  "anouarkharbache@gmail.com",
-  "anouar@cooldelo.com",
-  "anouar.kharbache@gmail.com"
-];
+import { ADMIN_EMAILS } from "@/app/lib/admin-auth";
+
+function checkAdmin(email) {
+  if (!email) return false;
+  const normalized = email.toLowerCase().trim();
+  return ADMIN_EMAILS.some((adm) => adm.toLowerCase() === normalized);
+}
 
 export default function EmailLayout({ children }) {
   const router = useRouter();
@@ -44,41 +45,18 @@ export default function EmailLayout({ children }) {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      checkAdmin(session);
+      setIsAuthorized(checkAdmin(session?.user?.email));
+      setAuthLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      checkAdmin(session);
+      setIsAuthorized(checkAdmin(session?.user?.email));
+      setAuthLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const checkAdmin = (currentSession) => {
-    // In local development or if logged in, grant admin access
-    if (process.env.NODE_ENV === "development") {
-      setIsAuthorized(true);
-      setAuthLoading(false);
-      return;
-    }
-
-    if (!currentSession?.user?.email) {
-      setIsAuthorized(false);
-      setAuthLoading(false);
-      return;
-    }
-    const email = currentSession.user.email.toLowerCase();
-    const authorized =
-      ADMIN_EMAILS.some((adm) => adm.toLowerCase() === email) ||
-      email.endsWith("@cooldelo.com") ||
-      email.endsWith("@0machine.com") ||
-      email.includes("anouar") ||
-      email.includes("admin");
-
-    setIsAuthorized(authorized);
-    setAuthLoading(false);
-  };
 
   const handleInstallGrowthFlows = async () => {
     setInstallingFlows(true);
@@ -105,6 +83,11 @@ export default function EmailLayout({ children }) {
     }
   };
 
+  // Recipient unsubscribe route is publicly accessible for opt-outs
+  if (pathname?.startsWith("/email/unsubscribe")) {
+    return <>{children}</>;
+  }
+
   if (authLoading) {
     return (
       <div className="min-h-screen bg-[#0A0C12] text-white flex items-center justify-center">
@@ -123,25 +106,32 @@ export default function EmailLayout({ children }) {
           <div className="w-14 h-14 bg-[#FE7733]/10 border border-[#FE7733]/30 rounded-2xl flex items-center justify-center mx-auto mb-4 text-[#FE7733]">
             <ShieldAlert size={28} />
           </div>
-          <h1 className="text-2xl font-bold font-[Outfit] text-white mb-2">0machine Admin Only</h1>
+          <h1 className="text-2xl font-bold font-[Outfit] text-white mb-2">
+            {!session ? "Authentication Required" : "Access Restricted"}
+          </h1>
           <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-            Access to <strong className="text-white">0machine Marketing Console</strong> is restricted to authorized team administrators.
+            {!session
+              ? "You must be signed in with an authorized administrator account to access the 0machine Marketing Console."
+              : "Your account is not authorized to access the 0machine Marketing Console. Please sign in with an administrator account."}
           </p>
 
           <div className="space-y-3">
-            <button
-              onClick={() => setIsAuthorized(true)}
-              className="w-full bg-[#FE7733] hover:bg-[#ff8547] text-white font-semibold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-[#FE7733]/20 cursor-pointer"
-            >
-              <span>Enter 0machine Marketing Console →</span>
-            </button>
-
             <Link
               href="/admin"
-              className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 font-semibold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors block"
+              className="w-full bg-[#FE7733] hover:bg-[#ff8547] text-white font-semibold text-sm py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-[#FE7733]/20 block"
             >
-              <span>Authenticate via Admin Portal</span>
+              <span>Authenticate via Admin Portal →</span>
             </Link>
+
+            {session && (
+              <button
+                onClick={() => supabase.auth.signOut()}
+                className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 font-semibold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              >
+                <LogOut size={14} />
+                <span>Sign Out / Switch Account</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

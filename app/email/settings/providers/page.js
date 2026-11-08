@@ -60,10 +60,19 @@ export default function ProvidersSettingsPage() {
     fetchProviders();
   }, []);
 
+  const getAuthHeaders = async (isJson = true) => {
+    const { data: { session: currentSession } } = await supabase.auth.getSession();
+    return {
+      ...(isJson ? { "Content-Type": "application/json" } : {}),
+      Authorization: `Bearer ${currentSession?.access_token || ""}`
+    };
+  };
+
   const fetchProviders = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/providers");
+      const headers = await getAuthHeaders(false);
+      const res = await fetch("/api/providers", { headers });
       const data = await res.json();
       if (data.providers) {
         setProviders(data.providers);
@@ -79,9 +88,10 @@ export default function ProvidersSettingsPage() {
     setTestingId(providerId);
     setTestResults((prev) => ({ ...prev, [providerId]: null }));
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch("/api/providers/test-connection", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ provider_id: providerId })
       });
       const data = await res.json();
@@ -108,9 +118,10 @@ export default function ProvidersSettingsPage() {
     setSendingTestMail(true);
     setTestMailResult(null);
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch("/api/providers/send-test", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           provider_id: selectedTestProvider?.id,
           recipient: testRecipient
@@ -131,9 +142,10 @@ export default function ProvidersSettingsPage() {
 
   const handleSetPrimary = async (providerId) => {
     try {
+      const headers = await getAuthHeaders();
       await fetch("/api/providers", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ id: providerId, is_primary: true })
       });
       fetchProviders();
@@ -144,9 +156,10 @@ export default function ProvidersSettingsPage() {
 
   const handleToggleActive = async (provider) => {
     try {
+      const headers = await getAuthHeaders();
       await fetch("/api/providers", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ id: provider.id, is_active: !provider.is_active })
       });
       fetchProviders();
@@ -158,7 +171,8 @@ export default function ProvidersSettingsPage() {
   const handleDeleteProvider = async (providerId) => {
     if (!confirm("Are you sure you want to delete this email provider?")) return;
     try {
-      await fetch(`/api/providers?id=${providerId}`, { method: "DELETE" });
+      const headers = await getAuthHeaders(false);
+      await fetch(`/api/providers?id=${providerId}`, { method: "DELETE", headers });
       fetchProviders();
     } catch (err) {
       alert(`Error deleting provider: ${err.message}`);
@@ -170,10 +184,11 @@ export default function ProvidersSettingsPage() {
     try {
       const method = editingProvider ? "PUT" : "POST";
       const payload = editingProvider ? { id: editingProvider.id, ...form } : form;
+      const headers = await getAuthHeaders();
 
       const res = await fetch("/api/providers", {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(payload)
       });
 
@@ -189,6 +204,7 @@ export default function ProvidersSettingsPage() {
       alert(`Error saving provider: ${err.message}`);
     }
   };
+
 
   const openAddModal = () => {
     setEditingProvider(null);
@@ -635,7 +651,7 @@ export default function ProvidersSettingsPage() {
               <label className="block text-xs text-gray-400 mb-1">Recipient Email Address</label>
               <input
                 type="email"
-                placeholder="anouarkharbache@gmail.com"
+                placeholder="workshop@0machine.com"
                 value={testRecipient}
                 onChange={(e) => setTestRecipient(e.target.value)}
                 className="w-full bg-[#0A0C12] border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white"

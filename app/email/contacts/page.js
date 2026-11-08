@@ -27,6 +27,7 @@ export default function ContactsPage() {
   const [csvText, setCsvText] = useState("");
   const [importSummary, setImportSummary] = useState(null);
   const [importing, setImporting] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchContacts();
@@ -50,54 +51,57 @@ export default function ContactsPage() {
     }
   };
 
-  const handleProcessCsv = async () => {
-    if (!csvText.trim()) return;
-    setImporting(true);
-    setImportSummary(null);
-
-    const lines = csvText.trim().split("\n");
-    let processed = 0;
-    let imported = 0;
-    let updated = 0;
-    let duplicates = 0;
-    let invalid = 0;
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (!line || i === 0 && line.toLowerCase().includes("email")) continue; // skip header
-      processed++;
-
-      const parts = line.split(",").map(p => p.trim().replace(/^["']|["']$/g, ""));
-      const email = parts[0];
-      const firstName = parts[1] || "";
-      const plan = parts[2] || "free";
-
-      if (!email || !email.includes("@")) {
-        invalid++;
-        continue;
-      }
-
-      // Upsert into Supabase
-      const { data: existing } = await supabase.from("contacts").select("id").eq("email", email.toLowerCase()).single();
-      if (existing) {
-        updated++;
-        duplicates++;
-      } else {
-        imported++;
-      }
-
-      await supabase.from("contacts").upsert({
-        email: email.toLowerCase(),
-        first_name: firstName,
-        plan,
-        tags: ["csv-imported"],
-        updated_at: new Date().toISOString()
-      }, { onConflict: "email" });
+  const handleProcessCsv = async (rawCsv = csvText) => {
+    const textToProcess = (typeof rawCsv === "string" ? rawCsv : csvText).trim();
+    if (!textToProcess) {
+      setMessage("Please paste CSV data");
+      return;
     }
 
-    setImportSummary({ processed, imported, updated, duplicates, invalid });
-    setImporting(false);
-    fetchContacts();
+    setImporting(true);
+    setMessage("Importing contacts...");
+    setImportSummary(null);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+
+      // Call server endpoint (with authentication via session)
+      const response = await fetch("/api/contacts/import", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ csvText: textToProcess }),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setMessage(`Error: ${result.error || "Import failed"}`);
+        setImporting(false);
+        return;
+      }
+
+      // Success response
+      const { summary } = result;
+      setMessage(
+        `✅ Import complete: ${summary.inserted} inserted, ${summary.updated} updated, ${summary.skipped} skipped`
+      );
+      setImportSummary(summary);
+
+      // Refresh contacts list
+      fetchContacts();
+
+      // Clear textarea
+      setCsvText("");
+    } catch (error) {
+      console.error("Import error:", error);
+      setMessage(`Error: ${error.message}`);
+    } finally {
+      setImporting(false);
+    }
   };
 
   const filteredContacts = contacts.filter((c) => {
@@ -228,32 +232,47 @@ export default function ContactsPage() {
               <button onClick={() => setImportModalOpen(false)} className="text-gray-400 hover:text-white">✕</button>
             </div>
 
-            <p className="text-xs text-gray-400">Paste raw CSV data formatted as: <code>email, first_name, plan</code></p>
-
             <textarea
-              rows={6}
-              placeholder="email,first_name,plan&#10;john@example.com,John,free&#10;sarah@example.com,Sarah,pro"
+              rows={8}
+              placeholder="Paste CSV: email, firstName, plan&#10;test@example.com, John, pro"
               value={csvText}
               onChange={(e) => setCsvText(e.target.value)}
               className="w-full bg-[#0A0C12] border border-white/10 rounded-xl p-3 font-mono text-xs text-white focus:outline-none focus:border-[#FE7733]"
+              disabled={importing}
             />
+
+            <p className="text-xs text-gray-500 mt-2">
+              Max 5MB, 5000 rows. Columns: email (required), firstName (optional), plan (free|pro|user, default free).
+            </p>
+
+            {message && (
+              <p className={`mt-2 text-xs font-mono ${message.includes("✅") ? "text-emerald-400" : "text-red-400"}`}>
+                {message}
+              </p>
+            )}
 
             {importSummary && (
               <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-xl font-mono space-y-1">
                 <div>Processed: {importSummary.processed}</div>
-                <div>Imported New: {importSummary.imported}</div>
-                <div>Updated Duplicates: {importSummary.updated}</div>
+                <div>Inserted: {importSummary.inserted}</div>
+                <div>Updated: {importSummary.updated}</div>
+                <div>Skipped: {importSummary.skipped}</div>
               </div>
             )}
 
             <div className="flex justify-end gap-3 pt-2">
-              <button onClick={() => setImportModalOpen(false)} className="px-4 py-2 bg-white/5 text-gray-300 text-xs rounded-xl">Close</button>
               <button
-                onClick={handleProcessCsv}
-                disabled={importing}
-                className="px-5 py-2 bg-[#FE7733] text-white text-xs font-semibold rounded-xl"
+                onClick={() => { setImportModalOpen(false); setMessage(""); }}
+                className="px-4 py-2 bg-white/5 text-gray-300 text-xs rounded-xl"
               >
-                {importing ? "Processing..." : "Process & Import CSV"}
+                Close
+              </button>
+              <button
+                onClick={() => handleProcessCsv(csvText)}
+                disabled={importing || !csvText.trim()}
+                className="px-5 py-2 bg-[#FE7733] text-white text-xs font-semibold rounded-xl disabled:opacity-50"
+              >
+                {importing ? "Importing..." : "Import Contacts"}
               </button>
             </div>
           </div>

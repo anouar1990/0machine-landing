@@ -35,10 +35,10 @@ export async function POST(req) {
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; background: #1a1d21; color: #ffffff; padding: 32px; border-radius: 16px;">
-        <h2 style="color: #fe7733;">Unlock the 500+ Design Library & Nesting Tool</h2>
+        <h2 style="color: #fe7733;">Unlock the 5,000+ Design Vault & Nesting Tool</h2>
         <p style="color: #94a3b8; line-height: 1.6;">Hi there,</p>
-        <p style="color: #94a3b8; line-height: 1.6;">We noticed you started upgrading to 0Machine Pro ($19/mo) but didn't complete your checkout.</p>
-        <p style="color: #94a3b8; line-height: 1.6;">With Pro, you get instant access to 500+ ready-to-cut DXF/SVG vector files, sheet nesting yield optimizer, and custom PDF client invoices.</p>
+        <p style="color: #94a3b8; line-height: 1.6;">We noticed you started upgrading to 0Machine Pro ($19/mo or $14.90/mo billed annually) but didn't complete your checkout.</p>
+        <p style="color: #94a3b8; line-height: 1.6;">With Pro, you get instant access to 300 LaserAI vector generations/mo, 5,000+ ready-to-cut DXF/SVG vector files, sheet nesting yield optimizer, and 1-click WhatsApp client quotes.</p>
         <div style="text-align: center; margin: 28px 0;">
           <a href="https://app.0machine.com" style="background: #fe7733; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 10px; font-weight: bold; display: inline-block;">Complete Pro Upgrade →</a>
         </div>

@@ -30,9 +30,9 @@ export default function AboutUs() {
           <section>
             <h2 className="text-2xl font-bold text-white font-[Outfit] mb-3">Why 0Machine?</h2>
             <p>
-              We designed 0Machine to be the missing link f the maker workflow. Rather than guessing margins, 
+              We designed 0Machine to be the missing link in the maker workflow. Rather than guessing margins, 
               our app provides instant, scientific cost calculators, sheet nesting layout optimization, 
-              client management, and professional PDF quote generators — all f one dark-themed, ultra-fast application.
+              client management, and professional PDF quote generators — all in one dark-themed, ultra-fast application.
             </p>
           </section>
 
@@ -41,7 +41,7 @@ export default function AboutUs() {
             <p>
               0Machine Planner is built and operated by <strong>COOLDELO LABS LLC</strong>. 
               We are dedicated to building high-quality, lightweight software utilities for designers and makers worldwide. 
-              Whether you run a single Glowforge f your garage or an industrial CNC router farm, we build tools to help you succeed.
+              Whether you run a single Glowforge in your garage or an industrial CNC router farm, we build tools to help you succeed.
             </p>
           </section>
 

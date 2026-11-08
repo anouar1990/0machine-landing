@@ -58,9 +58,18 @@ export class ResendProvider {
     }
   }
 
-  async sendEmail({ to, subject, html, text, fromName, fromEmail }) {
+  async sendEmail({ to, subject, html, text, fromName, fromEmail, headers, unsubscribeToken, unsubscribeUrl }) {
     const recipient = Array.isArray(to) ? to[0] : to;
     const sender = `${fromName || this.fromName} <${fromEmail || this.fromEmail}>`;
+
+    const mailHeaders = {
+      ...(headers || {})
+    };
+    if (unsubscribeToken || unsubscribeUrl) {
+      const unsubUrl = unsubscribeUrl || `https://app.0machine.com/api/email/unsubscribe?token=${unsubscribeToken}`;
+      mailHeaders["List-Unsubscribe"] = `<${unsubUrl}>`;
+      mailHeaders["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click";
+    }
 
     if (!this.apiKey || this.apiKey.startsWith("re_placeholder")) {
       return {
@@ -68,9 +77,19 @@ export class ResendProvider {
         provider: "resend",
         messageId: `resend-mock-${Date.now()}`,
         recipient,
+        headers: mailHeaders,
         mock: true
       };
     }
+
+    const payload = {
+      from: sender,
+      to: [recipient],
+      subject: subject,
+      html: html,
+      text: text,
+      ...(Object.keys(mailHeaders).length > 0 ? { headers: mailHeaders } : {})
+    };
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -78,13 +97,7 @@ export class ResendProvider {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${this.apiKey}`
       },
-      body: JSON.stringify({
-        from: sender,
-        to: [recipient],
-        subject: subject,
-        html: html,
-        text: text
-      })
+      body: JSON.stringify(payload)
     });
 
     const data = await res.json();
@@ -96,7 +109,8 @@ export class ResendProvider {
       success: true,
       provider: "resend",
       messageId: data.id || `resend-${Date.now()}`,
-      recipient
+      recipient,
+      headers: mailHeaders
     };
   }
 }

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { EmailService, ProviderManager } from "../../../lib/email-service";
 import { supabaseAdmin as supabase } from "@/app/lib/supabase-admin";
+import { generateUnsubscribeToken } from "@/app/lib/email-service/unsubscribe-crypto";
+import { interpolateTemplate } from "@/app/lib/email-service/template-interpolator";
 
 
 export async function GET(request) {
@@ -30,10 +32,10 @@ async function handleQueueProcessing(request) {
     // Determine batch size bounded by 60s Vercel execution window (e.g. 50 recipients per batch)
     const batchSize = Math.min(100, rateLimit * 5);
 
-    // 2. Fetch pending queue items
+    // 2. Fetch pending queue items with associated contact data for interpolation
     let query = supabase
       .from("campaign_queue")
-      .select("id, campaign_id, contact_id, email, attempt_count, campaigns!inner(id, name, subject, html_content, status)")
+      .select("id, campaign_id, contact_id, email, attempt_count, campaigns!inner(id, name, subject, html_content, status), contacts(id, first_name, last_name, plan, attributes)")
       .in("status", ["pending", "retrying"])
       .lte("next_attempt_at", new Date().toISOString())
       .eq("campaigns.status", "sending")
@@ -93,12 +95,85 @@ async function handleQueueProcessing(request) {
         continue;
       }
 
-      // Dispatch Email via EmailService
+      // Generate per-recipient cryptographic unsubscribe token & URL
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.0machine.com";
+      const unsubscribeToken = generateUnsubscribeToken(
+        item.email,
+        item.contact_id || "",
+        item.campaign_id || ""
+      );
+      const unsubscribeUrl = `${appUrl}/api/email/unsubscribe?token=${encodeURIComponent(unsubscribeToken)}`;
+
+      let processedHtml = campaign.html_content || "";
+      const hasUnsubscribeTag =
+        processedHtml.includes("{{unsubscribe_link}}") ||
+        processedHtml.includes("{{unsubscribe_url}}") ||
+        processedHtml.includes("%unsubscribe_url%") ||
+        processedHtml.includes("{{unsubscribe_preferences}}");
+
+      // Replace template merge tags
+      processedHtml = processedHtml
+        .replaceAll("{{unsubscribe_link}}", `<a href="${unsubscribeUrl}" target="_blank" rel="noopener noreferrer">Unsubscribe</a>`)
+        .replaceAll("{{unsubscribe_url}}", unsubscribeUrl)
+        .replaceAll("%unsubscribe_url%", unsubscribeUrl)
+        .replaceAll("{{unsubscribe_preferences}}", `<a href="${unsubscribeUrl}" target="_blank" rel="noopener noreferrer">Manage Preferences</a>`);
+
+      // If no unsubscribe link present in HTML, auto-append compliant footer
+      if (!hasUnsubscribeTag && !processedHtml.toLowerCase().includes("unsubscribe")) {
+        const autoFooter = `
+<hr style="margin-top: 40px; border: none; border-top: 1px solid #333333;" />
+<p style="font-size: 12px; color: #888888; margin-top: 20px; text-align: center; font-family: sans-serif;">
+  You received this because you are on our mailing list. <a href="${unsubscribeUrl}" style="color: #FE7733; text-decoration: underline;" target="_blank" rel="noopener noreferrer">Unsubscribe</a>
+</p>`;
+        processedHtml += autoFooter;
+      }
+
+      // Abort and cancel if contact is missing (hard-deleted) or soft-deleted (EMAIL-008)
+      if (!item.contacts || item.contacts.status === "deleted") {
+        const cancelReason = item.contacts ? "Contact has been deleted" : "Contact record not found";
+        console.warn(`[QUEUE WORKER] Aborting send for queue item ${item.id}: ${cancelReason}`);
+
+        await supabase
+          .from("campaign_queue")
+          .update({
+            status: "cancelled",
+            last_error: cancelReason,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", item.id);
+
+        await supabase
+          .from("email_activity_logs")
+          .insert([{
+            action: "QUEUE_CANCELLED_CONTACT_DELETED",
+            description: `Cancelled queue item ${item.id} for ${item.email}: ${cancelReason}`,
+            actor_email: item.email,
+            metadata: {
+              email: item.email,
+              campaign_id: item.campaign_id,
+              queue_item_id: item.id,
+              details: item.contacts ? "Soft-deleted" : "Hard-deleted or missing"
+            }
+          }]).catch(() => {});
+
+        continue; // Skip to next item, do NOT send
+      }
+
+      // Interpolate contact template variables (first_name, last_name, email, plan, attributes.*)
+      processedHtml = interpolateTemplate(processedHtml, {
+        contact: item.contacts || null,
+        campaignId: item.campaign_id,
+        email: item.email
+      });
+
+      // Dispatch Email via EmailService with unsubscribe token and URL
       const result = await EmailService.send({
         to: item.email,
         subject: campaign.subject,
-        html: campaign.html_content,
-        purpose: "marketing"
+        html: processedHtml,
+        purpose: "marketing",
+        unsubscribeToken,
+        unsubscribeUrl
       });
 
       const nextAttempt = item.attempt_count + 1;

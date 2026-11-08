@@ -85,12 +85,17 @@ export default function CampaignQueueMonitoringPage({ params: paramsPromise }) {
   const handleControlAction = async (action) => {
     setActionLoading(true);
     try {
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
       const res = await fetch("/api/campaigns/control", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentSession?.access_token || ""}`
+        },
         body: JSON.stringify({ campaign_id: campaignId, action })
       });
       const data = await res.json();
+
       if (res.ok) {
         fetchCampaignDetails();
       } else {

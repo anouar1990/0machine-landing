@@ -15,8 +15,16 @@ import {
   Wand2,
   RotateCcw,
   Copy,
-  Info
+  Info,
+  Tag
 } from "lucide-react";
+import {
+  interpolateTemplate,
+  SAMPLE_CONTACT,
+  generatePreviewHtml
+} from "@/app/lib/email-service/template-interpolator";
+
+export { SAMPLE_CONTACT, generatePreviewHtml };
 
 export default function EmailDesignStudio({
   htmlContent,
@@ -35,12 +43,12 @@ export default function EmailDesignStudio({
   // Validation warnings state
   const [validations, setValidations] = useState([]);
 
-  // Debounced Preview HTML
-  const [previewHtml, setPreviewHtml] = useState(htmlContent);
+  // Debounced Preview HTML with sample contact interpolation
+  const [previewHtml, setPreviewHtml] = useState(() => generatePreviewHtml(htmlContent));
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPreviewHtml(htmlContent);
+      setPreviewHtml(generatePreviewHtml(htmlContent));
       runValidationChecks(htmlContent);
     }, 250);
     return () => clearTimeout(timer);
@@ -302,6 +310,85 @@ export default function EmailDesignStudio({
                   <span className="text-[10px] text-gray-400 mt-1 block">Compliant footer with unsubscribe tag</span>
                 </button>
               </div>
+
+              {/* Available Merge Tags Panel (EMAIL-005) */}
+              <div className="pt-5 border-t border-white/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h5 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
+                    <Tag size={13} className="text-[#FE7733]" />
+                    <span>Recipient Merge Tags</span>
+                  </h5>
+                  <span className="text-[10px] text-gray-400">Click to insert tag</span>
+                </div>
+                <div className="bg-black/30 border border-white/10 rounded-xl p-3 space-y-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleInsertBlock("{{first_name}}")}
+                      className="p-2.5 bg-white/5 border border-white/10 hover:border-[#FE7733] rounded-lg text-left hover:bg-white/10 transition-all flex flex-col"
+                    >
+                      <code className="text-xs text-[#FE7733] font-mono font-bold">{"{{first_name}}"}</code>
+                      <span className="text-[10px] text-gray-400 mt-0.5">First name (fallback: "there")</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertBlock("{{last_name}}")}
+                      className="p-2.5 bg-white/5 border border-white/10 hover:border-[#FE7733] rounded-lg text-left hover:bg-white/10 transition-all flex flex-col"
+                    >
+                      <code className="text-xs text-[#FE7733] font-mono font-bold">{"{{last_name}}"}</code>
+                      <span className="text-[10px] text-gray-400 mt-0.5">Last name (fallback: empty)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertBlock("{{email}}")}
+                      className="p-2.5 bg-white/5 border border-white/10 hover:border-[#FE7733] rounded-lg text-left hover:bg-white/10 transition-all flex flex-col"
+                    >
+                      <code className="text-xs text-[#FE7733] font-mono font-bold">{"{{email}}"}</code>
+                      <span className="text-[10px] text-gray-400 mt-0.5">Recipient email address</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertBlock("{{plan}}")}
+                      className="p-2.5 bg-white/5 border border-white/10 hover:border-[#FE7733] rounded-lg text-left hover:bg-white/10 transition-all flex flex-col"
+                    >
+                      <code className="text-xs text-[#FE7733] font-mono font-bold">{"{{plan}}"}</code>
+                      <span className="text-[10px] text-gray-400 mt-0.5">Plan tier (pro, user)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertBlock("{{attributes.company}}")}
+                      className="p-2.5 bg-white/5 border border-white/10 hover:border-[#FE7733] rounded-lg text-left hover:bg-white/10 transition-all flex flex-col"
+                    >
+                      <code className="text-xs text-[#FE7733] font-mono font-bold">{"{{attributes.company}}"}</code>
+                      <span className="text-[10px] text-gray-400 mt-0.5">Custom attribute: company</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertBlock("{{attributes.machine_type}}")}
+                      className="p-2.5 bg-white/5 border border-white/10 hover:border-[#FE7733] rounded-lg text-left hover:bg-white/10 transition-all flex flex-col"
+                    >
+                      <code className="text-xs text-[#FE7733] font-mono font-bold">{"{{attributes.machine_type}}"}</code>
+                      <span className="text-[10px] text-gray-400 mt-0.5">Custom attribute: machine_type</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertBlock("{{unsubscribe_link}}")}
+                      className="p-2.5 bg-white/5 border border-white/10 hover:border-[#FE7733] rounded-lg text-left hover:bg-white/10 transition-all flex flex-col"
+                    >
+                      <code className="text-xs text-[#FE7733] font-mono font-bold">{"{{unsubscribe_link}}"}</code>
+                      <span className="text-[10px] text-gray-400 mt-0.5">1-click unsubscribe hyperlink</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleInsertBlock("{{unsubscribe_url}}")}
+                      className="p-2.5 bg-white/5 border border-white/10 hover:border-[#FE7733] rounded-lg text-left hover:bg-white/10 transition-all flex flex-col"
+                    >
+                      <code className="text-xs text-[#FE7733] font-mono font-bold">{"{{unsubscribe_url}}"}</code>
+                      <span className="text-[10px] text-gray-400 mt-0.5">Unsubscribe URL token</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -325,7 +412,14 @@ export default function EmailDesignStudio({
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
                 <span className="w-2.5 h-2.5 rounded-full bg-green-400"></span>
               </div>
-              <span>{viewport === "mobile" ? "375px (Mobile)" : viewport === "tablet" ? "520px (Tablet)" : "640px (Desktop Email)"}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-gray-500 hidden sm:inline" title="Variables are interpolated with Alex Smith (pro)">
+                  Preview with sample data (actual recipient names will replace placeholders)
+                </span>
+                <span className="font-semibold text-gray-700">
+                  {viewport === "mobile" ? "375px (Mobile)" : viewport === "tablet" ? "520px (Tablet)" : "640px (Desktop Email)"}
+                </span>
+              </div>
             </div>
 
             {/* Sandboxed Iframe */}

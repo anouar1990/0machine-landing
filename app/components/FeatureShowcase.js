@@ -1,5 +1,5 @@
 "use client";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -11,249 +11,8 @@ export default function FeatureShowcase() {
 
   const features = [
     {
-      id: "dashboard",
-      label: t("features.tab.dashboard"),
-      title: t("features.db.title"),
-      subtitle: t("features.db.subtitle"),
-      highlights: [
-        t("features.db.h1"),
-        t("features.db.h2"),
-        t("features.db.h3"),
-        t("features.db.h4"),
-      ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            {[
-              { v: "24", l: t("mock.total"), c: "text-accent-400", icon: "📊" },
-              { v: "8", l: t("mock.inprogress"), c: "text-yellow-400", icon: "⏱" },
-              { v: "16", l: t("mock.completed"), c: "text-green-400", icon: "✅" },
-              { v: "$2,847", l: t("mock.revenue"), c: "text-blue-400", icon: "📈" },
-            ].map((s) => (
-              <div key={s.l} className="glass-card p-4">
-                <span className="text-lg">{s.icon}</span>
-                <p className={`text-2xl font-bold ${s.c} mt-1`}>{s.v}</p>
-                <p className="text-[10px] text-gray-500 mt-0.5">{s.l}</p>
-              </div>
-            ))}
-          </div>
-          <div className="glass-card p-3">
-            <p className="text-[10px] text-gray-500 mb-2 tracking-wider">{t("mock.recent")}</p>
-            {["Precision Gear Set — $145.50", "Architectural Model V2 — $210.75", "Custom Signage — $98.20"].map((p) => (
-              <div key={p} className="py-2 border-b border-white/5 text-xs text-gray-300 last:border-0">{p}</div>
-            ))}
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: "cost-calc",
-      label: t("features.tab.calc"),
-      title: t("features.calc.title"),
-      subtitle: t("features.calc.subtitle"),
-      highlights: [
-        t("features.calc.h1"),
-        t("features.calc.h2"),
-        t("features.calc.h3"),
-        t("features.calc.h4"),
-      ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="flex gap-4">
-            <div className="flex-1 space-y-3">
-              <div className="glass-card p-3">
-                <p className="text-[10px] text-gray-500 mb-2">PROJECT</p>
-                <p className="text-sm text-white font-medium">{t("mock.coasters")}</p>
-                <p className="text-xs text-gray-400 mt-1">{t("mock.birch")}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { l: t("mock.sheet"), v: "$25.00" },
-                  { l: t("mock.usage"), v: "80%" },
-                  { l: t("mock.laser"), v: "45 min" },
-                  { l: t("mock.labor"), v: "$10.00" },
-                ].map((f) => (
-                  <div key={f.l} className="glass-card p-2.5">
-                    <p className="text-[9px] text-gray-500">{f.l}</p>
-                    <p className="text-xs text-white font-medium">{f.v}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="w-40">
-              <div className="glass-card p-3 mb-2">
-                <p className="text-[10px] text-gray-500 mb-2">COST BREAKDOWN</p>
-                {[
-                  { l: "Material", v: "$20.00" },
-                  { l: "Electricity", v: "$1.13" },
-                  { l: "Machine Wear", v: "$2.00" },
-                  { l: "Labor", v: "$10.00" },
-                ].map((c) => (
-                  <div key={c.l} className="flex justify-between py-1">
-                    <span className="text-[9px] text-gray-500">{c.l}</span>
-                    <span className="text-[9px] text-white">{c.v}</span>
-                  </div>
-                ))}
-                <div className="border-t border-white/10 mt-2 pt-2 flex justify-between">
-                  <span className="text-[10px] text-gray-400 font-medium">{t("mock.total")}</span>
-                  <span className="text-xs text-accent-400 font-bold">$33.13</span>
-                </div>
-              </div>
-              <div className="glass-card p-3 text-center border-accent-500/20">
-                <p className="text-[9px] text-gray-500">Selling Price</p>
-                <p className="text-xl font-bold text-accent-400">$49.70</p>
-                <div className="flex gap-2 mt-1">
-                  <div className="flex-1 bg-green-500/10 rounded p-1">
-                    <p className="text-[8px] text-green-400">$16.57</p>
-                    <p className="text-[7px] text-gray-500">Profit</p>
-                  </div>
-                  <div className="flex-1 bg-green-500/10 rounded p-1">
-                    <p className="text-[8px] text-green-400">50%</p>
-                    <p className="text-[7px] text-gray-500">Margin</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: "materials",
-      label: t("features.tab.inventory"),
-      title: t("features.inv.title"),
-      subtitle: t("features.inv.subtitle"),
-      highlights: [
-        t("features.inv.h1"),
-        t("features.inv.h2"),
-        t("features.inv.h3"),
-        t("features.inv.h4"),
-      ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            <div className="glass-card p-3 text-center">
-              <p className="text-xl font-bold text-accent-400">12</p>
-              <p className="text-[9px] text-gray-500">Total SKUs</p>
-            </div>
-            <div className="glass-card p-3 text-center">
-              <p className="text-xl font-bold text-yellow-400">2</p>
-              <p className="text-[9px] text-gray-500">Low Stock</p>
-            </div>
-            <div className="glass-card p-3 text-center">
-              <p className="text-xl font-bold text-green-400">$1,248</p>
-              <p className="text-[9px] text-gray-500">Inventory Value</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { name: t("mock.birch"), type: "Wood", price: "$18/sheet", stock: "10", color: "bg-amber-500/15 text-amber-400" },
-              { name: t("mock.acrylic"), type: "Acrylic", price: "$24/sheet", stock: "5", color: "bg-cyan-500/15 text-cyan-400" },
-              { name: "MDF 6mm", type: "Wood", price: "$14/sheet", stock: "8", color: "bg-amber-500/15 text-amber-400" },
-            ].map((m) => (
-              <div key={m.name} className="glass-card p-3">
-                <span className={`text-[8px] px-1.5 py-0.5 rounded ${m.color}`}>{m.type}</span>
-                <p className="text-xs text-white font-medium mt-1.5">{m.name}</p>
-                <p className="text-[9px] text-gray-500 mt-0.5">{m.price}</p>
-                <div className="mt-2">
-                  <span className="text-[9px] text-green-400 bg-green-500/10 px-1.5 py-0.5 rounded">{m.stock} {t("mock.sheets")}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: "orders",
-      label: t("features.tab.orders"),
-      title: t("features.orders.title"),
-      subtitle: t("features.orders.subtitle"),
-      highlights: [
-        t("features.orders.h1"),
-        t("features.orders.h2"),
-        t("features.orders.h3"),
-        t("features.orders.h4"),
-      ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-3 gap-3">
-            <div className="glass-card p-3">
-              <p className="text-[9px] font-bold text-blue-400 mb-2 uppercase tracking-wider">Pending (2)</p>
-              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5 mb-2">
-                <p className="text-[10px] text-white font-medium">{t("mock.coasters")}</p>
-                <p className="text-[8px] text-gray-500">Due: Jul 21 · John D.</p>
-              </div>
-              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5">
-                <p className="text-[10px] text-white font-medium">Gift Box V3</p>
-                <p className="text-[8px] text-gray-500">Due: Jul 22 · Alice K.</p>
-              </div>
-            </div>
-            <div className="glass-card p-3 border-l border-yellow-500/20">
-              <p className="text-[9px] font-bold text-yellow-400 mb-2 uppercase tracking-wider">In Progress (1)</p>
-              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-yellow-500/20 mb-2">
-                <p className="text-[10px] text-white font-medium">Wedding Arch</p>
-                <p className="text-[8px] text-gray-500">Due: Today · Sarah L.</p>
-                <div className="w-full bg-white/10 h-1 rounded-full mt-2 overflow-hidden">
-                  <div className="bg-yellow-500 h-full w-2/3" />
-                </div>
-              </div>
-            </div>
-            <div className="glass-card p-3 border-l border-green-500/20">
-              <p className="text-[9px] font-bold text-green-400 mb-2 uppercase tracking-wider">Completed (5)</p>
-              <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5 opacity-60">
-                <p className="text-[10px] text-white font-medium line-through">Precision Gear Set</p>
-                <p className="text-[8px] text-gray-500">Done yesterday · Tyler P.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: "presets",
-      label: t("features.tab.presets"),
-      title: t("features.presets.title"),
-      subtitle: t("features.presets.subtitle"),
-      highlights: [
-        t("features.presets.h1"),
-        t("features.presets.h2"),
-        t("features.presets.h3"),
-        t("features.presets.h4"),
-      ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { name: t("mock.birch"), speed: "20", power: "85%", freq: "1000", passes: "1", air: true, note: "Clean cut, slight smoke" },
-              { name: t("mock.acrylic"), speed: "15", power: "90%", freq: "1500", passes: "1", air: true, note: "Remove protective film first" },
-              { name: "Birch Plywood Engrave", speed: "200", power: "40%", freq: "500", passes: "1", air: false, note: "Good contrast, medium depth" },
-              { name: "Leather 2mm", speed: "150", power: "25%", freq: "500", passes: "1", air: false, note: "Ventilate well, low power" },
-            ].map((p) => (
-              <div key={p.name} className="glass-card p-3">
-                <div className="flex items-center gap-1 mb-1.5">
-                  <span className="text-accent-400 text-xs">★</span>
-                  <p className="text-xs text-white font-medium truncate">{p.name}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-1 mb-2">
-                  <div className="bg-dark-800 rounded px-2 py-1">
-                    <p className="text-[7px] text-gray-500">{t("mock.speed")}</p>
-                    <p className="text-[10px] text-white">{p.speed} mm/s</p>
-                  </div>
-                  <div className="bg-dark-800 rounded px-2 py-1">
-                    <p className="text-[7px] text-gray-500">{t("mock.power")}</p>
-                    <p className="text-[10px] text-accent-400 font-medium">{p.power}</p>
-                  </div>
-                </div>
-                <p className="text-[8px] text-gray-500 leading-relaxed">{p.note}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      ),
-    },
-    {
       id: "nesting",
+      icon: "🧩",
       label: t("features.tab.nesting"),
       title: t("features.nest.title"),
       subtitle: t("features.nest.subtitle"),
@@ -263,296 +22,315 @@ export default function FeatureShowcase() {
         t("features.nest.h3"),
         t("features.nest.h4"),
       ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="flex gap-4">
-            <div className="flex-1 bg-dark-950 border border-white/5 rounded-xl p-4 flex flex-col justify-between min-h-[180px]">
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-[9px] text-gray-500 uppercase tracking-wider">Sheet Nesting (4'x8')</span>
-                <span className="text-[9px] text-green-400 bg-green-500/10 px-2 py-0.5 rounded font-bold">88% Efficiency</span>
-              </div>
-              <div className="flex-1 border border-dashed border-white/10 rounded p-2 flex flex-wrap gap-1.5 items-center justify-center bg-white/[0.01]">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="w-9 h-9 rounded bg-accent-500/20 border border-accent-500/40 flex items-center justify-center text-[8px] text-accent-400 font-bold">#N{i+1}</div>
-                ))}
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-[8px] text-blue-400 font-bold">#C{i+1}</div>
-                ))}
-              </div>
-            </div>
-            <div className="w-40 space-y-2">
-              <div className="glass-card p-3">
-                <p className="text-[8px] text-gray-500">Yield Stats</p>
-                <p className="text-xs font-bold text-white mt-1">12 Parts Nested</p>
-                <p className="text-[9px] text-gray-400 mt-1">Waste: 12%</p>
-              </div>
-              <div className="glass-card p-3 border-green-500/20 bg-green-500/[0.01]">
-                <p className="text-[8px] text-gray-500">Saved Material</p>
-                <p className="text-xs font-bold text-green-400 mt-1">$45.50 / sheet</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      ),
+      screenshot: "/screenshots/screenshot-nesting.png",
+      url: "app.0machine.com/nesting",
+      badge: "30-40% Scrap Reduction",
+      badgeColor: "text-green-400 bg-green-500/10 border-green-500/20",
+      stats: [
+        { label: "Material Savings", value: "30-40%", sub: "Less scrap waste" },
+        { label: "Placement Engine", value: "ClipperLib", sub: "Polygon collision detection" },
+        { label: "Export Format", value: "Clean SVG", sub: "LightBurn & Ruida ready" },
+      ],
     },
     {
-      id: "quotes",
-      label: t("features.tab.quotes"),
-      title: t("features.quotes.title"),
-      subtitle: t("features.quotes.subtitle"),
+      id: "laserai",
+      icon: "🤖",
+      label: t("features.tab.laserai"),
+      title: t("features.laserai.title"),
+      subtitle: t("features.laserai.subtitle"),
       highlights: [
-        t("features.quotes.h1"),
-        t("features.quotes.h2"),
-        t("features.quotes.h3"),
-        t("features.quotes.h4"),
+        t("features.laserai.h1"),
+        t("features.laserai.h2"),
+        t("features.laserai.h3"),
+        t("features.laserai.h4"),
       ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="glass-card p-4">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <p className="text-xs text-gray-500">Quote #QT-001</p>
-                <p className="text-sm text-white font-medium">Sarah Lee — Wedding Decorations</p>
-              </div>
-              <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">Accepted</span>
-            </div>
-            <div className="space-y-1 mb-3">
-              {[
-                { item: "Wooden Table Numbers (x20)", qty: 20, price: "$8.00", total: "$160.00" },
-                { item: "Acrylic Welcome Sign", qty: 1, price: "$45.00", total: "$45.00" },
-                { item: "Engraved Coaster Set (x50)", qty: 50, price: "$3.00", total: "$150.00" },
-              ].map((l) => (
-                <div key={l.item} className="flex items-center justify-between py-1.5 border-b border-white/5">
-                  <div>
-                    <p className="text-[10px] text-white">{l.item}</p>
-                    <p className="text-[8px] text-gray-500">Qty: {l.qty} × {l.price}</p>
-                  </div>
-                  <p className="text-[10px] text-white font-medium">{l.total}</p>
-                </div>
-              ))}
-            </div>
-            <div className="border-t border-white/10 pt-2 space-y-1">
-              <div className="flex justify-between text-[10px]">
-                <span className="text-gray-500">Subtotal</span>
-                <span className="text-white">$355.00</span>
-              </div>
-              <div className="flex justify-between text-[10px]">
-                <span className="text-gray-500">VAT (20%)</span>
-                <span className="text-white">$71.00</span>
-              </div>
-              <div className="flex justify-between text-xs font-bold pt-1 border-t border-white/10">
-                <span className="text-white">Total</span>
-                <span className="text-accent-400">$426.00</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      ),
+      screenshot: "/screenshots/screenshot-laser-ai.png",
+      url: "app.0machine.com/laser-ai",
+      badge: "Text-to-Laser AI",
+      badgeColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+      stats: [
+        { label: "Generation Speed", value: "< 5 sec", sub: "Instant vector geometry" },
+        { label: "Path Integrity", value: "100% Closed", sub: "Kerf-aware cut paths" },
+        { label: "Compatible Lasers", value: "CO2 & Fiber", sub: "Direct machine import" },
+      ],
     },
     {
-      id: "clients",
-      label: t("features.tab.clients"),
-      title: t("features.clients.title"),
-      subtitle: t("features.clients.subtitle"),
+      id: "calculator",
+      icon: "💰",
+      label: t("features.tab.calc"),
+      title: t("features.calc.title"),
+      subtitle: t("features.calc.subtitle"),
       highlights: [
-        t("features.clients.h1"),
-        t("features.clients.h2"),
-        t("features.clients.h3"),
-        t("features.clients.h4"),
+        t("features.calc.h1"),
+        t("features.calc.h2"),
+        t("features.calc.h3"),
+        t("features.calc.h4"),
       ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-3 gap-2.5 mb-3">
-            <div className="glass-card p-3">
-              <p className="text-[8px] text-gray-500">Total Clients</p>
-              <p className="text-xs font-bold text-white mt-1">42 Active</p>
-            </div>
-            <div className="glass-card p-3">
-              <p className="text-[8px] text-gray-500">Total LTV</p>
-              <p className="text-xs font-bold text-green-400 mt-1">$6,240</p>
-            </div>
-            <div className="glass-card p-3">
-              <p className="text-[8px] text-gray-500">Balances Due</p>
-              <p className="text-xs font-bold text-yellow-400 mt-1">$450</p>
-            </div>
-          </div>
-          <div className="glass-card p-3">
-            <p className="text-[9px] text-gray-500 mb-2">TOP CUSTOMERS</p>
-            <div className="space-y-2">
-              {[
-                { name: "Sarah Lee (Wedding Planner)", orders: 8, ltv: "$1,840.50", c: "bg-accent-500/10 text-accent-400", s: "LTV Leader" },
-                { name: "Tyler Peterson (CNC Craft Co)", orders: 12, ltv: "$1,450.00", c: "bg-blue-500/10 text-blue-400", s: "Active Builder" },
-              ].map((c) => (
-                <div key={c.name} className="flex justify-between items-center py-1 border-b border-white/5 last:border-0 last:pb-0">
-                  <div>
-                    <p className="text-xs text-white font-medium">{c.name}</p>
-                    <p className="text-[8px] text-gray-500">{c.orders} orders processed</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-white font-bold">{c.ltv}</p>
-                    <span className={`text-[7px] px-1.5 py-0.2 rounded ${c.c}`}>{c.s}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ),
+      screenshot: "/screenshots/screenshot-calculator.png",
+      url: "app.0machine.com/calculator",
+      badge: "Precision Cost Engine",
+      badgeColor: "text-accent-400 bg-accent-500/10 border-accent-500/20",
+      stats: [
+        { label: "Calculation Accuracy", value: "100%", sub: "Pierce, run & gas costs" },
+        { label: "Margin Security", value: "Dynamic", sub: "Guaranteed profit markup" },
+        { label: "Client Dispatch", value: "1-Click WhatsApp", sub: "Instant client quotes & invoices" },
+      ],
     },
     {
-      id: "analytics",
-      label: t("features.tab.analytics"),
-      title: t("features.analytics.title"),
-      subtitle: t("features.analytics.subtitle"),
+      id: "materials",
+      icon: "📦",
+      label: t("features.tab.inventory"),
+      title: t("features.inv.title"),
+      subtitle: t("features.inv.subtitle"),
       highlights: [
-        t("features.analytics.h1"),
-        t("features.analytics.h2"),
-        t("features.analytics.h3"),
-        t("features.analytics.h4"),
+        t("features.inv.h1"),
+        t("features.inv.h2"),
+        t("features.inv.h3"),
+        t("features.inv.h4"),
       ],
-      mockup: (
-        <div className="bg-dark-900 rounded-xl p-6 border border-white/5">
-          <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="glass-card p-3 border-l-2 border-accent-500">
-              <p className="text-[9px] text-gray-500">Total Revenue</p>
-              <p className="text-xl font-bold text-white">$4,842</p>
-              <p className="text-[9px] text-green-400">↑ 23% this month</p>
-            </div>
-            <div className="glass-card p-3 border-l-2 border-green-500">
-              <p className="text-[9px] text-gray-500">Completion</p>
-              <div className="flex items-center gap-2 mt-1">
-                <div className="w-10 h-10 rounded-full border-2 border-green-400 flex items-center justify-center">
-                  <span className="text-xs font-bold text-green-400">78%</span>
-                </div>
-              </div>
-            </div>
-            <div className="glass-card p-3 border-l-2 border-blue-500">
-              <p className="text-[9px] text-gray-500">Total Time</p>
-              <p className="text-xl font-bold text-white">124h</p>
-              <p className="text-[9px] text-gray-400">Avg 2.1h/project</p>
-            </div>
-            <div className="glass-card p-3 border-l-2 border-purple-500">
-              <p className="text-[9px] text-gray-500">Avg Cost</p>
-              <p className="text-xl font-bold text-white">$48</p>
-              <p className="text-[9px] text-gray-400">Per project</p>
-            </div>
-          </div>
-          <div className="glass-card p-3">
-            <p className="text-[9px] text-gray-500 mb-2">STATUS BREAKDOWN</p>
-            <div className="space-y-2">
-              {[
-                { l: "Completed", pct: 45, c: "bg-green-500" },
-                { l: "In Progress", pct: 33, c: "bg-accent-500" },
-                { l: "Planned", pct: 22, c: "bg-dark-600" },
-              ].map((s) => (
-                <div key={s.l} className="flex items-center gap-2">
-                  <span className="text-[8px] text-gray-500 w-16">{s.l}</span>
-                  <div className="flex-1 h-2 bg-dark-700 rounded-full overflow-hidden">
-                    <div className={`h-full ${s.c} rounded-full`} style={{ width: `${s.pct}%` }} />
-                  </div>
-                  <span className="text-[9px] text-gray-400 w-8">{s.pct}%</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ),
+      screenshot: "/screenshots/screenshot-materials.png",
+      url: "app.0machine.com/materials",
+      badge: "Sheet & Off-Cut Inventory",
+      badgeColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+      stats: [
+        { label: "Stock Visibility", value: "Real-Time", sub: "Plywood, Acrylic & Metal" },
+        { label: "Remnant Tracking", value: "Off-Cuts", sub: "Zero forgotten scrap" },
+        { label: "Reorder Alerts", value: "Automated", sub: "Low-stock notifications" },
+      ],
+    },
+    {
+      id: "production",
+      icon: "⚡",
+      label: t("features.tab.production"),
+      title: t("features.prod.title"),
+      subtitle: t("features.prod.subtitle"),
+      highlights: [
+        t("features.prod.h1"),
+        t("features.prod.h2"),
+        t("features.prod.h3"),
+        t("features.prod.h4"),
+      ],
+      screenshot: "/screenshots/screenshot-production.png",
+      url: "app.0machine.com/production",
+      badge: "Workshop Job Tracker",
+      badgeColor: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+      stats: [
+        { label: "Workflow Pipeline", value: "Live Kanban", sub: "Pending → Cutting → Done" },
+        { label: "Workshop Status", value: "Sync'd", sub: "Front desk & operator" },
+        { label: "Time Tracking", value: "Live Timer", sub: "Track exact cutting duration" },
+      ],
+    },
+    {
+      id: "presets",
+      icon: "⚙️",
+      label: t("features.tab.presets"),
+      title: t("features.presets.title"),
+      subtitle: t("features.presets.subtitle"),
+      highlights: [
+        t("features.presets.h1"),
+        t("features.presets.h2"),
+        t("features.presets.h3"),
+        t("features.presets.h4"),
+      ],
+      screenshot: "/screenshots/screenshot-presets.png",
+      url: "app.0machine.com/presets",
+      badge: "Laser Machine Presets",
+      badgeColor: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
+      stats: [
+        { label: "Supported Tubes", value: "CO2, Fiber, Diode", sub: "Multi-machine workshop" },
+        { label: "Parameters", value: "Speed, Power, Hz", sub: "Cut, engrave & score" },
+        { label: "Material Waste", value: "0% Test Cuts", sub: "Tested parameters stored" },
+      ],
     },
   ];
 
-  return (
-    <section id="features" ref={ref} className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 grid-pattern opacity-50" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+  const currentFeature = features[active];
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
+  return (
+    <section id="features" ref={ref} className="relative py-28 sm:py-36 overflow-hidden">
+      <div className="absolute inset-0 grid-pattern opacity-40 pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-500/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+
+      {/* Subtle radial ambient glow */}
+      <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-[700px] h-[700px] bg-accent-500/5 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-14 sm:mb-20"
         >
-          <span className="text-xs text-accent-400 tracking-[0.2em] uppercase font-medium">
-            {t("features.badge")}
+          <span className="inline-flex items-center gap-1.5 text-xs text-accent-400 tracking-[0.2em] uppercase font-semibold bg-accent-500/10 px-3.5 py-1.5 rounded-full border border-accent-500/20 mb-4">
+            <span>⚡</span>
+            <span>{t("features.badge")}</span>
           </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white mt-4 mb-6">
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-white mt-2 mb-5 tracking-tight">
             {t("features.title")}
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+          <p className="text-gray-300 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
             {t("features.subtitle")}
           </p>
         </motion.div>
 
-        {/* Feature tabs + content */}
-        <div className="flex flex-col lg:flex-row gap-8">
+        {/* Feature tabs + Content grid */}
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
           {/* Tab navigation */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:w-72 shrink-0"
+            className="w-full lg:w-80 shrink-0"
           >
-            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
-              {features.map((f, i) => (
-                <button
-                  key={f.id}
-                  onClick={() => setActive(i)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-left whitespace-nowrap transition-all duration-300 ${
-                    active === i
-                      ? "bg-accent-500/10 border border-accent-500/20 text-white"
-                      : "text-gray-500 hover:text-gray-300 hover:bg-white/[0.02] border border-transparent"
-                  }`}
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full transition-colors ${
-                      active === i ? "bg-accent-500" : "bg-dark-600"
+            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-3 lg:pb-0 scrollbar-none">
+              {features.map((f, i) => {
+                const isActive = active === i;
+                return (
+                  <button
+                    key={f.id}
+                    onClick={() => setActive(i)}
+                    className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl text-left whitespace-nowrap transition-all duration-300 border ${
+                      isActive
+                        ? "bg-dark-850 border-accent-500/40 shadow-xl shadow-accent-500/10 text-white"
+                        : "bg-dark-900/60 hover:bg-dark-850/80 border-white/5 text-gray-400 hover:text-gray-200"
                     }`}
-                  />
-                  <span className="text-sm font-medium">{f.label}</span>
-                </button>
-              ))}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">{f.icon}</span>
+                      <div>
+                        <span className="text-sm font-bold block">{f.label}</span>
+                        <span className="text-[11px] text-gray-500 block font-normal">
+                          {f.badge}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="hidden sm:flex items-center">
+                      <span
+                        className={`w-2 h-2 rounded-full transition-colors ${
+                          isActive ? "bg-accent-400 animate-pulse" : "bg-dark-700"
+                        }`}
+                      />
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
 
-          {/* Feature detail */}
+          {/* Feature detail + Screenshot Mockup */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex-1"
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex-1 w-full"
           >
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <h3 className="text-2xl sm:text-3xl font-bold text-white font-[Outfit] mb-3">
-                {features[active].title}
-              </h3>
-              <p className="text-gray-400 mb-6 leading-relaxed">
-                {features[active].subtitle}
-              </p>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentFeature.id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -15 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="space-y-6"
+              >
+                {/* Header Information */}
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full border ${currentFeature.badgeColor}`}
+                    >
+                      {currentFeature.badge}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white font-[Outfit] mb-3">
+                    {currentFeature.title}
+                  </h3>
+                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-3xl">
+                    {currentFeature.subtitle}
+                  </p>
+                </div>
 
-              {/* Highlights */}
-              <div className="flex flex-wrap gap-2 mb-8">
-                {features[active].highlights.map((h) => (
-                  <span
-                    key={h}
-                    className="text-xs px-3 py-1.5 rounded-full bg-white/5 text-gray-300 border border-white/5"
-                  >
-                    {h}
-                  </span>
-                ))}
-              </div>
+                {/* Highlights tags */}
+                <div className="flex flex-wrap gap-2">
+                  {currentFeature.highlights.map((h) => (
+                    <span
+                      key={h}
+                      className="text-xs px-3 py-1.5 rounded-xl bg-white/5 text-gray-200 border border-white/10 font-medium flex items-center gap-1.5"
+                    >
+                      <span className="text-accent-400 text-[10px]">✓</span>
+                      <span>{h}</span>
+                    </span>
+                  ))}
+                </div>
 
-              {/* Mockup */}
-              <div className="relative">
-                <div className="absolute inset-0 bg-accent-500/5 rounded-2xl blur-[40px] -z-10" />
-                {features[active].mockup}
-              </div>
-            </motion.div>
+                {/* REAL RETINA SCREENSHOT IN MAC BROWSER FRAME */}
+                <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-2xl shadow-black/90 bg-dark-950 group">
+                  {/* Browser Chrome Header */}
+                  <div className="bg-dark-900/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-white/10">
+                    <div className="flex items-center gap-2">
+                      <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-500/70" />
+                        <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
+                        <div className="w-3 h-3 rounded-full bg-green-500/70" />
+                      </div>
+                      <span className="hidden sm:inline-block ml-3 text-[11px] font-mono text-gray-500">
+                        0Machine Studio
+                      </span>
+                    </div>
+
+                    {/* Address Bar */}
+                    <div className="bg-dark-950/90 border border-white/10 rounded-lg px-4 py-1 text-xs text-gray-300 font-mono flex items-center gap-2 max-w-sm w-full justify-center">
+                      <span className="text-green-400 text-[10px]">🔒</span>
+                      <span className="truncate">{currentFeature.url}</span>
+                    </div>
+
+                    {/* Direct Launch Link */}
+                    <a
+                      href="https://app.0machine.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] font-semibold text-accent-400 hover:text-accent-300 flex items-center gap-1 transition-colors px-2 py-0.5 rounded-md hover:bg-accent-500/10"
+                    >
+                      <span className="hidden sm:inline">Try Studio</span>
+                      <span>↗</span>
+                    </a>
+                  </div>
+
+                  {/* Screenshot Container */}
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-dark-950">
+                    <img
+                      src={currentFeature.screenshot}
+                      alt={currentFeature.title}
+                      className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.01]"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-dark-950/80 to-transparent pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* 3-Column Key Metric Pillars */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                  {currentFeature.stats.map((stat, i) => (
+                    <div
+                      key={i}
+                      className="glass-card p-3.5 border-white/5 bg-dark-900/60 rounded-xl"
+                    >
+                      <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider block">
+                        {stat.label}
+                      </span>
+                      <span className="text-base sm:text-lg font-bold text-white font-[Outfit] block mt-0.5">
+                        {stat.value}
+                      </span>
+                      <span className="text-[11px] text-accent-400/90 block mt-0.5 font-medium">
+                        {stat.sub}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         </div>
       </div>

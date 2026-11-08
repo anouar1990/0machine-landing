@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
 import { ProviderManager } from "../../../lib/email-service";
 import { supabaseAdmin as supabase } from "@/app/lib/supabase-admin";
-
+import { verifyAdminAuth } from "@/app/lib/admin-auth";
 
 export async function POST(request) {
+  // 0. Enforce Server-Side Administrator Authentication
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
+
   try {
     const body = await request.json();
     const { provider_id } = body;
+
 
     if (!provider_id) {
       return NextResponse.json({ error: "Provider ID is required" }, { status: 400 });

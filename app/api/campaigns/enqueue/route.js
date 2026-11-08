@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/app/lib/supabase-admin";
-
+import { verifyAdminAuth } from "@/app/lib/admin-auth";
 
 export async function POST(request) {
+  // 0. Enforce Server-Side Administrator Authentication
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
+
   try {
     const body = await request.json();
     const { campaign_id } = body;
+
 
     if (!campaign_id) {
       return NextResponse.json({ error: "Campaign ID is required" }, { status: 400 });
@@ -22,8 +29,15 @@ export async function POST(request) {
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
     }
 
-    // 2. Fetch Recipient Audience
-    let contactsQuery = supabase.from("contacts").select("id, email, status, plan");
+    // 2. Fetch Recipient Audience (excluding unsubscribed/bounced/complained/deleted contacts)
+    let contactsQuery = supabase
+      .from("contacts")
+      .select("id, email, status, plan")
+      .neq("status", "unsubscribed")
+      .neq("status", "bounced")
+      .neq("status", "complained")
+      .neq("status", "deleted")
+      .not("email", "is", null);
     
     // Apply Segment filter if configured
     if (campaign.segment_id) {
@@ -50,8 +64,32 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
+    // Cross-reference against public.suppressions table
+    const { data: suppressionsList } = await supabase
+      .from("suppressions")
+      .select("email");
+    const suppressedSet = new Set((suppressionsList || []).map(s => s.email?.toLowerCase().trim()));
+
+    const eligibleContacts = contacts.filter(c => {
+      const normalizedEmail = c.email?.toLowerCase().trim();
+      if (!normalizedEmail) return false;
+      if (["unsubscribed", "bounced", "complained", "deleted"].includes(c.status?.toLowerCase())) return false;
+      if (suppressedSet.has(normalizedEmail)) return false;
+      return true;
+    });
+
+    const suppressedCount = contacts.length - eligibleContacts.length;
+    console.log(`[CAMPAIGN ENQUEUE] Audience: ${contacts.length}, Suppressed: ${suppressedCount}, Enqueueing: ${eligibleContacts.length}`);
+
+    if (eligibleContacts.length === 0) {
+      return NextResponse.json({
+        success: false,
+        error: "No eligible contacts found for this audience segment (all contacts suppressed or unsubscribed)."
+      }, { status: 400 });
+    }
+
     // 3. Populate persistent campaign_queue atomically
-    const queueRows = contacts.map(c => ({
+    const queueRows = eligibleContacts.map(c => ({
       campaign_id,
       contact_id: c.id,
       email: c.email.toLowerCase().trim(),

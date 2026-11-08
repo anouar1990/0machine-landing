@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin as supabase } from "@/app/lib/supabase-admin";
-
+import { verifyAdminAuth } from "@/app/lib/admin-auth";
 
 export async function POST(request) {
+  // 0. Enforce Server-Side Administrator Authentication
+  const auth = await verifyAdminAuth(request);
+  if (!auth.authorized) {
+    return auth.response;
+  }
+
   try {
     // 1. Seed Templates
     const initialTemplates = [

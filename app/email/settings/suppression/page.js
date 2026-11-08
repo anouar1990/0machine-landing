@@ -25,11 +25,28 @@ export default function SuppressionSettingsPage() {
     if (!newEmail || !newEmail.includes("@")) return;
 
     try {
+      const emailToAdd = newEmail.toLowerCase().trim();
+      const { data: { user } } = await supabase.auth.getUser().catch(() => ({ data: {} }));
+
       await supabase.from("suppressions").insert([{
-        email: newEmail.toLowerCase().trim(),
+        email: emailToAdd,
         reason,
         source: "admin_manual"
       }]);
+
+      // Audit log (EMAIL-008)
+      await supabase.from("email_activity_logs").insert([{
+        action: "SUPPRESSION_ADDED",
+        description: `Admin manually added ${emailToAdd} to suppression list (reason: ${reason})`,
+        actor_email: user?.email || "admin",
+        metadata: {
+          email: emailToAdd,
+          reason,
+          source: "admin_manual",
+          added_by: user?.email || "admin"
+        }
+      }]).catch(() => {});
+
       setNewEmail("");
       fetchSuppressions();
     } catch (err) {
@@ -38,9 +55,26 @@ export default function SuppressionSettingsPage() {
   };
 
   const handleRemoveSuppression = async (id) => {
+    const target = suppressions.find(s => s.id === id);
     if (!confirm("Are you sure you want to unblock this email address?")) return;
     try {
+      const { data: { user } } = await supabase.auth.getUser().catch(() => ({ data: {} }));
       await supabase.from("suppressions").delete().eq("id", id);
+
+      // Audit log (EMAIL-008)
+      if (target) {
+        await supabase.from("email_activity_logs").insert([{
+          action: "SUPPRESSION_REMOVED",
+          description: `Admin manually removed ${target.email} from suppression list`,
+          actor_email: user?.email || "admin",
+          metadata: {
+            email: target.email,
+            suppression_id: id,
+            removed_by: user?.email || "admin"
+          }
+        }]).catch(() => {});
+      }
+
       fetchSuppressions();
     } catch (err) {
       alert(`Error removing suppression: ${err.message}`);

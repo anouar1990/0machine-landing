@@ -71,26 +71,33 @@ export default function NewCampaignWizard() {
   };
 
   const handleSendTestEmail = async () => {
-    if (!testEmail) {
+    if (!testEmail || !testEmail.trim()) {
       alert("Please enter a test email address.");
       return;
     }
     setSendingTest(true);
     setTestSuccess("");
     try {
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const headers = { "Content-Type": "application/json" };
+      if (currentSession?.access_token) {
+        headers["Authorization"] = `Bearer ${currentSession.access_token}`;
+      }
+
       const res = await fetch("/api/campaigns/send-test", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
-          to: testEmail,
-          subject: `[TEST] ${form.subject}`,
+          to: testEmail.trim(),
+          subject: form.subject || "0machine Campaign Preview",
           html: form.html_content
         })
       });
-      if (res.ok) {
-        setTestSuccess(`✅ Test email sent to ${testEmail}`);
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        setTestSuccess(`✅ Test email sent to ${testEmail.trim()}${data.provider ? ` via ${data.provider}` : ""}`);
       } else {
-        alert("Test send failed. Please check Resend/SES API settings.");
+        alert(`Test send failed: ${data.error || "Please check provider configuration."}`);
       }
     } catch (err) {
       alert(`Error sending test: ${err.message}`);
@@ -126,13 +133,18 @@ export default function NewCampaignWizard() {
       if (error) throw error;
 
       if (status === "sent") {
-        // Enqueue campaign for bulk background processing
+        // Enqueue campaign for bulk background processing with authenticated admin token
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
         const res = await fetch("/api/campaigns/enqueue", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentSession?.access_token || ""}`
+          },
           body: JSON.stringify({ campaign_id: data.id })
         });
         const enqueueData = await res.json();
+
         if (!res.ok) {
           alert(`Queueing error: ${enqueueData.error}`);
         } else {
@@ -350,7 +362,7 @@ export default function NewCampaignWizard() {
             <div className="flex gap-2">
               <input
                 type="email"
-                placeholder="anouar@0machine.com"
+                placeholder="workshop@0machine.com"
                 value={testEmail}
                 onChange={(e) => setTestEmail(e.target.value)}
                 className="flex-1 bg-[#0A0C12] border border-white/10 rounded-xl px-4 py-2 text-xs text-white"

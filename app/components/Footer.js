@@ -7,10 +7,10 @@ export default function Footer() {
 
   const footerLinks = {
     [t("nav.features") === "Features" ? "Product" : t("nav.features") === "Fonctionnalités" ? "Produit" : "Producto"]: [
-      { label: t("nav.features"), href: "#features" },
-      { label: t("nav.pricing"), href: "#pricing" },
-      { label: t("nav.benefits"), href: "#benefits" },
-      { label: t("nav.workflow"), href: "#workflow" },
+      { label: t("nav.features"), href: "/#features" },
+      { label: t("nav.pricing"), href: "/#pricing" },
+      { label: t("nav.benefits"), href: "/#benefits" },
+      { label: t("nav.workflow"), href: "/#workflow" },
     ],
     [t("nav.features") === "Features" ? "Resources" : t("nav.features") === "Fonctionnalités" ? "Ressources" : "Recursos"]: [
       { label: t("nav.trial"), href: "https://app.0machine.com" },
@@ -20,11 +20,13 @@ export default function Footer() {
       { label: t("nav.features") === "Features" ? "Privacy Policy" : t("nav.features") === "Fonctionnalités" ? "Politique de Confidentialité" : "Política de Privacidad", href: "/privacy" },
       { label: t("nav.features") === "Features" ? "Terms of Service" : t("nav.features") === "Fonctionnalités" ? "Conditions d'Utilisation" : "Términos de Servicio", href: "/terms" },
     ],
-    [t("nav.features") === "Features" ? "Tools" : t("nav.features") === "Fonctionnalités" ? "Outils" : "Herramientas"]: [
-      { label: t("benefits.calc.feature"), href: "#features" },
-      { label: t("benefits.quote.feature"), href: "#features" },
-      { label: t("benefits.inv.feature"), href: "#features" },
-      { label: t("benefits.presets.feature"), href: "#features" },
+    [t("nav.features") === "Features" ? "Free Tools" : t("nav.features") === "Fonctionnalités" ? "Outils Gratuits" : "Herramientas Gratis"]: [
+      { label: "Free Tools Hub", href: "/tools" },
+      { label: "LaserAI Vector Studio", href: "/#laser-ai" },
+      { label: "Laser Box Generator", href: "/tools/box-generator" },
+      { label: "Cost & Quote Calculator", href: "/calculator" },
+      { label: "Commercial Designs Vault", href: "/#designs-vault" },
+      { label: t("features.tab.nesting"), href: "https://app.0machine.com" },
     ],
   };
 
@@ -36,7 +38,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="#" className="flex items-center gap-2.5 mb-4 group">
+            <a href="/" className="flex items-center gap-2.5 mb-4 group">
               <img 
                 src="/logo.png" 
                 alt="0Machine Logo" 
