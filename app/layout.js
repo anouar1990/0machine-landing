@@ -151,6 +151,14 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="facebook-domain-verification" content="nq9iuye9c4rxjv3s1ev6awc05wom58" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link
+          rel="preload"
+          as="image"
+          href="/screenshots/screenshot-designs-vault-mobile.webp"
+          type="image/webp"
+          media="(max-width: 768px)"
+          fetchPriority="high"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}

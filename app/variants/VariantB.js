@@ -96,20 +96,20 @@ export default function VariantB() {
         <div className="absolute inset-0 grid-pattern opacity-30 pointer-events-none" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-6"
+            className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] sm:text-xs font-semibold uppercase tracking-wider mb-6 max-w-full"
           >
-            <Sparkles size={14} className="text-emerald-400" />
-            <span>The Complete Laser & CNC Workshop Operating System</span>
+            <Sparkles size={14} className="text-emerald-400 flex-shrink-0" />
+            <span className="truncate sm:whitespace-normal">The Complete Laser & CNC Workshop Operating System</span>
           </motion.div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.12] sm:leading-[1.1] mb-5 sm:mb-6">
             Run Your Entire Laser &amp; CNC Workshop{" "}
             <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-accent-400 bg-clip-text text-transparent">
               in One Place.
@@ -121,7 +121,7 @@ export default function VariantB() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed mb-10"
+            className="text-sm sm:text-xl text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed mb-8 sm:mb-10 px-2 sm:px-0"
           >
             Stop Managing Your Workshop With 10 Different Tools. Everything You Need in One Unified Platform.
           </motion.p>

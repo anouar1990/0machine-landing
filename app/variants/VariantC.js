@@ -64,20 +64,20 @@ export default function VariantC() {
         <div className="absolute inset-0 grid-pattern opacity-30 pointer-events-none" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-6"
+            className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-[11px] sm:text-xs font-semibold uppercase tracking-wider mb-6 max-w-full"
           >
-            <DollarSign size={14} className="text-amber-400" />
-            <span>Laser &amp; CNC Financial Efficiency &amp; Material Protection</span>
+            <DollarSign size={14} className="text-amber-400 flex-shrink-0" />
+            <span className="truncate sm:whitespace-normal">Laser &amp; CNC Financial Efficiency &amp; Material Protection</span>
           </motion.div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.12] sm:leading-[1.1] mb-5 sm:mb-6">
             Stop Wasting Material.{" "}
             <span className="bg-gradient-to-r from-amber-400 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
               Start Making More Profit.
@@ -89,7 +89,7 @@ export default function VariantC() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed mb-10"
+            className="text-sm sm:text-xl text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed mb-8 sm:mb-10 px-2 sm:px-0"
           >
             Know Your Costs, Price Every Project Correctly, and Keep More Profit in Your Pocket.
           </motion.p>

@@ -27,6 +27,17 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
 
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
   const navLinks = [
     { label: "💎 Designs Vault", href: "/#designs-vault" },
     { label: "🤖 LaserAI", href: "/#laser-ai" },
@@ -49,7 +60,7 @@ export default function Navbar() {
             : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           {/* Logo */}
           <a href="/" className="flex items-center group">
             <img 
@@ -186,7 +197,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-dark-950/98 backdrop-blur-xl pt-24 px-8 md:hidden flex flex-col justify-between pb-12"
+            className="fixed inset-0 z-40 bg-dark-950/98 backdrop-blur-xl pt-24 px-6 md:hidden flex flex-col justify-between pb-8 overflow-y-auto overscroll-contain"
           >
             <div className="flex flex-col gap-6">
               {navLinks.map((link, i) => (

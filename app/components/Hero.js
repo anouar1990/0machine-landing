@@ -67,7 +67,7 @@ export default function Hero() {
     <section
       ref={ref}
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-20"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-24 pb-20"
     >
       {/* Background AI Workshop Visual Integration */}
       <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none">
@@ -97,18 +97,18 @@ export default function Hero() {
       <div className="absolute bottom-10 left-1/4 w-[450px] h-[450px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       <div
-        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center"
+        className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center"
       >
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-500/30 bg-accent-500/10 backdrop-blur-md mb-8 shadow-lg shadow-accent-500/10">
-          <span className="w-2 h-2 rounded-full bg-accent-400 animate-pulse" />
-          <span className="text-xs text-accent-300 font-semibold tracking-wide">
+        <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-accent-500/30 bg-accent-500/10 backdrop-blur-md mb-6 sm:mb-8 shadow-lg shadow-accent-500/10 max-w-full">
+          <span className="w-2 h-2 rounded-full bg-accent-400 animate-pulse flex-shrink-0" />
+          <span className="text-[11px] sm:text-xs text-accent-300 font-semibold tracking-wide truncate sm:whitespace-normal">
             {t("hero.badge")}
           </span>
         </div>
 
         {/* Headline */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black font-[Outfit] leading-[1.06] tracking-tight mb-6">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-[Outfit] leading-[1.12] sm:leading-[1.06] tracking-tight mb-5 sm:mb-6 max-w-5xl mx-auto">
           <span className="text-white">{t("hero.title1")}</span>
           <br className="hidden sm:inline" />{" "}
           <span className="text-white">{t("hero.title2")}</span>
@@ -116,16 +116,16 @@ export default function Hero() {
         </h1>
 
         {/* Subheadline */}
-        <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
+        <p className="text-sm sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed font-normal px-2 sm:px-0">
           {t("hero.subtitle")}
         </p>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-4 max-w-md mx-auto sm:max-w-none w-full">
           <a
             href="#designs-vault"
             onClick={() => trackEvent("cta_click", { button: "hero_designs_vault" })}
-            className="glow-btn text-base px-8 py-4 w-full sm:w-auto shadow-xl shadow-accent-500/25 flex items-center justify-center gap-2 font-semibold"
+            className="glow-btn text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 w-full sm:w-auto shadow-xl shadow-accent-500/25 flex items-center justify-center gap-2 font-semibold"
           >
             <span>💎 {t("hero.ctaVault")}</span>
             <span className="text-xs">↓</span>
@@ -133,7 +133,7 @@ export default function Hero() {
           <a
             href="#laser-ai-video"
             onClick={() => trackEvent("cta_click", { button: "hero_laser_ai" })}
-            className="glow-btn-outline text-base px-8 py-4 w-full sm:w-auto text-gray-200 border-white/20 hover:border-accent-500/50 flex items-center justify-center gap-2 font-semibold"
+            className="glow-btn-outline text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 w-full sm:w-auto text-gray-200 border-white/20 hover:border-accent-500/50 flex items-center justify-center gap-2 font-semibold"
           >
             <span>🤖 {t("hero.ctaLaserAi")}</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FE7733]/20 text-[#FE7733] border border-[#FE7733]/30 font-bold ml-1">
@@ -142,31 +142,32 @@ export default function Hero() {
           </a>
         </div>
 
-        <p className="text-xs sm:text-sm text-gray-400 mb-12">
+        <p className="text-xs sm:text-sm text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto">
           {t("hero.trialNote")}
         </p>
 
         {/* MOCKUP SECTION WITH SCREENSHOT TABS */}
         <motion.div
           style={{ y: mockupY }}
-          className="relative max-w-5xl mx-auto pt-16 sm:pt-0"
+          className="relative max-w-5xl mx-auto mt-4 sm:mt-0"
         >
           {/* Mockup Quick Toggle Tabs */}
-          <div className="flex items-center justify-center mb-4">
-            <div className="inline-flex p-1.5 rounded-2xl bg-dark-900/90 border border-white/10 backdrop-blur-xl shadow-2xl gap-1 max-w-full overflow-x-auto scrollbar-none">
+          <div className="flex items-center justify-center mb-4 w-full">
+            <div className="inline-flex p-1.5 rounded-2xl bg-dark-900/90 border border-white/10 backdrop-blur-xl shadow-2xl gap-1 max-w-full overflow-x-auto scrollbar-none justify-start sm:justify-center">
               {HERO_TABS.map((tab, idx) => {
                 const isActive = activeTab === idx;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(idx)}
-                    className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
                       isActive
                         ? "bg-accent-500 text-white shadow-lg shadow-accent-500/30"
                         : "text-gray-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
-                    <span>{tab.label}</span>
+                    <span className="hidden sm:inline">{tab.label}</span>
+                    <span className="sm:hidden">{tab.shortLabel || tab.label}</span>
                     {isActive && (
                       <span className="hidden md:inline-block text-[10px] px-2 py-0.5 rounded-full bg-black/25 text-white font-medium border border-white/15">
                         {tab.tag}
@@ -228,8 +229,9 @@ export default function Hero() {
                   width={1400}
                   height={875}
                   decoding="async"
+                  fetchPriority={activeTab === 0 ? "high" : "low"}
                   className="w-full h-full object-cover object-top block"
-                  loading="lazy"
+                  loading={activeTab === 0 ? "eager" : "lazy"}
                 />
               </picture>
 

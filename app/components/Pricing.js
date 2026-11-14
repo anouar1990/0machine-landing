@@ -113,10 +113,10 @@ export default function Pricing() {
           </p>
 
           {/* Monthly vs Annual Cycle Toggle */}
-          <div className="flex items-center justify-center gap-3 mt-8">
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
             <button
               onClick={() => setCycle("monthly")}
-              className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                 cycle === "monthly"
                   ? "bg-[#FE7733] text-white shadow-lg shadow-[#FE7733]/20"
                   : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10"
@@ -127,14 +127,14 @@ export default function Pricing() {
 
             <button
               onClick={() => setCycle("annual")}
-              className={`relative px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
+              className={`relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
                 cycle === "annual"
                   ? "bg-[#FE7733] text-white shadow-lg shadow-[#FE7733]/20"
                   : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10"
               }`}
             >
               {t("price.cycle.annual") || "Annual Billing"}
-              <span className="absolute -top-3 -right-3 bg-[#B1FA63] text-[#111317] text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full shadow">
+              <span className="absolute -top-3 -right-2 sm:-right-3 bg-[#B1FA63] text-[#111317] text-[9px] sm:text-[10px] uppercase font-extrabold px-1.5 sm:px-2 py-0.5 rounded-full shadow whitespace-nowrap">
                 {t("price.cycle.save_badge") || "Save up to 35%"}
               </span>
             </button>
@@ -142,16 +142,16 @@ export default function Pricing() {
         </motion.div>
 
         {/* Pricing Cards Grid (3 Columns) */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+        <div className="grid md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto items-stretch">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name || i}
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.12, duration: 0.6 }}
-              className={`relative flex flex-col h-full rounded-2xl p-8 border transition-all ${
+              className={`relative flex flex-col h-full rounded-2xl p-6 sm:p-8 border transition-all ${
                 plan.highlighted
-                  ? "bg-[#23262C] border-[#B1FA63] shadow-2xl shadow-[#B1FA63]/10 scale-105"
+                  ? "bg-[#23262C] border-[#B1FA63] shadow-2xl shadow-[#B1FA63]/10 md:scale-105"
                   : "bg-[#1A1D21] border-white/10 hover:border-white/20"
               }`}
             >

@@ -80,17 +80,17 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
           <p className="text-xs text-gray-600">
             {t("foot.copyright")}
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-4">
             <span className="text-xs text-gray-600">
               {t("foot.payments")}
             </span>
-            <span className="text-xs text-gray-700">•</span>
+            <span className="text-xs text-gray-700 hidden sm:inline">•</span>
             <span className="text-xs text-gray-600">{t("foot.billed")}</span>
-            <span className="text-xs text-gray-700">•</span>
+            <span className="text-xs text-gray-700 hidden sm:inline">•</span>
             <span className="text-xs text-gray-600">{t("foot.cancel")}</span>
           </div>
         </div>

@@ -84,27 +84,27 @@ export default function VariantE() {
         <div className="absolute inset-0 grid-pattern opacity-30 pointer-events-none" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-rose-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center">
           {/* Dual Badge */}
           <motion.div
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex flex-wrap items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/25 text-rose-400 text-xs font-semibold uppercase tracking-wider mb-6"
+            className="inline-flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/25 text-rose-400 text-[11px] sm:text-xs font-semibold uppercase tracking-wider mb-6 max-w-full"
           >
             <span className="flex items-center gap-1">
-              <Download size={13} className="text-rose-400" />
+              <Download size={13} className="text-rose-400 flex-shrink-0" />
               <span>300,000+ Ready-to-Cut Library</span>
             </span>
             <span className="text-gray-500">•</span>
             <span className="flex items-center gap-1 text-accent-400">
-              <Cpu size={13} />
+              <Cpu size={13} className="flex-shrink-0" />
               <span>Built-in CAD &amp; AI Creator Studio</span>
             </span>
           </motion.div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.08] mb-6">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.12] sm:leading-[1.08] mb-5 sm:mb-6">
             300,000+ Designs Ready to Use.{" "}
             <span className="bg-gradient-to-r from-rose-400 via-pink-300 to-amber-300 bg-clip-text text-transparent">
               Create Your Own. No Limits.
@@ -116,7 +116,7 @@ export default function VariantE() {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-lg sm:text-2xl text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed mb-10"
+            className="text-sm sm:text-xl text-gray-300 max-w-3xl mx-auto font-normal leading-relaxed mb-8 sm:mb-10 px-2 sm:px-0"
           >
             Never Run Out of Ideas. Start With 300,000+ Curated Designs or Create Something Completely Your Own with Native Laser Tools.
           </motion.p>
@@ -224,7 +224,7 @@ export default function VariantE() {
           </div>
 
           {/* Category Pills */}
-          <div className="flex items-center justify-center gap-2 overflow-x-auto pb-6 scrollbar-none">
+          <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-6 scrollbar-none px-4 sm:px-0">
             {categories.map((c) => (
               <button
                 key={c.id}

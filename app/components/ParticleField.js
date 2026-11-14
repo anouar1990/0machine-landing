@@ -6,6 +6,7 @@ export default function ParticleField() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (window.innerWidth < 768) return; // Disable canvas loop on mobile for buttery 120fps touch scrolling and zero battery drain
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }

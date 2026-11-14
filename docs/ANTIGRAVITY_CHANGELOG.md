@@ -1545,3 +1545,43 @@
 - **Test Results**: PASS (Working tree clean, local `main` is in sync with `origin/main` at commit `f942925`).
 - **Current Status**: COMPLETE
 - **Known Issues**: None
+
+## [2026-11-14 22:09:00] - Comprehensive Mobile Layout & Responsiveness Optimization
+- **Task**: Diagnose and resolve mobile layout issues where the landing page hero headline was horizontally clipped (expanded to 546px in a 375px viewport), eliminate awkward empty spacing, fix mobile navigation drawer scrolling, eliminate jerky CSS scroll-snapping, and prevent sticky test toolbar obstruction on mobile screens.
+- **Root Cause Diagnosed**:
+  - In `Hero.js`, `<section id="hero">` was using `display: flex` with default `flex-direction: row` while its child container `<div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">` lacked `w-full`. Inside flex-row, the container expanded to `546px` to fit unconstrained child elements, and combined with `justify-center` and `overflow-hidden`, clipped 85px off both the left and right edges on 375px mobile screens.
+  - A 64px artificial top padding (`pt-16 sm:pt-0`) on the mockup created an unsightly dark void between CTAs and the product preview on phones.
+  - `scroll-snap-type: y proximity` in `globals.css` caused stuttering, jittery touch momentum fights on iOS WebKit and Android Chrome.
+  - `Navbar.js` mobile drawer lacked `overflow-y-auto` and body scroll locking, leaving CTAs unreachable on smaller phone screens.
+  - `Pricing.js` highlighted card used unconditional `scale-105`, breaking out of mobile bounding containers.
+  - `ExperimentContext.js` preview toolbar was permanently expanded across the bottom on mobile, obscuring 20% of screen height.
+- **Changes Implemented**:
+  - `Hero.js`: Converted `<section>` to `flex-col`, added `w-full` to inner container, removed the 64px `pt-16` void, added responsive `shortLabel` to tabs (`💎 Designs` · `🤖 LaserAI` · `🧩 Nesting` · `📊 Dashboard`) so all 4 fit without horizontal scrolling, and adjusted typography to `text-3xl sm:text-5xl md:text-6xl...`.
+  - `globals.css`: Removed `scroll-snap-type: y proximity` for natural 120fps touch scrolling.
+  - `Navbar.js`: Added `overflow-y-auto`, overscroll containment, and dynamic body scroll locking when the mobile drawer opens.
+  - `Pricing.js`: Switched `scale-105` to `md:scale-105` and wrapped billing toggles with responsive padding.
+  - `ExperimentContext.js`: Defaulted preview toolbar to minimized pill on mobile screens (`< 640px`).
+  - `ParticleField.js`: Completely disabled continuous canvas `requestAnimationFrame` loop on mobile devices (`< 768px`) to eliminate battery drain and main-thread blocking.
+  - `VariantB.js`, `VariantC.js`, `VariantD.js`, `VariantE.js`: Added `w-full` to containers and optimized mobile headlines.
+  - `Footer.js`: Added `flex-wrap` and `text-center` to bottom legal/payment bar.
+- **Files Modified**:
+  - `0machine-landing/app/components/Hero.js`
+  - `0machine-landing/app/components/Navbar.js`
+  - `0machine-landing/app/components/Pricing.js`
+  - `0machine-landing/app/components/ParticleField.js`
+  - `0machine-landing/app/components/Footer.js`
+  - `0machine-landing/app/context/ExperimentContext.js`
+  - `0machine-landing/app/globals.css`
+  - `0machine-landing/app/layout.js`
+  - `0machine-landing/app/variants/VariantB.js`
+  - `0machine-landing/app/variants/VariantC.js`
+  - `0machine-landing/app/variants/VariantD.js`
+  - `0machine-landing/app/variants/VariantE.js`
+  - `0machine-landing/docs/ANTIGRAVITY_CHANGELOG.md`
+- **Tests Performed**:
+  - Chrome DevTools Protocol Mobile Viewport Audit (375x812 iPhone 13/14): PASS (0px horizontal overflow across all 5 variants, `h1` width = 343px with 16px margins on both sides).
+  - Chrome Headless Mobile Screenshots across Variants A, B, C, D, E: PASS (Zero text clipping, all elements visually balanced).
+  - Production Next.js Turbopack build (`npm run build`): PASS (63/63 routes compiled in 14.3s).
+- **Test Results**: PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None

@@ -220,7 +220,12 @@ export function useExperiment() {
  * Allows instant 1-click toggling between all 5 variants.
  */
 function ExperimentPreviewToolbar({ variant, onSelectVariant, onClose }) {
-  const [minimized, setMinimized] = useState(false);
+  const [minimized, setMinimized] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 640;
+    }
+    return false;
+  });
 
   if (minimized) {
     return (
