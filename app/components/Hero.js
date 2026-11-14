@@ -10,7 +10,8 @@ const HERO_TABS = [
     label: "💎 Designs Vault",
     shortLabel: "Designs",
     path: "app.0machine.com/library",
-    src: "/screenshots/screenshot-designs-vault.png",
+    src: "/screenshots/screenshot-designs-vault.webp",
+    mobileSrc: "/screenshots/screenshot-designs-vault-mobile.webp",
     alt: "0Machine Commercial Designs Vault with 5,000+ Ready-to-Cut Vector Packs",
     tag: "5,000+ Ready-to-Cut",
     badge: "Commercial License",
@@ -20,7 +21,7 @@ const HERO_TABS = [
     label: "🤖 LaserAI Studio",
     shortLabel: "LaserAI",
     path: "app.0machine.com/laser-ai",
-    src: "/screenshots/screenshot-laser-ai.png",
+    src: "/screenshots/screenshot-laser-ai.webp",
     alt: "0Machine LaserAI Studio Text-to-Vector Generator for laser cut designs",
     tag: "Prompt to SVG/DXF",
     badge: "Kerf-Compensated",
@@ -30,7 +31,7 @@ const HERO_TABS = [
     label: "🧩 Nesting Studio",
     shortLabel: "Nesting",
     path: "app.0machine.com/nesting",
-    src: "/screenshots/screenshot-nesting.png",
+    src: "/screenshots/screenshot-nesting.webp",
     alt: "0Machine True-Shape Nesting Studio with ClipperLib collision detection and sheet yield HUD",
     tag: "30-40% Less Scrap",
     badge: "ClipperLib Engine",
@@ -40,7 +41,7 @@ const HERO_TABS = [
     label: "📊 Workshop Hub",
     shortLabel: "Dashboard",
     path: "app.0machine.com/dashboard",
-    src: "/screenshots/screenshot-dashboard.png",
+    src: "/screenshots/screenshot-dashboard.webp",
     alt: "0Machine Workshop Hub with live revenue analytics, order status, and inventory alerts",
     tag: "Workshop Hub",
     badge: "Live Telemetry",
@@ -70,11 +71,19 @@ export default function Hero() {
     >
       {/* Background AI Workshop Visual Integration */}
       <div className="absolute inset-0 -z-20 overflow-hidden pointer-events-none">
-        <img
-          src="/assets/hero-laser-workshop.jpg"
-          alt="0Machine Fiber Laser Precision Workshop Cutting Nested Sheets"
-          className="w-full h-full object-cover object-center opacity-20 mix-blend-luminosity filter blur-[1px] scale-105"
-        />
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/assets/hero-laser-workshop-mobile.webp" type="image/webp" />
+          <img
+            src="/assets/hero-laser-workshop.webp"
+            alt="0Machine Fiber Laser Precision Workshop Cutting Nested Sheets"
+            width={800}
+            height={533}
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+            className="w-full h-full object-cover object-center opacity-20 mix-blend-luminosity filter blur-[1px] scale-105"
+          />
+        </picture>
         <div className="absolute inset-0 bg-gradient-to-b from-dark-950/85 via-dark-950/80 to-dark-950" />
         <div className="absolute inset-0 bg-gradient-to-r from-dark-950 via-transparent to-dark-950 opacity-90" />
       </div>
@@ -87,53 +96,32 @@ export default function Hero() {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-accent-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="absolute bottom-10 left-1/4 w-[450px] h-[450px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
-      <motion.div
-        style={{ opacity, scale }}
+      <div
         className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center"
       >
         {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-500/30 bg-accent-500/10 backdrop-blur-md mb-8 shadow-lg shadow-accent-500/10"
-        >
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent-500/30 bg-accent-500/10 backdrop-blur-md mb-8 shadow-lg shadow-accent-500/10">
           <span className="w-2 h-2 rounded-full bg-accent-400 animate-pulse" />
           <span className="text-xs text-accent-300 font-semibold tracking-wide">
             {t("hero.badge")}
           </span>
-        </motion.div>
+        </div>
 
         {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.8 }}
-          className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black font-[Outfit] leading-[1.06] tracking-tight mb-6"
-        >
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-8xl font-black font-[Outfit] leading-[1.06] tracking-tight mb-6">
           <span className="text-white">{t("hero.title1")}</span>
           <br className="hidden sm:inline" />{" "}
           <span className="text-white">{t("hero.title2")}</span>
           <span className="gradient-text-accent">{t("hero.titleAccent")}</span>
-        </motion.h1>
+        </h1>
 
         {/* Subheadline */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal"
-        >
+        <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
           {t("hero.subtitle")}
-        </motion.p>
+        </p>
 
         {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-4"
-        >
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-4">
           <a
             href="#designs-vault"
             onClick={() => trackEvent("cta_click", { button: "hero_designs_vault" })}
@@ -152,24 +140,16 @@ export default function Hero() {
               ▶ 5s Video
             </span>
           </a>
-        </motion.div>
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className="text-xs sm:text-sm text-gray-400 mb-12"
-        >
+        <p className="text-xs sm:text-sm text-gray-400 mb-12">
           {t("hero.trialNote")}
-        </motion.p>
+        </p>
 
         {/* MOCKUP SECTION WITH SCREENSHOT TABS */}
         <motion.div
           style={{ y: mockupY }}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 1, ease: [0.4, 0, 0.2, 1] }}
-          className="relative max-w-5xl mx-auto"
+          className="relative max-w-5xl mx-auto pt-16 sm:pt-0"
         >
           {/* Mockup Quick Toggle Tabs */}
           <div className="flex items-center justify-center mb-4">
@@ -239,19 +219,19 @@ export default function Hero() {
 
             {/* High-Resolution Screenshot Frame */}
             <div className="relative aspect-[16/10] w-full overflow-hidden bg-dark-950">
-              <AnimatePresence mode="wait">
-                <motion.img
+              <picture>
+                <source media="(max-width: 768px)" srcSet={currentTab.mobileSrc || currentTab.src} type="image/webp" />
+                <img
                   key={currentTab.id}
                   src={currentTab.src}
                   alt={currentTab.alt}
-                  initial={{ opacity: 0, scale: 0.99 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  width={1400}
+                  height={875}
+                  decoding="async"
                   className="w-full h-full object-cover object-top block"
-                  loading="eager"
+                  loading="lazy"
                 />
-              </AnimatePresence>
+              </picture>
 
               {/* Bottom depth subtle fade */}
               <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-dark-950/80 to-transparent pointer-events-none" />
@@ -294,28 +274,23 @@ export default function Hero() {
             </p>
           </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.6 }}
+      <div
         className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-10"
       >
         <a href="#designs-vault" className="flex flex-col items-center gap-1.5 group cursor-pointer">
           <span className="text-[10px] text-gray-500 group-hover:text-accent-400 tracking-wider transition-colors">
             EXPLORE DESIGNS VAULT
           </span>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
+          <div
             className="w-4 h-7 rounded-full border border-gray-700 group-hover:border-accent-500/50 flex items-start justify-center p-1 transition-colors"
           >
-            <div className="w-1 h-1.5 rounded-full bg-accent-400" />
-          </motion.div>
+            <div className="w-1 h-1.5 rounded-full bg-accent-400 animate-bounce" />
+          </div>
         </a>
-      </motion.div>
+      </div>
     </section>
   );
 }

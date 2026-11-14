@@ -40,8 +40,10 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <a href="/" className="flex items-center gap-2.5 mb-4 group">
               <img 
-                src="/logo.png" 
+                src="/logo.webp" 
                 alt="0Machine Logo" 
+                width={150}
+                height={36}
                 className="h-9 w-auto object-contain" 
               />
             </a>
@@ -60,7 +62,7 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <h4 className="text-sm font-semibold text-white mb-4">{title}</h4>
+              <p className="text-sm font-semibold text-white mb-4">{title}</p>
               <ul className="space-y-2.5">
                 {links.map((link) => (
                   <li key={link.label}>

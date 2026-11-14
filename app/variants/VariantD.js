@@ -6,7 +6,8 @@ import {
   Briefcase, TrendingUp, Users, MessageSquare, FileText, CheckCircle2,
   ArrowRight, ShieldCheck, Sparkles, Star, Award, Zap, Clock, Smartphone, Check
 } from "lucide-react";
-import Pricing from "../components/Pricing";
+import dynamic from "next/dynamic";
+const Pricing = dynamic(() => import("../components/Pricing"), { ssr: true });
 
 export default function VariantD() {
   const { buildAppUrl, handleCtaClick } = useExperiment();
@@ -83,17 +84,12 @@ export default function VariantD() {
           </motion.div>
 
           {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6"
-          >
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6">
             Turn Your Laser Workshop{" "}
             <span className="bg-gradient-to-r from-purple-400 via-pink-300 to-accent-400 bg-clip-text text-transparent">
               Into a Real Business.
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Subheadline */}
           <motion.p

@@ -61,77 +61,72 @@ function persistVariant(v) {
   } catch (e) {}
 }
 
-export function ExperimentProvider({ children }) {
-  const [variant, setVariantState] = useState("A");
+function getInitialVariant() {
+  if (typeof window === "undefined") return "A";
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlVariant = urlParams.get("variant")?.toUpperCase();
+    if (urlVariant && VARIANTS.includes(urlVariant)) return urlVariant;
+
+    const cookieMatch = document.cookie.match(/(?:^|;\s*)0machine_variant=([A-Ea-e])/);
+    if (cookieMatch && cookieMatch[1]) {
+      const saved = cookieMatch[1].toUpperCase();
+      if (VARIANTS.includes(saved)) return saved;
+    }
+
+    const localSaved = localStorage.getItem("0machine_variant")?.toUpperCase();
+    if (localSaved && VARIANTS.includes(localSaved)) return localSaved;
+
+    // Allocate random variant synchronously on first client run so there is zero post-mount layout swap
+    const rand = Math.random();
+    let chosen = "A";
+    if (rand < 0.20) chosen = "A";
+    else if (rand < 0.40) chosen = "B";
+    else if (rand < 0.60) chosen = "C";
+    else if (rand < 0.80) chosen = "D";
+    else chosen = "E";
+
+    persistVariant(chosen);
+    return chosen;
+  } catch (e) {}
+  return "A";
+}
+
+export function ExperimentProvider({ children, initialVariant }) {
+  const [variant, setVariantState] = useState(() => {
+    if (initialVariant && VARIANTS.includes(initialVariant)) return initialVariant;
+    return getInitialVariant();
+  });
   const [isPreview, setIsPreview] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || initialized) return;
+    setInitialized(true);
 
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const urlVariant = urlParams.get("variant")?.toUpperCase();
       const previewParam = urlParams.get("preview") === "true";
 
-      // 1. Check if explicit preview query parameter was provided
       if (urlVariant && VARIANTS.includes(urlVariant)) {
-        setVariantState(urlVariant);
         setIsPreview(true);
         setShowToolbar(true);
-        if (!previewParam) {
-          persistVariant(urlVariant);
-        }
-        setInitialized(true);
-        return;
       }
 
-      // 2. Check existing cookie
-      const cookieMatch = document.cookie.match(/(?:^|;\s*)0machine_variant=([A-Ea-e])/);
-      if (cookieMatch && cookieMatch[1]) {
-        const saved = cookieMatch[1].toUpperCase();
-        if (VARIANTS.includes(saved)) {
-          setVariantState(saved);
-          setInitialized(true);
-          return;
-        }
+      const isAssigned = localStorage.getItem("0machine_assigned");
+      if (!isAssigned) {
+        localStorage.setItem("0machine_assigned", "true");
+        trackEvent("experiment_assigned", {
+          experiment_id: EXPERIMENT_ID,
+          variant: variant,
+        }, `assigned_${variant}`);
       }
-
-      // 3. Check existing localStorage
-      const localSaved = localStorage.getItem("0machine_variant")?.toUpperCase();
-      if (localSaved && VARIANTS.includes(localSaved)) {
-        setVariantState(localSaved);
-        persistVariant(localSaved);
-        setInitialized(true);
-        return;
-      }
-
-      // 4. Equal 20% random allocation for new unique visitor (A: 20%, B: 20%, C: 20%, D: 20%, E: 20%)
-      const rand = Math.random();
-      let chosen = "A";
-      if (rand < 0.20) chosen = "A";
-      else if (rand < 0.40) chosen = "B";
-      else if (rand < 0.60) chosen = "C";
-      else if (rand < 0.80) chosen = "D";
-      else chosen = "E";
-
-      setVariantState(chosen);
-      persistVariant(chosen);
-      setInitialized(true);
-
-      // Track initial experiment assignment
-      trackEvent("experiment_assigned", {
-        experiment_id: EXPERIMENT_ID,
-        variant: chosen,
-        allocation_random: rand.toFixed(4),
-      }, `assigned_${chosen}`);
     } catch (err) {
       console.warn("Experiment variant resolution error:", err);
-      setVariantState("A");
-      setInitialized(true);
     }
-  }, []);
+  }, [variant, initialized]);
 
   const setVariant = (newVariant, isManualPreview = true) => {
     if (!VARIANTS.includes(newVariant)) return;

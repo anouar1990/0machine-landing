@@ -1,7 +1,20 @@
 import "./globals.css";
+import { Inter, Outfit } from "next/font/google";
 import { LanguageProvider } from "./context/LanguageContext";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import PixelScripts from "./components/PixelScripts";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
+});
 
 export const metadata = {
   title: "0Machine Planner — Run Your Laser Business Smarter, Faster, Easier",
@@ -134,19 +147,10 @@ export default function RootLayout({ children }) {
   };
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
       <head>
         <meta name="facebook-domain-verification" content="nq9iuye9c4rxjv3s1ev6awc05wom58" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareSchema) }}

@@ -122,6 +122,7 @@ export default function LaserAiDemoVideo({
           {inline && onExpand && (
             <button
               onClick={onExpand}
+              aria-label="Expand Fullscreen"
               className="text-gray-400 hover:text-white px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 flex items-center gap-1 text-[11px] font-bold transition-colors border border-white/10"
               title="Expand Fullscreen"
             >
@@ -133,6 +134,7 @@ export default function LaserAiDemoVideo({
           {!inline && onClose && (
             <button
               onClick={onClose}
+              aria-label="Close video demo"
               className="text-gray-400 hover:text-white w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors border border-white/10"
             >
               <X size={16} />

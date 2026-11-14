@@ -6,7 +6,8 @@ import {
   Sparkles, Layers, Download, CheckCircle2, ArrowRight, ShieldCheck,
   FolderDown, Sliders, Box, Cpu, Scissors, Palette, Check, Tag, Eye
 } from "lucide-react";
-import Pricing from "../components/Pricing";
+import dynamic from "next/dynamic";
+const Pricing = dynamic(() => import("../components/Pricing"), { ssr: true });
 
 export default function VariantE() {
   const { buildAppUrl, handleCtaClick } = useExperiment();
@@ -103,17 +104,12 @@ export default function VariantE() {
           </motion.div>
 
           {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6"
-          >
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.08] mb-6">
             300,000+ Designs Ready to Use.{" "}
             <span className="bg-gradient-to-r from-rose-400 via-pink-300 to-amber-300 bg-clip-text text-transparent">
               Create Your Own. No Limits.
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Subheadline */}
           <motion.p
@@ -178,10 +174,7 @@ export default function VariantE() {
           </div>
 
           {/* Visual Showcase */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+          <div
             className="relative max-w-5xl mx-auto rounded-2xl border border-white/15 bg-dark-950 p-2 shadow-2xl shadow-rose-500/10"
           >
             <div className="rounded-xl overflow-hidden border border-white/10 bg-dark-900">
@@ -198,13 +191,20 @@ export default function VariantE() {
                   💎 300k+ VECTOR ASSETS
                 </span>
               </div>
-              <img
-                src="/screenshots/screenshot-designs-vault.png"
-                alt="0Machine 300000+ Laser and CNC Vector Designs Vault"
-                className="w-full h-auto object-cover object-top"
-              />
+              <picture>
+                <source media="(max-width: 768px)" srcSet="/screenshots/screenshot-designs-vault-mobile.webp" type="image/webp" />
+                <img
+                  src="/screenshots/screenshot-designs-vault.webp"
+                  alt="0Machine 300000+ Laser and CNC Vector Designs Vault"
+                  width={1600}
+                  height={1000}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="w-full h-auto object-cover object-top"
+                />
+              </picture>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

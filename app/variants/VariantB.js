@@ -8,7 +8,8 @@ import {
   FileText, Check, Users, Smartphone, MessageSquare, AlertTriangle,
   Flame, Sliders, ChevronRight
 } from "lucide-react";
-import Pricing from "../components/Pricing";
+import dynamic from "next/dynamic";
+const Pricing = dynamic(() => import("../components/Pricing"), { ssr: true });
 
 export default function VariantB() {
   const { buildAppUrl, handleCtaClick } = useExperiment();
@@ -108,17 +109,12 @@ export default function VariantB() {
           </motion.div>
 
           {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6"
-          >
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6">
             Run Your Entire Laser &amp; CNC Workshop{" "}
             <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-accent-400 bg-clip-text text-transparent">
               in One Place.
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Subheadline */}
           <motion.p
@@ -179,10 +175,7 @@ export default function VariantB() {
           </div>
 
           {/* Desktop Dashboard Mockup */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+          <div
             className="relative max-w-5xl mx-auto rounded-2xl border border-white/15 bg-dark-950 p-2 shadow-2xl shadow-emerald-500/10"
           >
             <div className="rounded-xl overflow-hidden border border-white/10 bg-dark-900">
@@ -204,12 +197,16 @@ export default function VariantB() {
 
               {/* Real screenshot */}
               <img
-                src="/screenshots/screenshot-dashboard.png"
+                src="/screenshots/screenshot-dashboard.webp"
                 alt="0Machine Workshop Operating System Dashboard"
+                width={1600}
+                height={1000}
+                fetchPriority="high"
+                decoding="async"
                 className="w-full h-auto object-cover object-top"
               />
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 

@@ -17,8 +17,8 @@
   --color-glow-neon: rgba(177, 250, 99, 0.3);
   --color-glass: rgba(255, 255, 255, 0.05);
   --color-glass-border: rgba(255, 255, 255, 0.08);
-  --font-sans: 'Inter', 'system-ui', sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  --font-sans: var(--font-inter), 'Inter', 'system-ui', sans-serif;
+  --font-display: var(--font-outfit), 'Outfit', sans-serif;
 }
 
 /* Base styles */
@@ -30,10 +30,14 @@ html {
 body {
   background-color: #111317;
   color: #e5e7eb;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.font-\[Outfit\] {
+  font-family: var(--font-outfit), 'Outfit', sans-serif;
 }
 
 /* Scrollbar */

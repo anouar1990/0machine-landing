@@ -8,3 +8,4 @@ export default function robots() {
     sitemap: "https://www.0machine.com/sitemap.xml",
   };
 }
+

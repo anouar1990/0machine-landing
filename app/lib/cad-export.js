@@ -86,3 +86,4 @@ export function generateDxfString({ lines = [], polylines = [], texts = [] }) {
 
   return out.join("\r\n");
 }
+

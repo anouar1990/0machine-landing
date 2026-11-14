@@ -120,6 +120,7 @@ export default function LaserAiCreditModal({
           {/* Close Button */}
           <button
             onClick={onClose}
+            aria-label="Close credit pack modal"
             className="absolute top-5 right-5 text-gray-400 hover:text-white w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center border border-white/10 transition-colors cursor-pointer"
           >
             <X size={18} />

@@ -1,16 +1,18 @@
 "use client";
 import React from "react";
+import dynamic from "next/dynamic";
 import Hero from "../components/Hero";
-import DesignsVault from "../components/DesignsVault";
-import LaserAiSection from "../components/LaserAiSection";
-import Benefits from "../components/Benefits";
-import FeatureShowcase from "../components/FeatureShowcase";
-import Comparison from "../components/Comparison";
-import Workflow from "../components/Workflow";
-import ProductShowcase from "../components/ProductShowcase";
-import SocialProof from "../components/SocialProof";
-import Pricing from "../components/Pricing";
-import FinalCTA from "../components/FinalCTA";
+
+const DesignsVault = dynamic(() => import("../components/DesignsVault"), { ssr: true });
+const LaserAiSection = dynamic(() => import("../components/LaserAiSection"), { ssr: true });
+const Benefits = dynamic(() => import("../components/Benefits"), { ssr: true });
+const FeatureShowcase = dynamic(() => import("../components/FeatureShowcase"), { ssr: true });
+const Comparison = dynamic(() => import("../components/Comparison"), { ssr: true });
+const Workflow = dynamic(() => import("../components/Workflow"), { ssr: true });
+const ProductShowcase = dynamic(() => import("../components/ProductShowcase"), { ssr: true });
+const SocialProof = dynamic(() => import("../components/SocialProof"), { ssr: true });
+const Pricing = dynamic(() => import("../components/Pricing"), { ssr: true });
+const FinalCTA = dynamic(() => import("../components/FinalCTA"), { ssr: true });
 
 /**
  * VARIANT A — Baseline / Control

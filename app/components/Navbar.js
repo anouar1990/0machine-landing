@@ -53,8 +53,10 @@ export default function Navbar() {
           {/* Logo */}
           <a href="/" className="flex items-center group">
             <img 
-              src="/logo.png" 
+              src="/logo.webp" 
               alt="0Machine Logo" 
+              width={150}
+              height={36}
               className="h-9 w-auto object-contain" 
             />
           </a>
@@ -79,6 +81,8 @@ export default function Navbar() {
             <div ref={langRef} className="relative">
               <button
                 onClick={() => setLangOpen(!langOpen)}
+                aria-label="Select language"
+                aria-expanded={langOpen}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white border border-white/5 bg-white/5 hover:bg-white/10 transition-all font-medium font-[Outfit] cursor-pointer"
               >
                 <span>{language === "en" ? "🇺🇸 EN" : language === "fr" ? "🇫🇷 FR" : "🇪🇸 ES"}</span>

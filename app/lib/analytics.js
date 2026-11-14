@@ -1,4 +1,11 @@
-import { supabase } from './supabase';
+// Lazy-load Supabase client so the 232KB SDK is not in the critical initial page bundle
+let _supabasePromise = null;
+async function getSupabase() {
+  if (!_supabasePromise) {
+    _supabasePromise = import('./supabase').then(mod => mod.supabase);
+  }
+  return _supabasePromise;
+}
 
 const IS_BROWSER = typeof window !== 'undefined';
 export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || 'G-8V921YKC8S';
@@ -109,22 +116,31 @@ export async function trackPageView(pagePath, referrerOverride = null) {
     window.snaptr('track', 'PAGE_VIEW');
   }
 
-  try {
-    const referrer = referrerOverride !== null ? referrerOverride : document.referrer || 'direct';
-    const userAgent = navigator.userAgent;
-    const sessionId = getSessionId();
-    const utms = getSavedUTMs();
+  const sendToSupabase = async () => {
+    try {
+      const referrer = referrerOverride !== null ? referrerOverride : document.referrer || 'direct';
+      const userAgent = navigator.userAgent;
+      const sessionId = getSessionId();
+      const utms = getSavedUTMs();
+      const supabase = await getSupabase();
 
-    await supabase.from('analytics_events').insert({
-      event_name: 'pageview',
-      page_path: path,
-      referrer: referrer,
-      session_id: sessionId,
-      user_agent: userAgent,
-      metadata: { ...utms }
-    });
-  } catch (err) {
-    console.warn('Error tracking pageview:', err.message);
+      await supabase.from('analytics_events').insert({
+        event_name: 'pageview',
+        page_path: path,
+        referrer: referrer,
+        session_id: sessionId,
+        user_agent: userAgent,
+        metadata: { ...utms }
+      });
+    } catch (err) {
+      console.warn('Error tracking pageview:', err.message);
+    }
+  };
+
+  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+    window.requestIdleCallback(sendToSupabase, { timeout: 2500 });
+  } else {
+    setTimeout(sendToSupabase, 1000);
   }
 }
 
@@ -204,21 +220,30 @@ export async function trackEvent(eventName, metadata = {}, dedupeKey = null) {
   }
 
   // 6. Supabase DB Logging
-  try {
-    const pagePath = window.location.pathname;
-    const referrer = document.referrer || 'direct';
-    const userAgent = navigator.userAgent;
-    const sessionId = getSessionId();
+  const logToDb = async () => {
+    try {
+      const pagePath = window.location.pathname;
+      const referrer = document.referrer || 'direct';
+      const userAgent = navigator.userAgent;
+      const sessionId = getSessionId();
+      const supabase = await getSupabase();
 
-    await supabase.from('analytics_events').insert({
-      event_name: eventName,
-      page_path: pagePath,
-      referrer: referrer,
-      session_id: sessionId,
-      user_agent: userAgent,
-      metadata: payload
-    });
-  } catch (err) {
-    console.warn(`Failed to track event ${eventName}:`, err.message);
+      await supabase.from('analytics_events').insert({
+        event_name: eventName,
+        page_path: pagePath,
+        referrer: referrer,
+        session_id: sessionId,
+        user_agent: userAgent,
+        metadata: payload
+      });
+    } catch (err) {
+      console.warn(`Failed to track event ${eventName}:`, err.message);
+    }
+  };
+
+  if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+    window.requestIdleCallback(logToDb, { timeout: 2500 });
+  } else {
+    setTimeout(logToDb, 1000);
   }
 }

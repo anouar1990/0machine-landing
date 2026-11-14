@@ -6,7 +6,8 @@ import {
   TrendingUp, DollarSign, Calculator, Package, Grid, CheckCircle2,
   ArrowRight, ShieldCheck, Zap, AlertTriangle, Flame, Layers, Percent, Sparkles, Check
 } from "lucide-react";
-import Pricing from "../components/Pricing";
+import dynamic from "next/dynamic";
+const Pricing = dynamic(() => import("../components/Pricing"), { ssr: true });
 
 export default function VariantC() {
   const { buildAppUrl, handleCtaClick } = useExperiment();
@@ -76,17 +77,12 @@ export default function VariantC() {
           </motion.div>
 
           {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6"
-          >
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.1] mb-6">
             Stop Wasting Material.{" "}
             <span className="bg-gradient-to-r from-amber-400 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
               Start Making More Profit.
             </span>
-          </motion.h1>
+          </h1>
 
           {/* Subheadline */}
           <motion.p
@@ -151,10 +147,7 @@ export default function VariantC() {
           </div>
 
           {/* Visual Showcase: Nesting & Cost Engine */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+          <div
             className="relative max-w-5xl mx-auto rounded-2xl border border-white/15 bg-dark-950 p-2 shadow-2xl shadow-amber-500/10"
           >
             <div className="rounded-xl overflow-hidden border border-white/10 bg-dark-900">
@@ -171,13 +164,20 @@ export default function VariantC() {
                   ⚡ 38.6% LESS SCRAP
                 </span>
               </div>
-              <img
-                src="/screenshots/screenshot-nesting-yield.png"
-                alt="0Machine Laser True Shape Nesting Yield with Kerf Compensation"
-                className="w-full h-auto object-cover object-top"
-              />
+              <picture>
+                <source media="(max-width: 768px)" srcSet="/screenshots/screenshot-nesting-yield-mobile.webp" type="image/webp" />
+                <img
+                  src="/screenshots/screenshot-nesting-yield.webp"
+                  alt="0Machine Laser True Shape Nesting Yield with Kerf Compensation"
+                  width={1600}
+                  height={1000}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="w-full h-auto object-cover object-top"
+                />
+              </picture>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -201,10 +201,12 @@ export default function VariantC() {
               {/* Slider 1: Sheets per month */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs text-gray-400 font-semibold uppercase">Sheets Cut Per Month</label>
+                  <label htmlFor="sheets-per-month" className="text-xs text-gray-400 font-semibold uppercase">Sheets Cut Per Month</label>
                   <span className="text-lg font-black text-amber-400 font-[Outfit]">{sheetsPerMonth} Sheets</span>
                 </div>
                 <input
+                  id="sheets-per-month"
+                  aria-label="Sheets Cut Per Month"
                   type="range"
                   min="5"
                   max="200"
@@ -219,10 +221,12 @@ export default function VariantC() {
               {/* Slider 2: Average Sheet Price */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-xs text-gray-400 font-semibold uppercase">Average Cost Per Sheet</label>
+                  <label htmlFor="sheet-price" className="text-xs text-gray-400 font-semibold uppercase">Average Cost Per Sheet ($)</label>
                   <span className="text-lg font-black text-white font-[Outfit]">${sheetPrice}</span>
                 </div>
                 <input
+                  id="sheet-price"
+                  aria-label="Average Cost Per Sheet in dollars"
                   type="range"
                   min="10"
                   max="100"

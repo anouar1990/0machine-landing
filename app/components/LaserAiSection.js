@@ -245,6 +245,8 @@ export default function LaserAiSection() {
                   <span className="text-[#B1FA63] font-mono text-[10px] font-bold">LightBurn C00/C01 Ready</span>
                 </div>
                 <textarea
+                  id="laser-prompt-input"
+                  aria-label="Custom laser design prompt"
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
                   rows={3}
@@ -461,9 +463,11 @@ export default function LaserAiSection() {
                       className="w-full h-full relative"
                     >
                       <img
-                        src="/screenshots/screenshot-laser-ai.png"
+                        src="/screenshots/screenshot-laser-ai.webp"
                         alt="0Machine LaserAI Studio Text-to-Vector Generator"
                         className="w-full h-full object-cover object-top"
+                        loading="lazy"
+                        decoding="async"
                       />
 
                       {/* Live Floating Layer Badges */}

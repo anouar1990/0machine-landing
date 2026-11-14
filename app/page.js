@@ -1,47 +1,28 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import Loader from "./components/Loader";
-import Navbar from "./components/Navbar";
-import ParticleField from "./components/ParticleField";
-import Footer from "./components/Footer";
-import { ExperimentProvider, useExperiment } from "./context/ExperimentContext";
-import VariantA from "./variants/VariantA";
-import VariantB from "./variants/VariantB";
-import VariantC from "./variants/VariantC";
-import VariantD from "./variants/VariantD";
-import VariantE from "./variants/VariantE";
-import { trackPageView } from "./lib/analytics";
+import HomeClient from "./HomeClient";
+import { cookies } from "next/headers";
 
-function ExperimentContent() {
-  const { variant } = useExperiment();
+export const metadata = {
+  title: "0Machine Planner — Run Your Laser Business Smarter, Faster, Easier",
+  description:
+    "The all-in-one project planner for laser cutters and CNC makers. Track materials, costs, time, clients, and more. Start your free trial today.",
+};
 
-  useEffect(() => {
-    trackPageView(window.location.pathname);
-  }, [variant]);
+export default async function Page({ searchParams }) {
+  const sp = await searchParams;
+  let serverVariant = "A";
 
-  return (
-    <>
-      <ParticleField />
-      <Navbar />
-      <main>
-        {variant === "B" && <VariantB />}
-        {variant === "C" && <VariantC />}
-        {variant === "D" && <VariantD />}
-        {variant === "E" && <VariantE />}
-        {(variant === "A" || !["B", "C", "D", "E"].includes(variant)) && <VariantA />}
-      </main>
-      <Footer />
-    </>
-  );
-}
+  const urlVariant = sp?.variant ? String(sp.variant).toUpperCase() : null;
+  if (urlVariant && ["A", "B", "C", "D", "E"].includes(urlVariant)) {
+    serverVariant = urlVariant;
+  } else {
+    try {
+      const cookieStore = await cookies();
+      const cookieVariant = cookieStore.get("0machine_variant")?.value?.toUpperCase();
+      if (cookieVariant && ["A", "B", "C", "D", "E"].includes(cookieVariant)) {
+        serverVariant = cookieVariant;
+      }
+    } catch (e) {}
+  }
 
-export default function Home() {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <ExperimentProvider>
-      {!loaded && <Loader onComplete={() => setLoaded(true)} />}
-      {loaded && <ExperimentContent />}
-    </ExperimentProvider>
-  );
+  return <HomeClient initialVariant={serverVariant} />;
 }

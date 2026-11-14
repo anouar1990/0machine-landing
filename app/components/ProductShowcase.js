@@ -132,7 +132,7 @@ export default function ProductShowcase() {
                 {/* Real Desktop Screenshot */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden bg-dark-950">
                   <img
-                    src="/screenshots/screenshot-dashboard.png"
+                    src="/screenshots/screenshot-dashboard.webp"
                     alt="0Machine Desktop Workshop Dashboard with revenue, live orders, and material telemetry"
                     className="w-full h-full object-cover object-top"
                     loading="lazy"
@@ -199,7 +199,7 @@ export default function ProductShowcase() {
                     {/* Real Tablet Screenshot: Workshop Production Tracker */}
                     <div className="relative aspect-[16/10] w-full overflow-hidden bg-dark-950">
                       <img
-                        src="/screenshots/screenshot-production.png"
+                        src="/screenshots/screenshot-production.webp"
                         alt="0Machine Workshop Production Job Tracker on Benchtop Tablet"
                         className="w-full h-full object-cover object-top"
                         loading="lazy"
@@ -253,7 +253,7 @@ export default function ProductShowcase() {
                         <span>WhatsApp Quotes</span>
                       </div>
                       <img
-                        src="/screenshots/screenshot-quotes.png"
+                        src="/screenshots/screenshot-quotes.webp"
                         alt="0Machine Client PDF Quote Generator on Mobile Companion"
                         className="w-full h-full object-cover object-top"
                         loading="lazy"

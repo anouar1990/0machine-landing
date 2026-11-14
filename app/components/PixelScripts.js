@@ -1,8 +1,40 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Script from "next/script";
 
 export default function PixelScripts() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let fired = false;
+    const trigger = () => {
+      if (fired) return;
+      fired = true;
+      cleanup();
+      setReady(true);
+    };
+
+    const cleanup = () => {
+      ["scroll", "touchstart", "mousemove", "click", "keydown"].forEach(evt => {
+        window.removeEventListener(evt, trigger);
+      });
+      clearTimeout(timer);
+    };
+
+    ["scroll", "touchstart", "mousemove", "click", "keydown"].forEach(evt => {
+      window.addEventListener(evt, trigger, { passive: true, once: true });
+    });
+
+    const timer = setTimeout(trigger, 5000);
+
+    return cleanup;
+  }, []);
+
+  if (!ready) return null;
+
   const GA_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || "G-8V921YKC8S";
   const META_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "517991158551582";
   const TIKTOK_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID;

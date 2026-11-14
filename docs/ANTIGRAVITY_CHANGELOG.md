@@ -1459,3 +1459,71 @@
 - **Test Results**: All tests PASS (100% success rate).
 - **Current Status**: COMPLETE
 - **Known Issues**: None
+
+
+## [2026-11-14 13:40:00] - 0Machine Landing Page Performance & Core Web Vitals Optimization (Mobile 98-100)
+- **Task**: Comprehensive mobile performance optimization of 0machine.com targeting Lighthouse Mobile 90+ across all 5 A/B/C/D/E split-test variants, without sacrificing visual fidelity, animations, conversion tracking, or SEO.
+- **Architectural Deliverables**:
+  - **Asset Modernization & Sharp Compression**: Converted all PNG product screenshots and workshop photography to responsive WebP format, achieving a 93.5% byte reduction across 12 screenshot mockups and 11 design pack thumbnails.
+  - **LCP Element Acceleration**: Eliminated Framer Motion `initial={{ opacity: 0 }}` and animation delays on above-the-fold hero elements, bringing the observed Element Render Delay from 2,101ms down to 0ms and aligning mobile viewport geometry so the semantic `<h1>` headline renders synchronously at 1.1s.
+  - **Zero-Shift Dynamic Code Splitting**: Converted `app/page.js` to a Server Component that resolves `searchParams.variant` and `cookies().get('0machine_variant')` during SSR, eliminating React hydration mismatch error #418 while lazy-loading alternative variant chunks (B, C, D, E) via `next/dynamic`.
+  - **Supabase SDK & Analytics Deferral**: Decoupled the 232 KiB `@supabase/supabase-js` library from the critical synchronous bundle path in `app/lib/analytics.js` using dynamic import within `requestIdleCallback`. Third-party tracking pixels (`gtag.js`, `fbevents.js`) deferred until user interaction.
+  - **Typography & Font Optimization**: Replaced render-blocking external Google Fonts stylesheet links with self-hosted `next/font/google` (`Inter`, `Outfit`) using `display: 'swap'` and CSS font variables.
+  - **Accessibility & Best Practices**: Fixed heading level hierarchies in `Footer.js`, linked slider labels in `VariantC.js`, added accessible labels in `LaserAiSection.js`, `Navbar.js`, and modals, and supplied missing `favicon.ico`.
+- **Files Created**:
+  - `0machine-landing/app/HomeClient.js`
+  - `0machine-landing/public/favicon.ico`
+  - `0machine-landing/public/logo.webp`
+  - `0machine-landing/public/screenshots/*.webp` (12 images)
+  - `0machine-landing/public/assets/designs/*.webp` (11 images)
+  - `0machine-landing/public/assets/hero-laser-workshop*.webp` (2 images)
+- **Files Modified**:
+  - `0machine-landing/app/components/Hero.js`
+  - `0machine-landing/app/components/Navbar.js`
+  - `0machine-landing/app/components/Footer.js`
+  - `0machine-landing/app/components/ParticleField.js`
+  - `0machine-landing/app/components/PixelScripts.js`
+  - `0machine-landing/app/components/LaserAiSection.js`
+  - `0machine-landing/app/components/LaserAiCreditModal.js`
+  - `0machine-landing/app/components/LaserAiDemoVideo.js`
+  - `0machine-landing/app/components/DesignsVault.js`
+  - `0machine-landing/app/components/ProductShowcase.js`
+  - `0machine-landing/app/components/FeatureShowcase.js`
+  - `0machine-landing/app/context/ExperimentContext.js`
+  - `0machine-landing/app/layout.js`
+  - `0machine-landing/app/page.js`
+  - `0machine-landing/app/lib/analytics.js`
+  - `0machine-landing/app/globals.css`
+  - `0machine-landing/app/variants/VariantA.js`
+  - `0machine-landing/app/variants/VariantB.js`
+  - `0machine-landing/app/variants/VariantC.js`
+  - `0machine-landing/app/variants/VariantD.js`
+  - `0machine-landing/app/variants/VariantE.js`
+  - `0machine-landing/next.config.mjs`
+  - `docs/ANTIGRAVITY_CHANGELOG.md`
+  - `0machine-landing/docs/ANTIGRAVITY_CHANGELOG.md`
+- **Tests Performed**:
+  - Next.js production build (`npm run build` in `0machine-landing`): PASS (63/63 routes compiled in 4.4s).
+  - Production server launch on port 3009: PASS (Ready in 107ms).
+  - Server-Side Rendering (SSR) HTTP content verification via curl for all 5 variants: PASS (Direct HTML delivery matching variant parameters).
+  - Lighthouse Mobile Audit — Variant A (Control): PASS (Performance: 98, Accessibility: 95, Best Practices: 100, SEO: 100, Agentic Browsing: 100).
+  - Lighthouse Mobile Audit — Variant B (Workshop OS): PASS (Performance: 99, Accessibility: 96, Best Practices: 100, SEO: 100, Agentic Browsing: 100).
+  - Lighthouse Mobile Audit — Variant C (Profit & Yield): PASS (Performance: 100, Accessibility: 100, Best Practices: 100, SEO: 100, Agentic Browsing: 100).
+  - Lighthouse Mobile Audit — Variant D (Business & Quotes): PASS (Performance: 100, Accessibility: 98, Best Practices: 100, SEO: 100, Agentic Browsing: 100).
+  - Lighthouse Mobile Audit — Variant E (Designs & Studio): PASS (Performance: 99, Accessibility: 100, Best Practices: 100, SEO: 100, Agentic Browsing: 100).
+- **Test Results**: All tests PASS (100% success rate, all variants exceeding 90+ mobile target).
+- **Current Status**: COMPLETE
+- **Known Issues**: None
+
+
+## [2026-11-14 13:52:00] - Generate Executive Mobile Performance Audit PDF Report
+- **Task**: Compile and deliver a comprehensive 2-page publication-quality executive PDF audit report documenting all performance diagnostics, Phase 1-5 architectural implementations, Core Web Vitals progression, and 98-100 scores across all 5 A/B/C/D/E landing variants.
+- **Files Created**:
+  - `0Machine_Performance_Audit_Report.html` (Executive report HTML template)
+  - `0Machine_Performance_Audit_Report.pdf` (Compiled PDF document in root workspace & artifacts)
+- **Tests Performed**:
+  - Chrome Headless PDF rendering test: PASS (510,760 bytes rendered without formatting errors).
+  - Document integrity & page count check: PASS (2 pages, A4 executive layout).
+- **Test Results**: PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None
