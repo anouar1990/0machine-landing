@@ -3,44 +3,46 @@ import React, { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import ParticleField from "./components/ParticleField";
 import Footer from "./components/Footer";
+import Hero from "./components/Hero";
 import dynamic from "next/dynamic";
-import { ExperimentProvider, useExperiment } from "./context/ExperimentContext";
-import VariantA from "./variants/VariantA";
 import { trackPageView } from "./lib/analytics";
 
-const VariantB = dynamic(() => import("./variants/VariantB"));
-const VariantC = dynamic(() => import("./variants/VariantC"));
-const VariantD = dynamic(() => import("./variants/VariantD"));
-const VariantE = dynamic(() => import("./variants/VariantE"));
+const DesignsVault = dynamic(() => import("./components/DesignsVault"), { ssr: true });
+const LaserAiSection = dynamic(() => import("./components/LaserAiSection"), { ssr: true });
+const Benefits = dynamic(() => import("./components/Benefits"), { ssr: true });
+const FeatureShowcase = dynamic(() => import("./components/FeatureShowcase"), { ssr: true });
+const RoiCalculator = dynamic(() => import("./components/RoiCalculator"), { ssr: true });
+const Comparison = dynamic(() => import("./components/Comparison"), { ssr: true });
+const Workflow = dynamic(() => import("./components/Workflow"), { ssr: true });
+const ProductShowcase = dynamic(() => import("./components/ProductShowcase"), { ssr: true });
+const SocialProof = dynamic(() => import("./components/SocialProof"), { ssr: true });
+const Pricing = dynamic(() => import("./components/Pricing"), { ssr: true });
+const FinalCTA = dynamic(() => import("./components/FinalCTA"), { ssr: true });
 
-function ExperimentContent() {
-  const { variant } = useExperiment();
-
+export default function HomeClient() {
   useEffect(() => {
     trackPageView(window.location.pathname);
-  }, [variant]);
+  }, []);
 
   return (
     <>
       <ParticleField />
       <Navbar />
-      <main className="min-h-screen">
-        {variant === "B" && <VariantB />}
-        {variant === "C" && <VariantC />}
-        {variant === "D" && <VariantD />}
-        {variant === "E" && <VariantE />}
-        {(variant === "A" || !["B", "C", "D", "E"].includes(variant)) && <VariantA />}
+      <main className="min-h-screen overflow-x-hidden">
+        <Hero />
+        <DesignsVault />
+        <LaserAiSection />
+        <Benefits />
+        <FeatureShowcase />
+        <RoiCalculator />
+        <Comparison />
+        <Workflow />
+        <ProductShowcase />
+        <SocialProof />
+        <Pricing />
+        <FinalCTA />
       </main>
       <Footer />
     </>
   );
 }
-
-export default function HomeClient({ initialVariant = "A" }) {
-  return (
-    <ExperimentProvider initialVariant={initialVariant}>
-      <ExperimentContent />
-    </ExperimentProvider>
-  );
-}
-

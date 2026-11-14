@@ -1585,3 +1585,37 @@
 - **Test Results**: PASS (100%).
 - **Current Status**: COMPLETE
 - **Known Issues**: None
+
+
+## [2026-11-14 22:35:00] - Master Landing Page Consolidation & 100% 3-Language Parity (EN · FR · ES)
+- **Task**: Unify the split-tested variants into a single high-converting Master Landing Page incorporating the strongest elements across all variants (300,000+ Ready-to-Cut Library, LaserAI text-to-vector generator, Interactive True-Shape Nesting ROI Estimator, and Workshop OS). Achieve 100% key parity across all three supported languages (🇺🇸 English, 🇫🇷 French, 🇪🇸 Spanish) with zero missing keys, cookie persistence, and zero mobile horizontal overflow.
+- **Changes Implemented**:
+  - `LanguageContext.js`: Added all 70 missing French translation keys (`comp.*`, `flow.*`, `social.*`, `price.biz.*`, `features.analytics.*`), updated unified `hero.*` and `price.pro.*` copy for 300,000+ files and Workshop OS, added full `calc.roi.*` keys across English, French, and Spanish, added `mock.*` symmetry across all 3 languages, and enabled persistent cookie storage (`0machine_lang=...`). Achieved 320 keys in EN, 320 keys in FR, and 320 keys in ES (100% mutual parity).
+  - `RoiCalculator.js` (Created): Extracted and engineered a dedicated interactive Material Profit Recovery and Scrap Savings widget. Features interactive range sliders for monthly sheet volume (5–200) and sheet cost ($10–$100), computing live 22% nesting scrap savings, unbilled piercing/consumable recovery, and annual profit gains, fully localized via `t("calc.roi.*")`.
+  - `HomeClient.js`: Refactored to directly render the unified Master flow (`Hero`, `DesignsVault`, `LaserAiSection`, `Benefits`, `FeatureShowcase`, `RoiCalculator`, `Comparison`, `Workflow`, `ProductShowcase`, `SocialProof`, `Pricing`, `FinalCTA`), bypassing variant split-testing cookies and toolbars while preserving analytics pageview tracking.
+  - `page.js`: Streamlined to render `<HomeClient />` directly as a high-performance server component with updated laser workshop metadata.
+  - `Hero.js` & `DesignsVault.js`: Updated badges, tabs, alts, and headlines to accurately represent the 300,000+ Commercial Vector Library and Workshop OS.
+- **Files Created**:
+  - `0machine-landing/app/components/RoiCalculator.js`
+- **Files Modified**:
+  - `0machine-landing/app/context/LanguageContext.js`
+  - `0machine-landing/app/HomeClient.js`
+  - `0machine-landing/app/page.js`
+  - `0machine-landing/app/components/Hero.js`
+  - `0machine-landing/app/components/DesignsVault.js`
+  - `0machine-landing/docs/ANTIGRAVITY_CHANGELOG.md`
+- **Tests Performed**:
+  - Next.js Turbopack Production Build (`npm run build`): PASS (63/63 routes compiled in 6.3s with zero errors).
+  - Translation Key Parity Audit (Node.js VM): PASS (EN: 320 keys, FR: 320 keys, ES: 320 keys, 0 missing, 0 extra).
+  - Chrome DevTools Protocol Mobile Layout Audit across 3 viewports:
+    - iPhone SE / mini (375x812): PASS (scrollWidth: 375, innerWidth: 375, overflow: false, 0 bad elements).
+    - iPhone 14 / 15 (390x844): PASS (scrollWidth: 390, innerWidth: 390, overflow: false, 0 bad elements).
+    - iPhone Pro Max (430x932): PASS (scrollWidth: 430, innerWidth: 430, overflow: false, 0 bad elements).
+  - 3-Language Runtime Toggle Verification (CDP):
+    - English: Loaded `300,000+ Commercial Laser Designs & Workshop OS` and English ROI texts.
+    - French: Loaded `300 000+ Fichiers Laser Commerciaux & Laser Workshop OS` and `Estimateur de ROI Interactif`.
+    - Spanish: Loaded `300,000+ Diseños Láser Comerciales y Workshop OS` and `Estimador de ROI Interactivo`.
+  - Interactive ROI Slider Verification: Dispatched input event to change sheets from 35 to 60 with reactive re-calculation.
+- **Test Results**: All tests PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None

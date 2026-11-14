@@ -190,7 +190,7 @@ export default function DesignsVault() {
           </div>
 
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white tracking-tight mb-5">
-            5,000+ Ready-to-Cut <br />
+            300,000+ Ready-to-Cut <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FE7733] via-[#FFA559] to-[#B1FA63]">
               Bestselling Vector Bundles
             </span>
@@ -324,7 +324,7 @@ export default function DesignsVault() {
           
           <span className="text-xs font-extrabold text-[#B1FA63] uppercase tracking-[0.25em]">UNLIMITED DOWNLOADS</span>
           <h3 className="text-3xl sm:text-4xl font-bold text-white mt-2 mb-4 font-[Outfit]">
-            Unlock the Full 5,000+ Design Vault & Weekly New Releases
+            Unlock the Full 300,000+ Design Vault & Weekly New Releases
           </h3>
           <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
             Never pay $5 to $15 per file on Etsy again. Get unlimited access to our entire commercial vector library, including all future weekly drops, with Workshop Pro for only $14.90/mo.

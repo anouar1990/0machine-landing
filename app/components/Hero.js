@@ -12,8 +12,8 @@ const HERO_TABS = [
     path: "app.0machine.com/library",
     src: "/screenshots/screenshot-designs-vault.webp",
     mobileSrc: "/screenshots/screenshot-designs-vault-mobile.webp",
-    alt: "0Machine Commercial Designs Vault with 5,000+ Ready-to-Cut Vector Packs",
-    tag: "5,000+ Ready-to-Cut",
+    alt: "0Machine Commercial Designs Vault with 300,000+ Ready-to-Cut Vector Packs",
+    tag: "300,000+ Ready-to-Cut",
     badge: "Commercial License",
   },
   {
