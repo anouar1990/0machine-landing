@@ -60,10 +60,10 @@ export default function ProductShowcase() {
         >
           <div className="inline-flex items-center p-1.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl gap-1 max-w-full overflow-x-auto scrollbar-none">
             {[
-              { id: "all", label: "All Devices", icon: Layers },
-              { id: "desktop", label: "Desktop Web", icon: Monitor },
-              { id: "tablet", label: "Workshop Tablet", icon: Tablet },
-              { id: "mobile", label: "Mobile Companion", icon: Smartphone },
+              { id: "all", key: "showcase.tab.all", label: "All Devices", icon: Layers },
+              { id: "desktop", key: "showcase.tab.desktop", label: "Desktop Web", icon: Monitor },
+              { id: "tablet", key: "showcase.tab.tablet", label: "Workshop Tablet", icon: Tablet },
+              { id: "mobile", key: "showcase.tab.mobile", label: "Mobile Companion", icon: Smartphone },
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeDevice === tab.id;
@@ -78,7 +78,7 @@ export default function ProductShowcase() {
                   }`}
                 >
                   <Icon size={15} />
-                  <span>{tab.label}</span>
+                  <span>{t(tab.key) || tab.label}</span>
                 </button>
               );
             })}
@@ -192,7 +192,7 @@ export default function ProductShowcase() {
                         </span>
                       </div>
                       <span className="text-[10px] bg-accent-500/20 text-accent-400 font-semibold px-2 py-0.5 rounded">
-                        Hands-Free Bench
+                        {t("showcase.tablet.tag")}
                       </span>
                     </div>
 
@@ -212,7 +212,7 @@ export default function ProductShowcase() {
                   <div className="mt-3 px-2 flex items-center justify-between text-[11px] text-gray-400">
                     <span className="font-medium text-white flex items-center gap-1.5">
                       <Zap size={13} className="text-amber-400" />
-                      Operators track status & cutting times in real-time
+                      {t("showcase.tablet.desc")}
                     </span>
                     <span className="text-accent-400 font-semibold">Touch-Optimized</span>
                   </div>
@@ -240,7 +240,7 @@ export default function ProductShowcase() {
                     <div className="flex justify-between items-center px-4 pt-1.5 pb-2 text-[11px] border-b border-white/5 bg-dark-900/90">
                       <span className="font-semibold text-white flex items-center gap-1.5">
                         <Smartphone size={13} className="text-accent-400" />
-                        <span>Mobile Companion</span>
+                        <span>{t("showcase.tab.mobile")}</span>
                       </span>
                       <span className="text-[10px] text-gray-400 font-mono">9:41 AM</span>
                     </div>
@@ -268,7 +268,7 @@ export default function ProductShowcase() {
                       <span className="w-4 h-4 rounded-full bg-[#25D366]/20 text-[#25D366] flex items-center justify-center flex-shrink-0">
                         <WhatsAppIcon className="w-3 h-3 fill-current" />
                       </span>
-                      <span>Send client quotes &amp; invoices via WhatsApp on-the-go</span>
+                      <span>{t("showcase.mobile.whatsapp")}</span>
                     </span>
                   </div>
                 </div>

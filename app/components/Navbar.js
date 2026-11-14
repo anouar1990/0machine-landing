@@ -39,11 +39,11 @@ export default function Navbar() {
   }, [mobileOpen]);
 
   const navLinks = [
-    { label: "💎 Designs Vault", href: "/#designs-vault" },
-    { label: "🤖 LaserAI", href: "/#laser-ai" },
+    { label: t("nav.vault"), href: "/#designs-vault" },
+    { label: t("nav.laserai"), href: "/#laser-ai" },
     { label: t("nav.features"), href: "/#features" },
-    { label: "Free Tools", href: "/tools" },
-    { label: "Calculator", href: "/calculator" },
+    { label: t("nav.tools"), href: "/tools" },
+    { label: t("nav.calculator"), href: "/calculator" },
     { label: t("nav.benefits"), href: "/#benefits" },
     { label: t("nav.pricing"), href: "/#pricing" },
   ];

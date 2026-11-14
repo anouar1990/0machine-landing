@@ -7,6 +7,9 @@ import { trackEvent } from "../lib/analytics";
 const HERO_TABS = [
   {
     id: "vault",
+    labelKey: "hero.tab.vault",
+    shortLabelKey: "hero.tab.vault.short",
+    tagKey: "hero.tab.vault.tag",
     label: "💎 Designs Vault",
     shortLabel: "Designs",
     path: "app.0machine.com/library",
@@ -18,6 +21,9 @@ const HERO_TABS = [
   },
   {
     id: "laser-ai",
+    labelKey: "hero.tab.laserai",
+    shortLabelKey: "hero.tab.laserai.short",
+    tagKey: "hero.tab.laserai.tag",
     label: "🤖 LaserAI Studio",
     shortLabel: "LaserAI",
     path: "app.0machine.com/laser-ai",
@@ -28,6 +34,9 @@ const HERO_TABS = [
   },
   {
     id: "nesting",
+    labelKey: "hero.tab.nesting",
+    shortLabelKey: "hero.tab.nesting.short",
+    tagKey: "hero.tab.nesting.tag",
     label: "🧩 Nesting Studio",
     shortLabel: "Nesting",
     path: "app.0machine.com/nesting",
@@ -38,6 +47,9 @@ const HERO_TABS = [
   },
   {
     id: "dashboard",
+    labelKey: "hero.tab.dashboard",
+    shortLabelKey: "hero.tab.dashboard.short",
+    tagKey: "hero.tab.dashboard.tag",
     label: "📊 Workshop Hub",
     shortLabel: "Dashboard",
     path: "app.0machine.com/dashboard",
@@ -137,7 +149,7 @@ export default function Hero() {
           >
             <span>🤖 {t("hero.ctaLaserAi")}</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FE7733]/20 text-[#FE7733] border border-[#FE7733]/30 font-bold ml-1">
-              ▶ 5s Video
+              ▶ {t("hero.videoBadge")}
             </span>
           </a>
         </div>
@@ -156,6 +168,9 @@ export default function Hero() {
             <div className="inline-flex p-1.5 rounded-2xl bg-dark-900/90 border border-white/10 backdrop-blur-xl shadow-2xl gap-1 max-w-full overflow-x-auto scrollbar-none justify-start sm:justify-center">
               {HERO_TABS.map((tab, idx) => {
                 const isActive = activeTab === idx;
+                const tabLabel = t(tab.labelKey) || tab.label;
+                const tabShort = t(tab.shortLabelKey) || tab.shortLabel;
+                const tabTag = t(tab.tagKey) || tab.tag;
                 return (
                   <button
                     key={tab.id}
@@ -166,11 +181,11 @@ export default function Hero() {
                         : "text-gray-400 hover:text-white hover:bg-white/5"
                     }`}
                   >
-                    <span className="hidden sm:inline">{tab.label}</span>
-                    <span className="sm:hidden">{tab.shortLabel || tab.label}</span>
+                    <span className="hidden sm:inline">{tabLabel}</span>
+                    <span className="sm:hidden">{tabShort}</span>
                     {isActive && (
                       <span className="hidden md:inline-block text-[10px] px-2 py-0.5 rounded-full bg-black/25 text-white font-medium border border-white/15">
-                        {tab.tag}
+                        {tabTag}
                       </span>
                     )}
                   </button>
@@ -212,7 +227,7 @@ export default function Hero() {
                   rel="noopener noreferrer"
                   className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold text-accent-400 hover:text-accent-300 bg-accent-500/10 border border-accent-500/20 px-3 py-1 rounded-lg transition-colors"
                 >
-                  <span>Launch Live</span>
+                  <span>{t("hero.launchLive")}</span>
                   <span>↗</span>
                 </a>
               </div>
@@ -249,10 +264,10 @@ export default function Hero() {
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2 h-2 rounded-full bg-green-400 animate-ping" />
               <p className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase">
-                Commercial Designs Vault
+                {t("vault.badge")}
               </p>
             </div>
-            <p className="text-sm font-bold text-white">5,000+ Ready-to-Cut Vectors</p>
+            <p className="text-sm font-bold text-white">300,000+ Ready-to-Cut Vectors</p>
             <p className="text-[10px] text-accent-400 font-semibold mt-0.5">
               Full Resale License · SVG, DXF, PDF, AI
             </p>
@@ -283,8 +298,8 @@ export default function Hero() {
         className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-10"
       >
         <a href="#designs-vault" className="flex flex-col items-center gap-1.5 group cursor-pointer">
-          <span className="text-[10px] text-gray-500 group-hover:text-accent-400 tracking-wider transition-colors">
-            EXPLORE DESIGNS VAULT
+          <span className="text-[10px] text-gray-500 group-hover:text-accent-400 tracking-wider transition-colors uppercase">
+            {t("vault.badge")}
           </span>
           <div
             className="w-4 h-7 rounded-full border border-gray-700 group-hover:border-accent-500/50 flex items-start justify-center p-1 transition-colors"

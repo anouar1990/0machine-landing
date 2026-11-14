@@ -161,16 +161,24 @@ const DESIGN_PACKS = [
   },
 ];
 
-const CATEGORIES = ["All Packs", "🔥 Bestsellers", "3D Layered", "Jewelry", "Home Decor", "Boxes", "Seasonal"];
+const CATEGORY_ITEMS = [
+  { id: "all", key: "vault.cats.all", label: "All Packs" },
+  { id: "bestsellers", key: "vault.cats.bestsellers", label: "🔥 Bestsellers", isBestseller: true },
+  { id: "3D Layered", key: "vault.cats.3d", label: "3D Layered", category: "3D Layered" },
+  { id: "Jewelry", key: "vault.cats.jewelry", label: "Jewelry", category: "Jewelry" },
+  { id: "Home Decor", key: "vault.cats.decor", label: "Home Decor", category: "Home Decor" },
+  { id: "Boxes", key: "vault.cats.boxes", label: "Boxes", category: "Boxes" },
+  { id: "Seasonal", key: "vault.cats.seasonal", label: "Seasonal", category: "Seasonal" },
+];
 
 export default function DesignsVault() {
   const { t } = useLanguage();
-  const [selectedCategory, setSelectedCategory] = useState("All Packs");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [activeModalDesign, setActiveModalDesign] = useState(null);
 
   const filteredPacks = DESIGN_PACKS.filter((p) => {
-    if (selectedCategory === "All Packs") return true;
-    if (selectedCategory === "🔥 Bestsellers") return p.bestseller;
+    if (selectedCategory === "all") return true;
+    if (selectedCategory === "bestsellers") return p.bestseller;
     return p.category === selectedCategory;
   });
 
@@ -186,52 +194,55 @@ export default function DesignsVault() {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FE7733]/10 border border-[#FE7733]/25 text-[#FE7733] text-xs font-extrabold uppercase tracking-[0.2em] mb-4">
             <Sparkles size={13} />
-            <span>COMMERCIAL DESIGNS VAULT</span>
+            <span>{t("vault.badge")}</span>
           </div>
 
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white tracking-tight mb-5">
-            300,000+ Ready-to-Cut <br />
+            {t("vault.title1")} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FE7733] via-[#FFA559] to-[#B1FA63]">
-              Bestselling Vector Bundles
+              {t("vault.titleAccent")}
             </span>
           </h2>
 
           <p className="text-gray-400 text-base sm:text-lg leading-relaxed">
-            Stop wasting 5 hours drawing CAD files from scratch. Download proven, high-demand laser cutting templates with commercial licenses included. Tested on CO2, Fiber & Diode machines.
+            {t("vault.subtitle")}
           </p>
 
           {/* Social Proof Metric Pill */}
           <div className="flex flex-wrap items-center justify-center gap-6 mt-8 pt-6 border-t border-white/10 text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-              <span className="text-white font-bold">$100k+ Commercial Resale Proof</span>
+              <span className="text-white font-bold">{t("vault.proof.sales")}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-400">
               <ShieldCheck size={14} className="text-[#B1FA63]" />
-              <span>Full Commercial Selling Rights</span>
+              <span>{t("vault.proof.license")}</span>
             </div>
             <div className="flex items-center gap-2 text-gray-400">
               <Check size={14} className="text-[#FE7733]" />
-              <span>LightBurn & xTool Ready</span>
+              <span>{t("vault.proof.ready")}</span>
             </div>
           </div>
         </div>
 
         {/* Category Filter Pills */}
         <div className="flex items-center justify-center gap-2 flex-wrap mb-12">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                selectedCategory === cat
-                  ? "bg-[#FE7733] text-white shadow-lg shadow-[#FE7733]/20 scale-105"
-                  : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10 hover:border-white/20"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+          {CATEGORY_ITEMS.map((cat) => {
+            const isSelected = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  isSelected
+                    ? "bg-[#FE7733] text-white shadow-lg shadow-[#FE7733]/20 scale-105"
+                    : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10 hover:border-white/20"
+                }`}
+              >
+                {t(cat.key) || cat.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Designs Grid */}
@@ -293,11 +304,11 @@ export default function DesignsVault() {
 
                   <div className="space-y-1.5 pt-3 border-t border-white/5 text-[11px]">
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Material:</span>
+                      <span className="text-gray-500">{t("vault.card.material")}</span>
                       <span className="text-gray-300 font-medium">{pack.material}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Potential Profit:</span>
+                      <span className="text-gray-500">{t("vault.card.profit")}</span>
                       <span className="text-[#B1FA63] font-bold">{pack.resalePrice}</span>
                     </div>
                   </div>
@@ -308,10 +319,10 @@ export default function DesignsVault() {
               <div className="p-6 pt-0">
                 <button
                   onClick={() => setActiveModalDesign(pack)}
-                  className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-white/5 hover:bg-[#FE7733] text-white border border-white/10 hover:border-[#FE7733] transition-all flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-[#FE7733]/20"
+                  className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-white/5 hover:bg-[#FE7733] text-white border border-white/10 hover:border-[#FE7733] transition-all flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-[#FE7733]/20 cursor-pointer"
                 >
                   <Eye size={14} />
-                  <span>Inspect Vector Specs & Preview</span>
+                  <span>{t("vault.card.inspect")}</span>
                 </button>
               </div>
             </motion.div>
@@ -322,12 +333,12 @@ export default function DesignsVault() {
         <div className="bg-gradient-to-r from-[#1A1D21] via-[#23262C] to-[#1A1D21] border border-[#FE7733]/30 rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl">
           <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-[#FE7733]/15 rounded-full blur-[100px] pointer-events-none" />
           
-          <span className="text-xs font-extrabold text-[#B1FA63] uppercase tracking-[0.25em]">UNLIMITED DOWNLOADS</span>
+          <span className="text-xs font-extrabold text-[#B1FA63] uppercase tracking-[0.25em]">{t("vault.banner.badge")}</span>
           <h3 className="text-3xl sm:text-4xl font-bold text-white mt-2 mb-4 font-[Outfit]">
-            Unlock the Full 300,000+ Design Vault & Weekly New Releases
+            {t("vault.banner.title")}
           </h3>
           <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
-            Never pay $5 to $15 per file on Etsy again. Get unlimited access to our entire commercial vector library, including all future weekly drops, with Workshop Pro for only $14.90/mo.
+            {t("vault.banner.sub")}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -335,14 +346,14 @@ export default function DesignsVault() {
               href="https://app.0machine.com"
               className="w-full sm:w-auto px-8 py-4 bg-[#FE7733] hover:bg-[#E85F20] text-white font-extrabold rounded-xl text-sm transition-all shadow-xl shadow-[#FE7733]/30 flex items-center justify-center gap-2 scale-105"
             >
-              <span>⚡ Unlock Full Vault with Pro</span>
+              <span>{t("vault.banner.ctaPro")}</span>
               <ArrowRight size={16} />
             </a>
             <a
               href="#pricing"
               className="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl text-sm border border-white/10 transition-all"
             >
-              View Transparent Plans
+              {t("vault.banner.ctaPlans")}
             </a>
           </div>
         </div>

@@ -324,7 +324,63 @@ export const translations = {
   "calc.roi.cta": "Recover This Profit in Your Workshop →",
   "mock.title": "Everything your workshop needs",
   "mock.titleAccent": "in one single app.",
-  "mock.subtitle": "Switch between projects, materials, orders, and laser presets in one click."
+  "mock.subtitle": "Switch between projects, materials, orders, and laser presets in one click.",
+  "nav.vault": "💎 Designs Vault",
+  "nav.laserai": "🤖 LaserAI",
+  "nav.tools": "Free Tools",
+  "nav.calculator": "Cost Calculator",
+  "hero.tab.vault.short": "Designs",
+  "hero.tab.vault.tag": "300,000+ Ready-to-Cut",
+  "hero.tab.laserai.short": "LaserAI",
+  "hero.tab.laserai.tag": "Prompt to SVG/DXF",
+  "hero.tab.nesting.short": "Nesting",
+  "hero.tab.nesting.tag": "30-40% Less Scrap",
+  "hero.tab.dashboard.short": "Hub",
+  "hero.tab.dashboard.tag": "Live Workshop OS",
+  "hero.videoBadge": "5s Video",
+  "hero.launchLive": "Launch Live",
+  "hero.testedRuida": "Tested with LightBurn & Ruida DSP Controllers",
+  "vault.badge": "COMMERCIAL DESIGNS VAULT",
+  "vault.title1": "300,000+ Ready-to-Cut",
+  "vault.titleAccent": "Bestselling Vector Bundles",
+  "vault.subtitle": "Stop wasting 5 hours drawing CAD files from scratch. Download proven, high-demand laser cutting templates with commercial licenses included. Tested on CO2, Fiber & Diode machines.",
+  "vault.proof.sales": "$100k+ Commercial Resale Proof",
+  "vault.proof.license": "Full Commercial Selling Rights",
+  "vault.proof.ready": "LightBurn & xTool Ready",
+  "vault.cats.all": "All Packs",
+  "vault.cats.bestsellers": "🔥 Bestsellers",
+  "vault.cats.3d": "3D Layered",
+  "vault.cats.jewelry": "Jewelry",
+  "vault.cats.decor": "Home Decor",
+  "vault.cats.boxes": "Boxes",
+  "vault.cats.seasonal": "Seasonal",
+  "vault.card.material": "Material:",
+  "vault.card.profit": "Potential Profit:",
+  "vault.card.inspect": "Inspect Vector Specs & Preview",
+  "vault.banner.badge": "UNLIMITED DOWNLOADS",
+  "vault.banner.title": "Unlock the Full 300,000+ Design Vault & Weekly New Releases",
+  "vault.banner.sub": "Never pay $5 to $15 per file on Etsy again. Get unlimited access to our entire commercial vector library, including all future weekly drops, with Workshop Pro for only $14.90/mo.",
+  "vault.banner.ctaPro": "⚡ Unlock Full Vault with Pro",
+  "vault.banner.ctaPlans": "View Transparent Plans",
+  "laserai.badge": "AI VECTOR CAD ENGINE — POWERED BY 0MACHINE AI",
+  "laserai.title1": "Turn Any Prompt into",
+  "laserai.titleAccent": "Ready-to-Cut SVG & DXF Vectors",
+  "laserai.subtitle": "Need a custom design that doesn't exist yet? Describe what you want. LaserAI Studio generates production-ready closed vector contours with separate Cut (Red) and Engrave (Black) layers in under 3 seconds.",
+  "laserai.selectPrompt": "SELECT SAMPLE PROMPT",
+  "laserai.customPromptLabel": "Custom Prompt or Edit Sample:",
+  "laserai.lightburnReady": "LightBurn C00/C01 Ready",
+  "laserai.btnGenerating": "Generating closed vector...",
+  "laserai.btnGenerate": "⚡ Generate Closed-Contour Vector",
+  "laserai.btnDownload": "Download Clean SVG",
+  "laserai.btnCopy": "Copy SVG Code",
+  "laserai.btnCopied": "Copied!",
+  "showcase.tab.all": "All Devices",
+  "showcase.tab.desktop": "Desktop Web",
+  "showcase.tab.tablet": "Workshop Tablet",
+  "showcase.tab.mobile": "Mobile Companion",
+  "showcase.tablet.tag": "Hands-Free Bench",
+  "showcase.tablet.desc": "Operators track status & cutting times in real-time",
+  "showcase.mobile.whatsapp": "Send client quotes & invoices via WhatsApp on-the-go"
 },
   fr: {
   "loader.loading": "Chargement de l'expérience...",
@@ -646,7 +702,63 @@ export const translations = {
   "calc.roi.totalGain": "Bénéfice Net Supplémentaire",
   "calc.roi.perMonth": "/ mois",
   "calc.roi.annualGain": "de bénéfice net supplémentaire chaque année",
-  "calc.roi.cta": "Récupérez Ces Bénéfices dans Votre Atelier →"
+  "calc.roi.cta": "Récupérez Ces Bénéfices dans Votre Atelier →",
+  "nav.vault": "💎 Fichiers Laser",
+  "nav.laserai": "🤖 LaserAI",
+  "nav.tools": "Outils Gratuits",
+  "nav.calculator": "Calculateur de Coûts",
+  "hero.tab.vault.short": "Fichiers",
+  "hero.tab.vault.tag": "300 000+ Fichiers Prêts",
+  "hero.tab.laserai.short": "LaserAI",
+  "hero.tab.laserai.tag": "Idée vers SVG/DXF",
+  "hero.tab.nesting.short": "Nesting",
+  "hero.tab.nesting.tag": "-30% à -40% de Chutes",
+  "hero.tab.dashboard.short": "Hub",
+  "hero.tab.dashboard.tag": "Workshop OS en Direct",
+  "hero.videoBadge": "Vidéo 5s",
+  "hero.launchLive": "Lancer l'App",
+  "hero.testedRuida": "Testé avec contrôleurs LightBurn & Ruida DSP",
+  "vault.badge": "COFFRE À DESIGNS COMMERCIAUX",
+  "vault.title1": "300 000+ Fichiers Prêts à Découper",
+  "vault.titleAccent": "Packs Vectoriels les Plus Vendus",
+  "vault.subtitle": "Arrêtez de perdre 5 heures à redessiner vos fichiers CAO. Téléchargez des modèles éprouvés et très demandés avec licence commerciale incluse. Testés sur machines CO2, Fibre et Diode.",
+  "vault.proof.sales": "+100k$ de Preuve de Revente Commerciale",
+  "vault.proof.license": "Droits de Revente Commerciale Inclus",
+  "vault.proof.ready": "Compatible LightBurn & xTool",
+  "vault.cats.all": "Tous les Packs",
+  "vault.cats.bestsellers": "🔥 Meilleurs Ventes",
+  "vault.cats.3d": "3D Multicouches",
+  "vault.cats.jewelry": "Bijoux & Mode",
+  "vault.cats.decor": "Décoration",
+  "vault.cats.boxes": "Boîtes & Coffrets",
+  "vault.cats.seasonal": "Saisonnier & Fêtes",
+  "vault.card.material": "Matériau :",
+  "vault.card.profit": "Bénéfice Potentiel :",
+  "vault.card.inspect": "Voir Détails & Spécifications Vectorielles",
+  "vault.banner.badge": "TÉLÉCHARGEMENTS ILLIMITÉS",
+  "vault.banner.title": "Débloquez Tout le Coffre de 300 000+ Fichiers et les Nouveautés",
+  "vault.banner.sub": "Ne payez plus 5€ à 15€ par fichier sur Etsy. Profitez d'un accès illimité à toute notre bibliothèque vectorielle commerciale avec Atelier Pro pour seulement 14,90$/mois.",
+  "vault.banner.ctaPro": "⚡ Débloquer Tout le Coffre avec Pro",
+  "vault.banner.ctaPlans": "Voir les Tarifs",
+  "laserai.badge": "MOTEUR CAO VECTORIEL IA — PROPULSÉ PAR 0MACHINE AI",
+  "laserai.title1": "Transformez Toute Idée en",
+  "laserai.titleAccent": "Vecteurs SVG & DXF Prêts à Découper",
+  "laserai.subtitle": "Besoin d'un design sur-mesure introuvable ? Décrivez votre projet. Le Studio LaserAI génère des contours vectoriels fermés avec calques Découpe (Rouge) et Gravure (Noir) séparés en moins de 3 secondes.",
+  "laserai.selectPrompt": "CHOISIR UN EXEMPLE",
+  "laserai.customPromptLabel": "Votre description ou modifier l'exemple :",
+  "laserai.lightburnReady": "Compatible LightBurn C00/C01",
+  "laserai.btnGenerating": "Génération du tracé fermé...",
+  "laserai.btnGenerate": "⚡ Générer le Vecteur Fermé",
+  "laserai.btnDownload": "Télécharger le SVG",
+  "laserai.btnCopy": "Copier le Code SVG",
+  "laserai.btnCopied": "Copié !",
+  "showcase.tab.all": "Tous les Écrans",
+  "showcase.tab.desktop": "Ordinateur d'Atelier",
+  "showcase.tab.tablet": "Tablette d'Atelier",
+  "showcase.tab.mobile": "Application Mobile",
+  "showcase.tablet.tag": "Établi Mains-Libres",
+  "showcase.tablet.desc": "Les opérateurs suivent le statut et les temps de coupe en direct",
+  "showcase.mobile.whatsapp": "Envoyez devis et factures par WhatsApp en déplacement"
 },
   es: {
   "loader.loading": "Cargando experiencia...",
@@ -968,35 +1080,118 @@ export const translations = {
   "calc.roi.cta": "Recupere Estas Ganancias en su Taller →",
   "mock.title": "Todo lo que su taller necesita",
   "mock.titleAccent": "en una sola aplicación.",
-  "mock.subtitle": "Cambie entre proyectos, inventario y preajustes con un solo clic."
+  "mock.subtitle": "Cambie entre proyectos, inventario y preajustes con un solo clic.",
+  "nav.vault": "💎 Diseños Láser",
+  "nav.laserai": "🤖 LaserAI",
+  "nav.tools": "Herramientas Gratis",
+  "nav.calculator": "Calculadora de Costos",
+  "hero.tab.vault.short": "Diseños",
+  "hero.tab.vault.tag": "300,000+ Listos para Cortar",
+  "hero.tab.laserai.short": "LaserAI",
+  "hero.tab.laserai.tag": "Prompt a SVG/DXF",
+  "hero.tab.nesting.short": "Anidado",
+  "hero.tab.nesting.tag": "30-40% Menos Desperdicio",
+  "hero.tab.dashboard.short": "Panel",
+  "hero.tab.dashboard.tag": "Workshop OS en Vivo",
+  "hero.videoBadge": "Video 5s",
+  "hero.launchLive": "Iniciar App",
+  "hero.testedRuida": "Probado con controladores LightBurn y Ruida DSP",
+  "vault.badge": "BÓVEDA DE DISEÑOS COMERCIALES",
+  "vault.title1": "300,000+ Listos para Cortar",
+  "vault.titleAccent": "Paquetes Vectoriales Más Vendidos",
+  "vault.subtitle": "Deje de perder 5 horas dibujando archivos CAD desde cero. Descargue plantillas de corte láser probadas y de alta demanda con licencia comercial incluida. Probadas en láser CO2, Fibra y Diodo.",
+  "vault.proof.sales": "+$100k en Ventas Comerciales Probadas",
+  "vault.proof.license": "Derechos de Venta Comercial Completos",
+  "vault.proof.ready": "Listo para LightBurn y xTool",
+  "vault.cats.all": "Todos los Packs",
+  "vault.cats.bestsellers": "🔥 Más Vendidos",
+  "vault.cats.3d": "Capas 3D",
+  "vault.cats.jewelry": "Joyería",
+  "vault.cats.decor": "Decoración",
+  "vault.cats.boxes": "Cajas",
+  "vault.cats.seasonal": "De Temporada",
+  "vault.card.material": "Material:",
+  "vault.card.profit": "Ganancia Potencial:",
+  "vault.card.inspect": "Inspeccionar Especificaciones y Vista Previa",
+  "vault.banner.badge": "DESCARGAS ILIMITADAS",
+  "vault.banner.title": "Desbloquee la Bóveda Completa de 300,000+ Diseños y Novedades",
+  "vault.banner.sub": "Nunca vuelva a pagar de $5 a $15 por archivo en Etsy. Obtenga acceso ilimitado a toda nuestra biblioteca vectorial comercial con Taller Pro por solo $14.90/mes.",
+  "vault.banner.ctaPro": "⚡ Desbloquear Bóveda con Pro",
+  "vault.banner.ctaPlans": "Ver Planes Transparentes",
+  "laserai.badge": "MOTOR CAD VECTORIAL IA — IMPULSADO POR 0MACHINE AI",
+  "laserai.title1": "Convierta Cualquier Idea en",
+  "laserai.titleAccent": "Vectores SVG y DXF Listos para Cortar",
+  "laserai.subtitle": "¿Necesita un diseño personalizado que no existe aún? Describa lo que desea. LaserAI Studio genera contornos vectoriales cerrados con capas separadas de Corte (Rojo) y Grabado (Negro) en menos de 3 segundos.",
+  "laserai.selectPrompt": "SELECCIONAR UN EJEMPLO",
+  "laserai.customPromptLabel": "Prompt personalizado o editar ejemplo:",
+  "laserai.lightburnReady": "Listo para LightBurn C00/C01",
+  "laserai.btnGenerating": "Generando trazado cerrado...",
+  "laserai.btnGenerate": "⚡ Generar Vector Cerrado",
+  "laserai.btnDownload": "Descargar SVG Limpio",
+  "laserai.btnCopy": "Copiar Código SVG",
+  "laserai.btnCopied": "¡Copiado!",
+  "showcase.tab.all": "Todos los Dispositivos",
+  "showcase.tab.desktop": "Web de Escritorio",
+  "showcase.tab.tablet": "Tablet de Taller",
+  "showcase.tab.mobile": "App Móvil",
+  "showcase.tablet.tag": "Banco Manos Libres",
+  "showcase.tablet.desc": "Los operarios siguen el estado y tiempos de corte en tiempo real",
+  "showcase.mobile.whatsapp": "Envíe presupuestos y facturas por WhatsApp desde el móvil"
 }
 };
 
 export function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState("en");
 
-  // Load preferred language from localStorage or cookies, or auto-detect from browser
+  // Load language: 1) URL query param ?lang=, 2) localStorage, 3) cookie, 4) browser navigator
   useEffect(() => {
-    let saved = null;
+    let chosen = null;
+
+    // 1. Check URL query param: ?lang=fr | ?lang=es | ?lang=en
     try {
-      saved = localStorage.getItem("preferred_language");
-      if (!saved && typeof document !== "undefined") {
-        const match = document.cookie.match(/(?:^|; )0machine_lang=([^;]+)/);
-        if (match) saved = match[1];
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        const urlLang = params.get("lang")?.toLowerCase();
+        if (urlLang && ["en", "fr", "es"].includes(urlLang)) {
+          chosen = urlLang;
+        }
       }
     } catch (e) {}
 
-    if (saved && ["en", "fr", "es"].includes(saved)) {
-      setLanguageState(saved);
-    } else {
-      // Auto-detect browser language
+    // 2. Check localStorage & cookies
+    if (!chosen) {
+      try {
+        const saved = localStorage.getItem("preferred_language");
+        if (saved && ["en", "fr", "es"].includes(saved)) {
+          chosen = saved;
+        } else if (typeof document !== "undefined") {
+          const match = document.cookie.match(/(?:^|; )0machine_lang=([^;]+)/);
+          if (match && ["en", "fr", "es"].includes(match[1])) {
+            chosen = match[1];
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 3. Auto-detect browser language
+    if (!chosen && typeof navigator !== "undefined") {
       const browserLang = navigator.language || (navigator.languages && navigator.languages[0]);
       if (browserLang) {
         const langCode = browserLang.substring(0, 2).toLowerCase();
         if (["en", "fr", "es"].includes(langCode)) {
-          setLanguageState(langCode);
+          chosen = langCode;
         }
       }
+    }
+
+    if (chosen && ["en", "fr", "es"].includes(chosen)) {
+      setLanguageState(chosen);
+      try {
+        localStorage.setItem("preferred_language", chosen);
+        if (typeof document !== "undefined") {
+          document.cookie = `0machine_lang=${chosen}; path=/; max-age=31536000; SameSite=Lax`;
+        }
+      } catch (e) {}
     }
   }, []);
 

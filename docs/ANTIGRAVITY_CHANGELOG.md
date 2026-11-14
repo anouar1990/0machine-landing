@@ -1619,3 +1619,39 @@
 - **Test Results**: All tests PASS (100%).
 - **Current Status**: COMPLETE
 - **Known Issues**: None
+
+
+## [2026-11-14 23:17:00] - Fix French & Spanish Language Support, URL Routing, and Full Translation Coverage
+- **Task**: Diagnose and fix issues where selecting French (`fr`) or Spanish (`es`) left significant sections of the page in English, add support for direct URL parameter language selection (`?lang=fr` and `?lang=es`), and wire all hardcoded UI strings into the localized translation dictionary.
+- **Root Cause Diagnosed**:
+  - `DesignsVault.js` (300K+ Commercial Vector Library) had zero `t()` translation calls; headers, badges, proof pills, category filter buttons, card metadata (material, profit, inspect button), and the Pro upgrade banner were hardcoded in English.
+  - `LaserAiSection.js` had only 3 translation calls; headers, badges, sample prompt selector, custom prompt input label, CAD mode tags, vector generation buttons, and download/copy buttons were hardcoded in English.
+  - `Navbar.js` top links (`💎 Designs Vault`, `🤖 LaserAI`, `Free Tools`, `Calculator`) had hardcoded English text.
+  - `Hero.js` tab navigation labels (`HERO_TABS`), tags, 5-second video badge, and launch buttons were static English strings.
+  - `ProductShowcase.js` device switcher tabs (`All Devices`, `Desktop Web`, `Workshop Tablet`, `Mobile Companion`) and feature callouts were hardcoded English.
+  - `LanguageContext.js` lacked URL parameter inspection, meaning visiting `?lang=fr` or `?lang=es` failed to activate the requested language.
+- **Changes Implemented**:
+  - `LanguageContext.js`: Added URL parameter detection (`?lang=fr`, `?lang=es`, `?lang=en`) to `LanguageProvider` with precedence order: URL param -> localStorage -> cookie -> navigator.language. Expanded dictionary with 56 new keys per language (nav links, hero tabs, vault categories/pills/banners, LaserAI CAD controls, and showcase tabs). Key count increased from 320 to 376 keys per language with 100% mutual parity (EN: 376, FR: 376, ES: 376).
+  - `Navbar.js`: Connected `nav.vault`, `nav.laserai`, `nav.tools`, and `nav.calculator` to `t()`.
+  - `Hero.js`: Wired `HERO_TABS` labels, short labels, tags, video badge, and live launch buttons into `t()`. Updated floating HUD to 300,000+ files.
+  - `DesignsVault.js`: Converted category filter pills to dynamic `CATEGORY_ITEMS` mapped through `t()`, localized section header, badges, proof pills, card metadata, and the Pro upgrade banner.
+  - `LaserAiSection.js`: Localized AI CAD engine badge, header, subtitle, sample prompt selector, custom input label, generation states, and export buttons.
+  - `ProductShowcase.js`: Localized device switcher tabs, tablet hands-free badge, operator telemetry text, and mobile WhatsApp callout.
+- **Files Modified**:
+  - `0machine-landing/app/context/LanguageContext.js`
+  - `0machine-landing/app/components/Navbar.js`
+  - `0machine-landing/app/components/Hero.js`
+  - `0machine-landing/app/components/DesignsVault.js`
+  - `0machine-landing/app/components/LaserAiSection.js`
+  - `0machine-landing/app/components/ProductShowcase.js`
+  - `0machine-landing/docs/ANTIGRAVITY_CHANGELOG.md`
+- **Tests Performed**:
+  - Next.js Turbopack Production Build (`npm run build`): PASS (63/63 routes compiled in 6.3s).
+  - Translation Key Parity Audit: PASS (EN: 376, FR: 376, ES: 376, 0 missing, 0 extra).
+  - Chrome DevTools Protocol Direct URL Parameter Tests:
+    - `/?lang=fr`: PASS (Nav links: `💎 Fichiers Laser`, `Outils Gratuits`; Hero: `300 000+ Fichiers Laser Commerciaux`; Vault: `COFFRE À DESIGNS COMMERCIAUX`; LaserAI: `MOTEUR CAO VECTORIEL IA`; Showcase: `Tous les Écrans`, `Tablette d'Atelier`).
+    - `/?lang=es`: PASS (Nav links: `💎 Diseños Láser`, `Herramientas Gratis`; Hero: `300,000+ Diseños Láser Comerciales`; Vault: `BÓVEDA DE DISEÑOS COMERCIALES`; LaserAI: `MOTOR CAD VECTORIAL IA`; Showcase: `Todos los Dispositivos`, `Web de Escritorio`).
+  - Mobile 375px Layout Verification in French: PASS (`scrollWidth: 375px, innerWidth: 375px, hasHorizontalOverflow: false`).
+- **Test Results**: All tests PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None

@@ -171,18 +171,18 @@ export default function LaserAiSection() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 text-[#B1FA63] text-xs font-extrabold uppercase tracking-[0.2em] mb-4">
             <Cpu size={14} />
-            <span>AI VECTOR CAD ENGINE — POWERED BY 0MACHINE AI</span>
+            <span>{t("laserai.badge")}</span>
           </div>
 
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white tracking-tight mb-5">
-            Turn Any Prompt into <br />
+            {t("laserai.title1")} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FE7733] to-[#B1FA63]">
-              Ready-to-Cut SVG &amp; DXF Vectors
+              {t("laserai.titleAccent")}
             </span>
           </h2>
 
           <p className="text-gray-400 text-base sm:text-lg leading-relaxed mb-8">
-            Need a custom design that doesn't exist yet? Describe what you want. LaserAI Studio generates production-ready closed vector contours with separate Cut (<span className="text-[#EF4444] font-semibold">Red #EF4444</span>) and Engrave (<span className="text-gray-200 font-semibold">Black #000000</span>) layers in under 3 seconds.
+            {t("laserai.subtitle")}
           </p>
 
           {/* Autoplaying 5-Second Video Walkthrough Showcase */}
@@ -206,7 +206,7 @@ export default function LaserAiSection() {
           <div className="lg:col-span-5 bg-[#1A1D21] border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">SELECT SAMPLE PROMPT</span>
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t("laserai.selectPrompt")}</span>
                 <span className="text-xs text-[#B1FA63] font-mono font-bold">⚡ 0machine ai</span>
               </div>
 
@@ -240,9 +240,9 @@ export default function LaserAiSection() {
               <div className="p-4 bg-[#111317] border border-white/10 rounded-2xl space-y-3 mb-6">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">
-                    Custom Prompt or Edit Sample:
+                    {t("laserai.customPromptLabel")}
                   </span>
-                  <span className="text-[#B1FA63] font-mono text-[10px] font-bold">LightBurn C00/C01 Ready</span>
+                  <span className="text-[#B1FA63] font-mono text-[10px] font-bold">{t("laserai.lightburnReady")}</span>
                 </div>
                 <textarea
                   id="laser-prompt-input"
@@ -313,12 +313,12 @@ export default function LaserAiSection() {
               {isGenerating ? (
                 <>
                   <RefreshCw size={16} className="animate-spin" />
-                  <span>Generating Vectors with 0machine ai...</span>
+                  <span>{t("laserai.btnGenerating")}</span>
                 </>
               ) : (
                 <>
                   <Zap size={16} />
-                  <span>⚡ Generate Real Laser Vector SVG</span>
+                  <span>{t("laserai.btnGenerate")}</span>
                 </>
               )}
             </button>
@@ -511,14 +511,14 @@ export default function LaserAiSection() {
                       className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-xs text-white font-medium flex items-center gap-1.5 transition-all cursor-pointer"
                     >
                       <Code2 size={13} />
-                      <span>{copied ? "Copied SVG!" : "Copy Code"}</span>
+                      <span>{copied ? t("laserai.btnCopied") : t("laserai.btnCopy")}</span>
                     </button>
                     <button
                       onClick={handleDownloadSvg}
                       className="px-4 py-1.5 rounded-lg bg-[#FE7733] hover:bg-[#E85F20] text-xs text-white font-bold flex items-center gap-1.5 transition-all shadow-md shadow-[#FE7733]/20 cursor-pointer"
                     >
                       <Download size={13} />
-                      <span>Download SVG</span>
+                      <span>{t("laserai.btnDownload")}</span>
                     </button>
                   </div>
                 </div>
