@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export async function POST(req) {
   try {
     const { prompt, mode = "cut-engrave", targetWidthMm = 120 } = await req.json();
@@ -9,7 +19,7 @@ export async function POST(req) {
     if (!prompt || typeof prompt !== "string" || prompt.trim().length === 0) {
       return NextResponse.json(
         { error: "Prompt is required." },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -17,32 +27,36 @@ export async function POST(req) {
     if (!apiKey) {
       return NextResponse.json(
         { error: "GEMINI_API_KEY is not configured on the server." },
-        { status: 500 }
+        { status: 500, headers: corsHeaders }
       );
     }
 
     // Determine CAM requirements based on mode
     let modeGuidelines = `
 - Outer cutline: Put in <g id="CUT_00" stroke="#EF4444" stroke-width="0.5" fill="none">.
-- Interior engravings/details: Put in <g id="ENGRAVE_01" fill="#000000" stroke="none">.
+- Internal fast vector marking/score lines: Put in <g id="SCORE_01" stroke="#3B82F6" stroke-width="0.5" fill="none">.
+- Solid surface engravings/textures: Put in <g id="ENGRAVE_02" fill="#000000" stroke="none">.
 `;
 
     if (mode === "stencil" || mode === "connected-stencil") {
       modeGuidelines = `
 - Single-piece laser cut stencil: Connect all inner islands (e.g. loops in letters like O, A, B or animal eyes) with 1.5mm to 2mm bridge tabs to the main body so zero pieces fall out.
 - Put all through-cuts in <g id="CUT_00" stroke="#EF4444" stroke-width="0.5" fill="none">.
+- Put decorative surface scores in <g id="SCORE_01" stroke="#3B82F6" stroke-width="0.5" fill="none">.
 `;
     } else if (mode === "keychain" || mode === "keychain-medallion") {
       modeGuidelines = `
 - Keychain/Pendant mode: Create an integrated 3.5mm circular mounting hole with at least 2mm perimeter wall thickness at the top for a jump ring or keyring.
 - Outer boundary and hole in <g id="CUT_00" stroke="#EF4444" stroke-width="0.5" fill="none">.
-- Inner graphic art in <g id="ENGRAVE_01" fill="#000000" stroke="none">.
+- Fine vector line score accents in <g id="SCORE_01" stroke="#3B82F6" stroke-width="0.5" fill="none">.
+- Solid engraved artwork in <g id="ENGRAVE_02" fill="#000000" stroke="none">.
 `;
     } else if (mode === "layered" || mode === "layered-scene") {
       modeGuidelines = `
 - Multilayer 3D Shadowbox style: Stark separated silhouettes (background horizon, midground elements, foreground silhouette).
 - Clean closed cutlines in <g id="CUT_00" stroke="#EF4444" stroke-width="0.5" fill="none">.
-- High-contrast crosshatching in <g id="ENGRAVE_01" fill="#000000" stroke="none">.
+- Outline vector scores in <g id="SCORE_01" stroke="#3B82F6" stroke-width="0.5" fill="none">.
+- High-contrast crosshatching in <g id="ENGRAVE_02" fill="#000000" stroke="none">.
 `;
     }
 
@@ -53,12 +67,13 @@ STRICT RULES:
 1. Output valid SVG XML ONLY.
 2. Standard ViewBox: viewBox="0 0 500 500" with width="100%" height="100%".
 3. Use exact LightBurn Layer Conventions:
-   - Include <defs><style>.cut { stroke: #EF4444; stroke-width: 0.5; fill: none; } .engrave { fill: #000000; stroke: none; }</style></defs>
-   - Cut Contours: class="cut" stroke="#EF4444" stroke-width="0.5" fill="none" inside <g id="CUT_00">
-   - Engrave Elements: class="engrave" fill="#000000" stroke="none" inside <g id="ENGRAVE_01">
+   - Include <defs><style>.cut { stroke: #EF4444; stroke-width: 0.5; fill: none; } .score { stroke: #3B82F6; stroke-width: 0.5; fill: none; } .engrave { fill: #000000; stroke: none; }</style></defs>
+   - Cut Contours (Through cuts): class="cut" stroke="#EF4444" stroke-width="0.5" fill="none" inside <g id="CUT_00" inkscape:label="C00 - Cut">
+   - Score Contours (Vector line markings): class="score" stroke="#3B82F6" stroke-width="0.5" fill="none" inside <g id="SCORE_01" inkscape:label="C01 - Score">
+   - Engrave Elements (Solid surface raster): class="engrave" fill="#000000" stroke="none" inside <g id="ENGRAVE_02" inkscape:label="C02 - Engrave">
 4. Geometric Integrity:
    - All cut paths must be closed (<path d="... Z"/> or <circle>, <rect>, <polygon>).
-   - No self-intersecting or overlapping duplicate cutlines.
+   - Zero self-intersecting or overlapping duplicate cutlines.
 5. Specific Mode Requirements:
 ${modeGuidelines}
 
@@ -94,7 +109,7 @@ Do not include any chat commentary or conversational text.`;
             errData.error?.message ||
             `Gemini API request failed with status ${res.status}`,
         },
-        { status: res.status }
+        { status: res.status, headers: corsHeaders }
       );
     }
 
@@ -107,7 +122,7 @@ Do not include any chat commentary or conversational text.`;
       console.warn("[generate-svg] No valid SVG block found in response:", rawText.slice(0, 200));
       return NextResponse.json(
         { error: "Model did not return valid SVG markup. Please retry." },
-        { status: 502 }
+        { status: 502, headers: corsHeaders }
       );
     }
 
@@ -120,15 +135,16 @@ Do not include any chat commentary or conversational text.`;
       mode,
       targetWidthMm,
       layers: {
-        cut: "#EF4444 (LightBurn Layer 00)",
-        engrave: "#000000 (LightBurn Layer 01)",
+        cut: "#EF4444 (LightBurn Layer 00 Cut)",
+        score: "#3B82F6 (LightBurn Layer 01 Score)",
+        engrave: "#000000 (LightBurn Layer 02 Engrave)",
       },
-    });
+    }, { headers: corsHeaders });
   } catch (err) {
     console.error("[generate-svg] Server error:", err);
     return NextResponse.json(
       { error: err.message || "Internal server error occurred." },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

@@ -1697,3 +1697,15 @@
 - **Test Results**: All tests PASS (100%).
 - **Current Status**: COMPLETE
 - **Known Issues**: None
+
+
+## [2026-11-16 23:10:00] - 0Machine AI Studio Upgrade & Direct CAM Vectorization
+- **Task**: Upgrade API `/api/generate-svg` with CORS headers and LightBurn/xTool 3-layer CAM prompts (Cut 🔴, Score 🔵, Engrave ⚫) with closed contours and zero duplicate lines.
+- **Files Changed**:
+  - `0machine-landing/app/api/generate-svg/route.js`: Upgraded Gemini prompt to output direct 3-layer CAM SVG (`CUT_00`, `SCORE_01`, `ENGRAVE_02`) with closed paths and zero duplicate lines; added CORS headers (`Access-Control-Allow-Origin: *`) and `OPTIONS` preflight handling.
+  - `0machine-landing/docs/ANTIGRAVITY_CHANGELOG.md`: Appended completion changelog entry.
+- **Tests Performed**:
+  - Next.js production build (`cd 0machine-landing && npm run build`): PASS (63/63 pages compiled cleanly in 4.3s)
+- **Test Results**: PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None
