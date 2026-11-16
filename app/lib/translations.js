@@ -28,7 +28,7 @@ export const LANDING_TRANSLATIONS = {
     starter_bullet_6: "Design Library Access",
 
     pro_bullet_1: "Everything in Starter +",
-    pro_bullet_2: "Nesting Yield Calculator",
+    pro_bullet_2: "0machine Nesting Calculator",
     pro_bullet_3: "1-Click WhatsApp Sharing",
     pro_bullet_4: "CSV & Excel Exports",
     pro_bullet_5: "Team Workspace (3 Users)",
@@ -65,7 +65,7 @@ export const LANDING_TRANSLATIONS = {
     starter_bullet_6: "Accès Bibliothèque Vectorielle",
 
     pro_bullet_1: "Tout ce qui est dans Starter +",
-    pro_bullet_2: "Calculateur d'Imbrication / Nesting",
+    pro_bullet_2: "Calculateur 0machine Nesting",
     pro_bullet_3: "Partage Direct WhatsApp en 1 Clic",
     pro_bullet_4: "Exportations CSV et Excel",
     pro_bullet_5: "Espace Équipe (3 Utilisateurs)",
@@ -102,7 +102,7 @@ export const LANDING_TRANSLATIONS = {
     starter_bullet_6: "Acceso a Biblioteca de Diseños",
 
     pro_bullet_1: "Todo lo de Starter +",
-    pro_bullet_2: "Calculadora de Nesting",
+    pro_bullet_2: "Calculadora 0machine Nesting",
     pro_bullet_3: "Compartir por WhatsApp en 1 Clic",
     pro_bullet_4: "Exportación CSV y Excel",
     pro_bullet_5: "Espacio de Trabajo (3 Usuarios)",
