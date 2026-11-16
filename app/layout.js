@@ -41,6 +41,13 @@ export const metadata = {
       "facebook-domain-verification": "nq9iuye9c4rxjv3s1ev6awc05wom58",
     },
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -150,7 +157,9 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
       <head>
         <meta name="facebook-domain-verification" content="nq9iuye9c4rxjv3s1ev6awc05wom58" />
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
         <link
           rel="preload"
           as="image"
