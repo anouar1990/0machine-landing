@@ -1709,3 +1709,16 @@
 - **Test Results**: PASS (100%).
 - **Current Status**: COMPLETE
 - **Known Issues**: None
+
+
+## [2026-11-17 00:08:00] - 0Machine LaserAI Studio Phase 0 Execution
+- **Task**: Fix multi-part candidate assembly in `/api/generate-svg`, enforce IP-based rate limiting, sanitize full-bleed background rectangles, and reject truncated/malformed SVGs.
+- **Files Changed**:
+  - `0machine-landing/app/api/generate-svg/route.js`: Implemented complete multi-part candidate assembly (`candidate.content.parts.map()`), markdown code block extraction, strict SVG structural validation, automatic full-bleed background rectangle stripping, safe IP-based sliding-window rate limiting (20 req/min), and descriptive HTTP error responses.
+  - `0machine-landing/docs/ANTIGRAVITY_CHANGELOG.md`: Appended entry.
+- **Tests Performed**:
+  - Live validation on 6 prompts: PASS (100% complete SVGs with Cut, Score, and Engrave layers)
+  - Next.js production build (`npm run build`): PASS (4.1s)
+- **Test Results**: All tests PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None
