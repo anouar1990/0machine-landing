@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
@@ -7,38 +7,27 @@ import {
   Download,
   ShieldCheck,
   Zap,
-  ArrowRight,
   Code2,
   RefreshCw,
-  Eye,
   Check,
   AlertCircle,
-  Play
+  Lock,
+  Unlock,
+  ExternalLink,
+  Send,
+  Layers,
+  ArrowRight
 } from "lucide-react";
-import { useLanguage } from "../context/LanguageContext";
-import LaserAiDemoVideo from "./LaserAiDemoVideo";
-import LaserAiCreditModal from "./LaserAiCreditModal";
+import { supabase } from "../lib/supabase";
 
 const SAMPLE_PROMPTS = [
   {
     id: "wolf",
     icon: "🐺",
-    title: "Lone Wolf Forest Silhouette",
+    title: "Lone Wolf Silhouette",
     prompt: "Majestic howling wolf on a rocky cliff surrounded by pine trees, stark woodcut crosshatching, closed contour cutline.",
     mode: "cut-engrave",
-    modeLabel: "Cut & Engrave",
-    specs: "Red 0.1mm Cut Perimeter + Black Engrave Crosshatching",
-    resale: "$35 - $60 Wood Wall Art",
-  },
-  {
-    id: "owl_clock",
-    icon: "⚙️",
-    title: "Steampunk Owl Gear Clock",
-    prompt: "Mechanical owl with exposed clockwork gears, Roman numerals ring, 8mm center shaft hole for quartz movement.",
-    mode: "cut-engrave",
-    modeLabel: "Precision Functional CAM",
-    specs: "8mm Precision Center Hole + Layered Gear Cutouts",
-    resale: "$55 - $95 Etsy Best-Seller",
+    modeLabel: "Cut + Engrave",
   },
   {
     id: "keychain",
@@ -46,103 +35,283 @@ const SAMPLE_PROMPTS = [
     title: "Art Deco Eagle Keychain",
     prompt: "Geometric Art Deco eagle medallion, 40mm circular pendant with integrated 3.5mm top jump-ring hole.",
     mode: "keychain",
-    modeLabel: "Keychain Mode",
-    specs: "Integrated 3.5mm Reinforced Top Tab Hole",
-    resale: "$12 - $20 (Fast 2-Min Cut)",
+    modeLabel: "Keychain (3.5mm Hole)",
+  },
+  {
+    id: "owl_clock",
+    icon: "⚙️",
+    title: "Steampunk Gear Clock",
+    prompt: "Mechanical owl with exposed clockwork gears, Roman numerals ring, 8mm center shaft hole for quartz movement.",
+    mode: "cut-engrave",
+    modeLabel: "Precision CAM",
+  },
+  {
+    id: "coaster",
+    icon: "🌸",
+    title: "Mandala Floral Coaster",
+    prompt: "Sacred geometry mandala flower pattern coaster, circular laser cut border with concentric engraved lace detail.",
+    mode: "cut-engrave",
+    modeLabel: "Coaster Pack",
   },
   {
     id: "stencil",
     icon: "🌿",
-    title: "Botanical Floral Monogram",
+    title: "Monogram Stencil",
     prompt: "Intricate vine monogram letter 'M' stencil, connected tabs on all inner enclosed loops, single-piece cut.",
     mode: "stencil",
-    modeLabel: "Connected Stencil",
-    specs: "Zero Fallen Islands · 1.5mm Micro-Tabs",
-    resale: "$25 - $45 Cake Stencil / Sign",
+    modeLabel: "Bridged Stencil",
   },
 ];
 
 export default function LaserAiSection() {
-  const { t } = useLanguage();
-  const [activePrompt, setActivePrompt] = useState(0);
-  const [customPrompt, setCustomPrompt] = useState(SAMPLE_PROMPTS[0].prompt);
-  const [activeMode, setActiveMode] = useState(SAMPLE_PROMPTS[0].mode);
+  const [customPrompt, setCustomPrompt] = useState("");
+  const [activeMode, setActiveMode] = useState("cut-engrave");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedSvg, setGeneratedSvg] = useState(null);
+  const [progressPercent, setProgressPercent] = useState(0);
+  const [progressStage, setProgressStage] = useState("");
   const [genError, setGenError] = useState(null);
-  const [viewMode, setViewMode] = useState("preview"); // "preview" (svg) or "screenshot"
-  const [bedMaterial, setBedMaterial] = useState("wood"); // "wood" | "light" | "honeycomb"
   const [copied, setCopied] = useState(false);
-  const [showDemoVideo, setShowDemoVideo] = useState(false);
-  const [showCreditModal, setShowCreditModal] = useState(false);
-  const [credits, setCredits] = useState(1); // 1 free generation by default
 
+  // Auth & Unlock state
+  const [user, setUser] = useState(null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [authMode, setAuthMode] = useState("signup"); // "signup" | "login"
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState(null);
+
+  // Chat conversation messages
+  const [messages, setMessages] = useState([
+    {
+      id: "welcome",
+      sender: "assistant",
+      text: "👋 Welcome to LaserAI Prompt Chat v2.0! Describe any design you want to laser cut (keychains, signs, wall art, stencils). Our CAD engine will synthesize closed cutlines (C00) and engrave contours (C01).",
+      timestamp: "Just now",
+    },
+  ]);
+
+  const chatContainerRef = useRef(null);
+  const progressIntervalRef = useRef(null);
+
+  // Check initial authentication
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("0machine_ai_credits");
-      if (stored !== null) {
-        setCredits(parseInt(stored, 10));
-      } else {
-        localStorage.setItem("0machine_ai_credits", "1");
-        setCredits(1);
+      if (typeof window !== "undefined") {
+        if (localStorage.getItem("0machine_user_unlocked") === "true") {
+          setIsUnlocked(true);
+        }
       }
     } catch (e) {}
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user);
+        setIsUnlocked(true);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        setIsUnlocked(true);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
-  const selected = SAMPLE_PROMPTS[activePrompt];
+  // Auto-scroll chat to latest message
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages, isGenerating, progressPercent]);
 
-  const handleSelectSample = (idx) => {
-    setActivePrompt(idx);
-    setCustomPrompt(SAMPLE_PROMPTS[idx].prompt);
-    setActiveMode(SAMPLE_PROMPTS[idx].mode);
+  // Clean up progress intervals on unmount
+  useEffect(() => {
+    return () => {
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    };
+  }, []);
+
+  const handleSelectSample = (sample) => {
+    setCustomPrompt(sample.prompt);
+    setActiveMode(sample.mode);
   };
 
-  const handleGenerate = async (promptToUse, modeToUse) => {
-    const p = promptToUse || customPrompt;
-    const m = modeToUse || activeMode;
-    if (!p || !p.trim()) return;
+  const handleSendPrompt = async (promptToSend = null, modeToSend = null) => {
+    const p = (promptToSend || customPrompt).trim();
+    const m = modeToSend || activeMode;
+    if (!p || isGenerating) return;
 
-    // Check if user has available credits
-    if (credits <= 0) {
-      setShowCreditModal(true);
-      return;
-    }
+    // Add user message
+    const userMsg = {
+      id: `user-${Date.now()}`,
+      sender: "user",
+      text: p,
+      mode: m,
+      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    };
 
-    setIsGenerating(true);
+    setMessages((prev) => [...prev, userMsg]);
+    setCustomPrompt("");
     setGenError(null);
+    setIsGenerating(true);
+    setProgressPercent(10);
+    setProgressStage("Analyzing prompt & vector geometry...");
+
+    // Animate progress bar ("samta katcharja")
+    if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
+    let currentPercent = 10;
+    progressIntervalRef.current = setInterval(() => {
+      currentPercent += Math.floor(Math.random() * 8) + 4;
+      if (currentPercent > 92) {
+        currentPercent = 92;
+        clearInterval(progressIntervalRef.current);
+      }
+      setProgressPercent(currentPercent);
+
+      if (currentPercent > 30 && currentPercent <= 60) {
+        setProgressStage("Tracing closed boundary cutlines (#EF4444)...");
+      } else if (currentPercent > 60 && currentPercent <= 85) {
+        setProgressStage("Synthesizing LightBurn/DXF layers & kerf offset...");
+      } else if (currentPercent > 85) {
+        setProgressStage("Finalizing vector smoothing & CAM export...");
+      }
+    }, 280);
 
     try {
       const res = await fetch("/api/generate-svg", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: p.trim(), mode: m }),
+        body: JSON.stringify({ prompt: p, mode: m }),
       });
+
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
 
       const data = await res.json();
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Failed to generate SVG.");
+        throw new Error(data.error || "Failed to generate laser vector SVG.");
       }
 
-      setGeneratedSvg(data.svg);
-      setViewMode("preview");
+      // Finish progress bar smoothly to 100%
+      setProgressPercent(100);
+      setProgressStage("Vector CAD Synthesis Complete! ✓");
 
-      // Deduct credit
-      const remaining = Math.max(0, credits - 1);
-      setCredits(remaining);
-      try {
-        localStorage.setItem("0machine_ai_credits", String(remaining));
-      } catch (e) {}
+      await new Promise((r) => setTimeout(r, 400));
+
+      // Append assistant message with generated SVG
+      const aiResultMsg = {
+        id: `ai-${Date.now()}`,
+        sender: "assistant",
+        text: `⚡ Clean vector synthesized for: "${p}"`,
+        svg: data.svg,
+        prompt: p,
+        mode: m,
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      };
+
+      setMessages((prev) => [...prev, aiResultMsg]);
     } catch (err) {
       console.error("[LaserAiSection] Generate error:", err);
       setGenError(err.message || "Error generating vector file.");
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-err-${Date.now()}`,
+          sender: "assistant",
+          text: `⚠️ Generation failed: ${err.message || "Please try another prompt."}`,
+          isError: true,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        },
+      ]);
     } finally {
+      if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
       setIsGenerating(false);
+      setProgressPercent(0);
+      setProgressStage("");
     }
   };
 
-  const handleDownloadSvg = () => {
-    if (!generatedSvg) return;
-    const blob = new Blob([generatedSvg], { type: "image/svg+xml;charset=utf-8" });
+  const handleAuthSubmit = async (e) => {
+    e?.preventDefault();
+    if (!authEmail || !authPassword) {
+      setAuthError("Please enter your email and password.");
+      return;
+    }
+    if (authPassword.length < 6) {
+      setAuthError("Password must be at least 6 characters.");
+      return;
+    }
+
+    setAuthLoading(true);
+    setAuthError(null);
+
+    try {
+      if (authMode === "signup") {
+        const { data, error } = await supabase.auth.signUp({
+          email: authEmail.trim(),
+          password: authPassword,
+          options: {
+            data: {
+              source: "laserai_prompt_chat_v2",
+            },
+          },
+        });
+
+        if (error) {
+          if (error.message?.toLowerCase().includes("already registered")) {
+            setAuthMode("login");
+            setAuthError("This email is already registered. Please log in to unlock.");
+            setAuthLoading(false);
+            return;
+          }
+          throw error;
+        }
+
+        // Grant instant unlock
+        setIsUnlocked(true);
+        try {
+          localStorage.setItem("0machine_user_unlocked", "true");
+          localStorage.setItem("0machine_user_email", authEmail.trim());
+        } catch (e) {}
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: authEmail.trim(),
+          password: authPassword,
+        });
+
+        if (error) throw error;
+
+        setIsUnlocked(true);
+        try {
+          localStorage.setItem("0machine_user_unlocked", "true");
+          localStorage.setItem("0machine_user_email", authEmail.trim());
+        } catch (e) {}
+      }
+    } catch (err) {
+      console.error("[LaserAiSection] Auth error:", err);
+      setAuthError(err.message || "Authentication error. Please check your credentials.");
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleDownloadSvg = (svgContent) => {
+    if (!isUnlocked) {
+      setAuthError("Please create a free account to download the clean vector file.");
+      return;
+    }
+    if (!svgContent) return;
+    const blob = new Blob([svgContent], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -153,430 +322,482 @@ export default function LaserAiSection() {
     URL.revokeObjectURL(url);
   };
 
-  const handleCopySvg = () => {
-    if (!generatedSvg) return;
-    navigator.clipboard.writeText(generatedSvg);
+  const handleCopySvg = (svgContent) => {
+    if (!isUnlocked) {
+      setAuthError("Please sign up free to copy clean vector code.");
+      return;
+    }
+    if (!svgContent) return;
+    navigator.clipboard.writeText(svgContent);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <section id="laser-ai" className="relative py-28 bg-[#111317] text-gray-200 overflow-hidden">
-      {/* Background gradients */}
-      <div className="absolute top-1/3 left-10 w-[600px] h-[600px] bg-[#FE7733]/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#B1FA63]/5 rounded-full blur-[130px] pointer-events-none -z-10" />
+    <section id="laser-ai" className="relative py-24 sm:py-32 bg-[#111317] text-gray-200 overflow-hidden">
+      {/* Background neon ambient gradients */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-[#FE7733]/10 rounded-full blur-[160px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#B1FA63]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 text-[#B1FA63] text-xs font-extrabold uppercase tracking-[0.2em] mb-4">
             <Cpu size={14} />
-            <span>{t("laserai.badge")}</span>
+            <span>0MACHINE LASERAI ENGINE V2.0</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white tracking-tight mb-5">
-            {t("laserai.title1")} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FE7733] to-[#B1FA63]">
-              {t("laserai.titleAccent")}
+          <h2 className="text-3xl sm:text-5xl font-bold font-[Outfit] text-white tracking-tight mb-4">
+            LaserAI Prompt Chat <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FE7733] via-[#FF8F50] to-[#B1FA63]">
+              Text to Clean Laser Cut Vector
             </span>
           </h2>
 
-          <p className="text-gray-400 text-base sm:text-lg leading-relaxed mb-8">
-            {t("laserai.subtitle")}
+          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+            Type any prompt below. Watch the CAD engine charge in real-time and synthesize closed cut contours ready for LightBurn and laser cutters.
           </p>
-
-          {/* Autoplaying 5-Second Video Walkthrough Showcase */}
-          <div id="laser-ai-video" className="mb-14 text-left">
-            <LaserAiDemoVideo
-              inline={true}
-              onExpand={() => setShowDemoVideo(true)}
-              onTryPrompt={() => {
-                setCustomPrompt("Geometric Wolf Keychain with 3.5mm top hole");
-                setActiveMode("keychain");
-                const el = document.getElementById("laser-ai-generator");
-                if (el) el.scrollIntoView({ behavior: "smooth" });
-              }}
-            />
-          </div>
         </div>
 
-        {/* Interactive Studio Preview Grid */}
-        <div id="laser-ai-generator" className="grid lg:grid-cols-12 gap-8 items-stretch mb-16">
-          {/* Left Column: Interactive Prompt Switcher & Custom Input */}
-          <div className="lg:col-span-5 bg-[#1A1D21] border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t("laserai.selectPrompt")}</span>
-                <span className="text-xs text-[#B1FA63] font-mono font-bold">⚡ 0machine ai</span>
+        {/* ============================================================== */}
+        {/* STANDALONE LASERAI PROMPT CHAT V2.0 CONTAINER                 */}
+        {/* ============================================================== */}
+        <div className="bg-[#1A1D21] border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+          {/* Chat Top Bar */}
+          <div className="p-4 sm:p-5 border-b border-white/10 bg-[#16181D] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/20">
+                <Sparkles size={20} />
               </div>
-
-              {/* Sample Prompt Selector Buttons */}
-              <div className="space-y-3 mb-6">
-                {SAMPLE_PROMPTS.map((item, idx) => (
-                  <button
-                    key={item.id}
-                    onClick={() => handleSelectSample(idx)}
-                    className={`w-full text-left p-3.5 rounded-2xl border transition-all flex items-start gap-3.5 cursor-pointer ${
-                      activePrompt === idx
-                        ? "bg-[#23262C] border-[#FE7733] shadow-lg shadow-[#FE7733]/15"
-                        : "bg-white/5 border-white/5 hover:border-white/15 text-gray-400"
-                    }`}
-                  >
-                    <span className="text-2xl flex-shrink-0">{item.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className={`text-sm font-bold ${activePrompt === idx ? "text-white" : "text-gray-300"}`}>
-                          {item.title}
-                        </span>
-                        <span className="text-[10px] font-mono text-[#B1FA63] font-bold">{item.modeLabel}</span>
-                      </div>
-                      <p className="text-xs text-gray-400 line-clamp-1 italic">"{item.prompt}"</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {/* Live Editable Prompt Input */}
-              <div className="p-4 bg-[#111317] border border-white/10 rounded-2xl space-y-3 mb-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400 font-semibold uppercase tracking-wider text-[10px]">
-                    {t("laserai.customPromptLabel")}
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm sm:text-base font-bold text-white font-[Outfit]">LaserAI Prompt Chat</span>
+                  <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded-md bg-[#B1FA63]/15 text-[#B1FA63] border border-[#B1FA63]/30">
+                    v2.0
                   </span>
-                  <span className="text-[#B1FA63] font-mono text-[10px] font-bold">{t("laserai.lightburnReady")}</span>
                 </div>
-                <textarea
-                  id="laser-prompt-input"
-                  aria-label="Custom laser design prompt"
-                  value={customPrompt}
-                  onChange={(e) => setCustomPrompt(e.target.value)}
-                  rows={3}
-                  placeholder="Describe your design (e.g. Celtic knot keychain, 3D dragon wall art, acrylic cake topper)..."
-                  className="w-full bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#FE7733] transition-colors resize-none font-mono"
-                />
-
-                {/* Mode Selector */}
-                <div className="flex gap-2 pt-1">
-                  {[
-                    { id: "cut-engrave", label: "Cut + Engrave" },
-                    { id: "keychain", label: "Keychain (Hole Tab)" },
-                    { id: "stencil", label: "Bridge Stencil" },
-                  ].map((m) => (
-                    <button
-                      key={m.id}
-                      onClick={() => setActiveMode(m.id)}
-                      className={`text-[10px] font-semibold px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer ${
-                        activeMode === m.id
-                          ? "bg-[#FE7733]/20 border-[#FE7733] text-[#FE7733]"
-                          : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
-                      }`}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                  <span>0machine Cloud Active · 2.0s Average Synthesize</span>
                 </div>
               </div>
-
-              {genError && (
-                <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
-                  <AlertCircle size={14} className="flex-shrink-0" />
-                  <span>{genError}</span>
-                </div>
-              )}
             </div>
 
-            {/* Credit Status & Refill Bar */}
-            <div className="flex items-center justify-between text-xs mb-2.5 px-1">
-              <span className="text-gray-400 flex items-center gap-1.5 font-medium">
-                <span className={`w-2 h-2 rounded-full ${credits > 0 ? "bg-[#10B981]" : "bg-[#EF4444]"}`} />
-                <span>Available Credits:</span>
-                <span className="font-mono text-white font-bold">{credits}</span>
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowCreditModal(true)}
-                className="text-[11px] font-bold text-[#FE7733] hover:text-[#FFA559] hover:underline flex items-center gap-1 cursor-pointer transition-colors"
+            {isUnlocked ? (
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#10B981]/15 border border-[#10B981]/30 text-[#10B981] text-xs font-bold">
+                <Unlock size={13} />
+                <span>Unlocked ✓</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FE7733]/15 border border-[#FE7733]/30 text-[#FE7733] text-xs font-bold">
+                <Lock size={13} />
+                <span>Sign Up to Unlock</span>
+              </div>
+            )}
+          </div>
+
+          {/* Chat Messages Stream */}
+          <div
+            ref={chatContainerRef}
+            className="p-5 sm:p-7 space-y-6 max-h-[520px] overflow-y-auto scrollbar-thin bg-gradient-to-b from-[#1A1D21] to-[#14161A]"
+          >
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
               >
-                <span>Pick Credits (from $9) →</span>
+                {/* User Message Bubble */}
+                {msg.sender === "user" && (
+                  <div className="max-w-[85%] rounded-2xl rounded-tr-none p-4 bg-gradient-to-r from-[#FE7733] to-[#FF8F50] text-white shadow-lg shadow-[#FE7733]/20 text-xs sm:text-sm font-medium space-y-1.5">
+                    {msg.mode && (
+                      <div className="text-[10px] font-mono font-extrabold uppercase tracking-wider text-white/80">
+                        Mode: {msg.mode}
+                      </div>
+                    )}
+                    <p>{msg.text}</p>
+                    <div className="text-right text-[10px] text-white/70">{msg.timestamp}</div>
+                  </div>
+                )}
+
+                {/* Assistant Message Bubble */}
+                {msg.sender === "assistant" && (
+                  <div className="max-w-[95%] sm:max-w-[90%] rounded-2xl rounded-tl-none p-4 sm:p-5 bg-[#16181D] border border-white/10 text-gray-200 text-xs sm:text-sm space-y-4 shadow-xl">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#B1FA63]">
+                        <Cpu size={14} />
+                        <span>0machine LaserAI Assistant</span>
+                      </div>
+                      <span className="text-[10px] text-gray-500">{msg.timestamp}</span>
+                    </div>
+
+                    <p className="leading-relaxed text-gray-300">{msg.text}</p>
+
+                    {/* Rendered SVG Result (if message has SVG) */}
+                    {msg.svg && (
+                      <div className="space-y-4 pt-2">
+                        {/* Vector Viewport Canvas */}
+                        <div className="relative rounded-2xl overflow-hidden border border-[#CBB28D] bg-gradient-to-br from-[#F6EEDC] via-[#ECE1C8] to-[#E2D2B5] min-h-[320px] sm:min-h-[380px] flex items-center justify-center p-6 shadow-2xl">
+                          {/* CAD Grid */}
+                          <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
+
+                          {/* Floating Layer Badges */}
+                          <div className="absolute top-3 right-3 bg-black/85 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 text-[10px] space-y-1 shadow-lg z-20">
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
+                              <span className="text-gray-200 font-mono">Layer 00: CUT (Hairline)</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="w-2 h-2 rounded-full bg-[#1A1108]" />
+                              <span className="text-gray-200 font-mono">Layer 01: ENGRAVE (Burnt Wood)</span>
+                            </div>
+                          </div>
+
+                          {/* SVG Canvas with conditional blur ("flow hta ytsejel") */}
+                          <div
+                            id="laser-svg-canvas"
+                            style={{
+                              filter: !isUnlocked ? "blur(14px) brightness(0.95)" : "none",
+                              pointerEvents: !isUnlocked ? "none" : "auto",
+                              userSelect: !isUnlocked ? "none" : "auto",
+                              transition: "filter 0.5s ease-in-out",
+                            }}
+                            className="w-full h-full max-h-[340px] flex items-center justify-center relative z-10 [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto [&_.engrave]:fill-[#1A1108] [&_.cut]:stroke-[#EF4444] drop-shadow-[0_4px_12px_rgba(40,25,12,0.35)]"
+                            dangerouslySetInnerHTML={{ __html: msg.svg }}
+                          />
+
+                          {/* ==================================================== */}
+                          {/* OVERLAY SIGN UP TO UNLOCK CARD ("moraha yban liih")   */}
+                          {/* ==================================================== */}
+                          {!isUnlocked && (
+                            <div
+                              id="laser-unlock-card"
+                              className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-black/45 backdrop-blur-[2px]"
+                            >
+                              <motion.div
+                                initial={{ scale: 0.93, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ duration: 0.3 }}
+                                className="w-full max-w-sm bg-[#16181D]/95 backdrop-blur-2xl border border-[#FE7733]/40 rounded-3xl p-5 sm:p-6 shadow-2xl text-center space-y-3.5"
+                              >
+                                <div className="w-11 h-11 mx-auto rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/30">
+                                  <Lock size={22} />
+                                </div>
+
+                                <div>
+                                  <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/20">
+                                    ⚡ Vector CAD Ready
+                                  </span>
+                                  <h3 className="text-lg sm:text-xl font-bold font-[Outfit] text-white mt-1.5">
+                                    Sign Up Free to Unlock
+                                  </h3>
+                                  <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                                    Closed cutlines and engrave layers synthesized. Register free in 5 seconds to unblur and export your clean SVG.
+                                  </p>
+                                </div>
+
+                                {/* Auth Tab Toggle */}
+                                <div className="flex p-1 bg-black/40 rounded-xl border border-white/10 text-xs">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setAuthMode("signup");
+                                      setAuthError(null);
+                                    }}
+                                    className={`flex-1 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                                      authMode === "signup"
+                                        ? "bg-[#FE7733] text-white shadow"
+                                        : "text-gray-400 hover:text-white"
+                                    }`}
+                                  >
+                                    ⚡ Free Sign Up
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setAuthMode("login");
+                                      setAuthError(null);
+                                    }}
+                                    className={`flex-1 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                                      authMode === "login"
+                                        ? "bg-white/10 text-white"
+                                        : "text-gray-400 hover:text-white"
+                                    }`}
+                                  >
+                                    Log In
+                                  </button>
+                                </div>
+
+                                {/* Auth Form */}
+                                <form onSubmit={handleAuthSubmit} className="space-y-2.5 text-left">
+                                  <div>
+                                    <input
+                                      type="email"
+                                      required
+                                      value={authEmail}
+                                      onChange={(e) => setAuthEmail(e.target.value)}
+                                      placeholder="Your email address"
+                                      className="w-full bg-[#111317] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733]"
+                                    />
+                                  </div>
+                                  <div>
+                                    <input
+                                      type="password"
+                                      required
+                                      minLength={6}
+                                      value={authPassword}
+                                      onChange={(e) => setAuthPassword(e.target.value)}
+                                      placeholder="Password (min 6 chars)"
+                                      className="w-full bg-[#111317] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733]"
+                                    />
+                                  </div>
+
+                                  {authError && (
+                                    <div className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-1.5">
+                                      <AlertCircle size={13} className="flex-shrink-0" />
+                                      <span>{authError}</span>
+                                    </div>
+                                  )}
+
+                                  <button
+                                    type="submit"
+                                    disabled={authLoading}
+                                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs transition-all shadow-lg shadow-[#FE7733]/25 flex items-center justify-center gap-2 cursor-pointer"
+                                  >
+                                    {authLoading ? (
+                                      <RefreshCw size={14} className="animate-spin" />
+                                    ) : (
+                                      <>
+                                        <Unlock size={14} />
+                                        <span>
+                                          {authMode === "signup"
+                                            ? "⚡ Sign Up & Reveal Unblurred Vector"
+                                            : "Log In & Reveal Vector"}
+                                        </span>
+                                      </>
+                                    )}
+                                  </button>
+                                </form>
+
+                                <div className="text-[10px] text-gray-400 flex items-center justify-center gap-2 pt-0.5">
+                                  <span>✓ 100% Free</span>
+                                  <span>·</span>
+                                  <span>✓ Zero Card Needed</span>
+                                  <span>·</span>
+                                  <span>✓ LightBurn Ready</span>
+                                </div>
+                              </motion.div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Export Action Toolbar */}
+                        <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-white/5 border border-white/10 rounded-2xl">
+                          <div className="text-xs">
+                            {isUnlocked ? (
+                              <span className="text-[#10B981] font-mono font-semibold flex items-center gap-1.5">
+                                <Check size={14} />
+                                <span>Vector Unlocked (Closed CAD Paths)</span>
+                              </span>
+                            ) : (
+                              <span className="text-[#FE7733] font-mono font-semibold flex items-center gap-1.5">
+                                <Lock size={14} />
+                                <span>Blurred Preview · Sign Up Free to Unlock</span>
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleCopySvg(msg.svg)}
+                              className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs text-white font-medium flex items-center gap-1.5 transition-all cursor-pointer"
+                            >
+                              <Code2 size={13} />
+                              <span>{copied ? "Copied SVG!" : "Copy SVG Code"}</span>
+                            </button>
+                            <button
+                              onClick={() => handleDownloadSvg(msg.svg)}
+                              className="px-4 py-1.5 rounded-xl bg-[#FE7733] hover:bg-[#E85F20] text-xs text-white font-bold flex items-center gap-1.5 transition-all shadow-md shadow-[#FE7733]/20 cursor-pointer"
+                            >
+                              <Download size={13} />
+                              <span>Download Clean SVG</span>
+                            </button>
+                            <a
+                              href="https://app.0machine.com"
+                              className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#B1FA63]/10 hover:bg-[#B1FA63]/20 border border-[#B1FA63]/25 text-[#B1FA63] text-xs font-bold transition-all"
+                            >
+                              <span>Studio CAM</span>
+                              <ExternalLink size={12} />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* ============================================================== */}
+            {/* CHARGING PROGRESS BAR ("SAMTA KATCHARJA")                      */}
+            {/* ============================================================== */}
+            {isGenerating && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-[95%] sm:max-w-[90%] rounded-2xl rounded-tl-none p-5 bg-[#16181D] border border-[#FE7733]/40 text-gray-200 shadow-xl space-y-3"
+              >
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-2 text-[#FE7733] font-bold">
+                    <RefreshCw size={14} className="animate-spin" />
+                    <span>{progressStage || "Synthesizing vector contours..."}</span>
+                  </div>
+                  <span className="font-mono font-extrabold text-[#B1FA63] text-xs">
+                    {progressPercent}%
+                  </span>
+                </div>
+
+                {/* The Charging Bar ("Samta") */}
+                <div className="w-full bg-[#111317] h-3.5 rounded-full p-0.5 border border-white/10 overflow-hidden relative shadow-inner">
+                  <motion.div
+                    className="h-full rounded-full bg-gradient-to-r from-[#FE7733] via-[#FFA559] to-[#B1FA63] shadow-lg shadow-[#FE7733]/40 relative"
+                    style={{ width: `${progressPercent}%` }}
+                    transition={{ ease: "easeOut", duration: 0.25 }}
+                  >
+                    {/* Glowing lead edge shine */}
+                    <div className="absolute top-0 right-0 bottom-0 w-4 bg-white/40 blur-[2px] rounded-full" />
+                  </motion.div>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] text-gray-400 pt-0.5 font-mono">
+                  <span>0machine CAD Engine v2.0</span>
+                  <span>Closed Perimeter · LightBurn C00/C01</span>
+                </div>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Quick Suggestion Pills ("Popular Presets") */}
+          <div className="p-3.5 sm:p-4 border-t border-white/10 bg-[#16181D]/80">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                Popular Presets (Tap to Load)
+              </span>
+              <span className="text-[10px] font-mono text-[#B1FA63] font-semibold">1-Click CAM Vector</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {SAMPLE_PROMPTS.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleSelectSample(item)}
+                  className="text-xs px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 text-gray-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>{item.icon}</span>
+                  <span className="font-medium">{item.title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Chat Input Bar */}
+          <div className="p-4 sm:p-5 border-t border-white/10 bg-[#111317] space-y-3">
+            {/* Mode selection chips */}
+            <div className="flex items-center gap-2">
+              {[
+                { id: "cut-engrave", label: "✂️ Cut + Engrave" },
+                { id: "keychain", label: "🔑 Keychain (3.5mm Hole)" },
+                { id: "stencil", label: "🌿 Bridged Stencil" },
+              ].map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setActiveMode(m.id)}
+                  className={`text-[11px] font-semibold px-3 py-1 rounded-lg border transition-all cursor-pointer ${
+                    activeMode === m.id
+                      ? "bg-[#FE7733]/20 border-[#FE7733] text-[#FE7733]"
+                      : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Prompt Input Box */}
+            <div className="relative">
+              <textarea
+                id="laser-prompt-input"
+                aria-label="Laser cut design prompt"
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendPrompt();
+                  }
+                }}
+                rows={2}
+                placeholder="Describe your laser cut design (e.g. Wolf howling at moon keychain, geometric coaster, vintage sign)..."
+                className="w-full bg-[#1A1D21] border border-white/10 rounded-2xl p-3.5 pr-28 text-xs sm:text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#FE7733] transition-colors resize-none font-mono"
+              />
+
+              <button
+                onClick={() => handleSendPrompt()}
+                disabled={isGenerating || !customPrompt.trim()}
+                className={`absolute right-2.5 bottom-3 px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isGenerating || !customPrompt.trim()
+                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                    : "bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white shadow-lg shadow-[#FE7733]/25"
+                }`}
+              >
+                {isGenerating ? (
+                  <RefreshCw size={14} className="animate-spin" />
+                ) : (
+                  <>
+                    <Zap size={14} />
+                    <span>Generate</span>
+                  </>
+                )}
               </button>
             </div>
 
-            {/* Primary Action Button */}
-            <button
-              onClick={() => handleGenerate(customPrompt, activeMode)}
-              disabled={isGenerating}
-              className={`w-full py-4 rounded-xl text-center text-sm font-extrabold transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                isGenerating
-                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white shadow-xl shadow-[#FE7733]/25"
-              }`}
-            >
-              {isGenerating ? (
-                <>
-                  <RefreshCw size={16} className="animate-spin" />
-                  <span>{t("laserai.btnGenerating")}</span>
-                </>
-              ) : (
-                <>
-                  <Zap size={16} />
-                  <span>{t("laserai.btnGenerate")}</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* Right Column: Live SVG Display or Studio Screenshot View */}
-          <div className="lg:col-span-7 bg-[#1A1D21] border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
-            <div>
-              {/* Studio Header & View Mode Switcher */}
-              <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
-                <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-[#EF4444]" />
-                  <span className="w-3 h-3 rounded-full bg-[#F59E0B]" />
-                  <span className="w-3 h-3 rounded-full bg-[#10B981]" />
-                  <span className="text-xs font-mono text-gray-500 ml-2">app.0machine.com/laser-ai</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {/* Material Bed Switcher (When Live SVG is visible) */}
-                  {generatedSvg && viewMode === "preview" && (
-                    <div className="flex items-center gap-1 p-0.5 bg-black/60 rounded-lg border border-white/10">
-                      <button
-                        onClick={() => setBedMaterial("wood")}
-                        title="Birch Plywood Bed"
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          bedMaterial === "wood"
-                            ? "bg-[#D8C6A5] text-[#2D2115] shadow"
-                            : "text-gray-400 hover:text-white"
-                        }`}
-                      >
-                        🪵 Wood
-                      </button>
-                      <button
-                        onClick={() => setBedMaterial("light")}
-                        title="Clean Light CAD Sheet"
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          bedMaterial === "light"
-                            ? "bg-white text-dark-950 shadow"
-                            : "text-gray-400 hover:text-white"
-                        }`}
-                      >
-                        ⚪ CAD
-                      </button>
-                      <button
-                        onClick={() => setBedMaterial("honeycomb")}
-                        title="Dark Honeycomb Bed"
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                          bedMaterial === "honeycomb"
-                            ? "bg-[#252A34] text-[#B1FA63] border border-[#B1FA63]/30"
-                            : "text-gray-400 hover:text-white"
-                        }`}
-                      >
-                        🐝 Dark
-                      </button>
-                    </div>
-                  )}
-
-                  {generatedSvg && (
-                    <button
-                      onClick={() => setViewMode(viewMode === "preview" ? "screenshot" : "preview")}
-                      className="text-[11px] font-semibold text-gray-300 hover:text-white px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 cursor-pointer"
-                    >
-                      {viewMode === "preview" ? "Studio Screenshot" : "Live SVG"}
-                    </button>
-                  )}
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#B1FA63]/10 text-[#B1FA63] border border-[#B1FA63]/20">
-                    {generatedSvg ? "Vector Generated ✓" : "Auto-Tracer Active"}
-                  </span>
-                </div>
+            {genError && (
+              <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                <AlertCircle size={14} className="flex-shrink-0" />
+                <span>{genError}</span>
               </div>
+            )}
 
-              {/* Display Area: Either Live SVG CAD Canvas OR Authentic Studio Screenshot */}
-              <div
-                className={`relative rounded-2xl overflow-hidden border shadow-2xl aspect-[16/10] flex items-center justify-center p-4 transition-colors duration-500 ${
-                  generatedSvg && viewMode === "preview"
-                    ? bedMaterial === "wood"
-                      ? "bg-[#EFE5D3] bg-gradient-to-br from-[#F6EEDC] via-[#ECE1C8] to-[#E2D2B5] border-[#CBB28D]"
-                      : bedMaterial === "light"
-                      ? "bg-[#FFFFFF] border-slate-300"
-                      : "bg-[#090A0C] border-white/10"
-                    : "bg-[#090A0C] border-white/10"
-                }`}
-              >
-                <AnimatePresence mode="wait">
-                  {generatedSvg && viewMode === "preview" ? (
-                    <motion.div
-                      key={`live-svg-${bedMaterial}`}
-                      initial={{ opacity: 0, scale: 0.97 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="w-full h-full flex items-center justify-center relative overflow-hidden"
-                    >
-                      {/* Grid background for CAD visualization */}
-                      <div
-                        className={`absolute inset-0 pointer-events-none ${
-                          bedMaterial === "light"
-                            ? "grid-pattern opacity-15 filter invert"
-                            : "grid-pattern opacity-20"
-                        }`}
-                      />
-
-                      {/* Rendered SVG with Adaptive Laser Finish */}
-                      <div
-                        className={`w-full h-full max-h-[380px] flex items-center justify-center relative z-10 transition-all duration-300 [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto ${
-                          bedMaterial === "wood"
-                            ? "[&_.engrave]:fill-[#1A1108] [&_.cut]:stroke-[#EF4444] drop-shadow-[0_4px_12px_rgba(40,25,12,0.35)]"
-                            : bedMaterial === "light"
-                            ? "[&_.engrave]:fill-[#000000] [&_.cut]:stroke-[#EF4444] drop-shadow-[0_4px_10px_rgba(0,0,0,0.15)]"
-                            : "[&_.engrave]:fill-[#F1F5F9] [&_.cut]:stroke-[#EF4444] drop-shadow-[0_0_15px_rgba(254,119,51,0.25)]"
-                        }`}
-                        dangerouslySetInnerHTML={{ __html: generatedSvg }}
-                      />
-
-                      {/* Live Floating Layer Badges */}
-                      <div className="absolute top-3 right-3 bg-black/85 backdrop-blur-md p-2.5 rounded-xl border border-white/10 text-xs space-y-1 shadow-xl z-20">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
-                          <span className="text-gray-200 font-mono text-[10px]">Layer 00: CUT (Hairline)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`w-2 h-2 rounded-full ${
-                              bedMaterial === "wood"
-                                ? "bg-[#1A1108]"
-                                : bedMaterial === "light"
-                                ? "bg-black"
-                                : "bg-white"
-                            }`}
-                          />
-                          <span className="text-gray-200 font-mono text-[10px]">
-                            Layer 01: ENGRAVE ({bedMaterial === "wood" ? "Burnt Wood" : "Scan"})
-                          </span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="screenshot"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="w-full h-full relative"
-                    >
-                      <img
-                        src="/screenshots/screenshot-laser-ai.webp"
-                        alt="0Machine LaserAI Studio Text-to-Vector Generator"
-                        className="w-full h-full object-cover object-top"
-                        loading="lazy"
-                        decoding="async"
-                      />
-
-                      {/* Live Floating Layer Badges */}
-                      <div className="absolute top-4 right-4 bg-black/85 backdrop-blur-md p-3 rounded-xl border border-white/10 text-xs space-y-1.5 shadow-xl">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444]" />
-                          <span className="text-gray-200 font-mono text-[11px]">Layer 00: CUT (Hairline)</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="w-2.5 h-2.5 rounded-full bg-white" />
-                          <span className="text-gray-200 font-mono text-[11px]">Layer 01: ENGRAVE (Scan)</span>
-                        </div>
-                      </div>
-
-                      {/* Overlay CTA if no SVG generated yet */}
-                      {!generatedSvg && (
-                        <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/40 to-transparent flex flex-col justify-end p-6">
-                          <p className="text-xs text-white font-semibold mb-1">
-                            Click "⚡ Generate Real Laser Vector SVG" to test live vector CAD synthesis
-                          </p>
-                          <p className="text-[11px] text-gray-400">
-                            Vectors are returned with strict LightBurn color mapping and closed contours.
-                          </p>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Action Toolbar if SVG Generated */}
-              {generatedSvg && (
-                <div className="flex flex-wrap items-center justify-between gap-3 mt-4 p-3 bg-white/5 border border-white/10 rounded-xl">
-                  <div className="flex items-center gap-2 text-xs text-[#B1FA63] font-mono font-semibold">
-                    <Check size={14} />
-                    <span>Clean SVG Generated</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={handleCopySvg}
-                      className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-xs text-white font-medium flex items-center gap-1.5 transition-all cursor-pointer"
-                    >
-                      <Code2 size={13} />
-                      <span>{copied ? t("laserai.btnCopied") : t("laserai.btnCopy")}</span>
-                    </button>
-                    <button
-                      onClick={handleDownloadSvg}
-                      className="px-4 py-1.5 rounded-lg bg-[#FE7733] hover:bg-[#E85F20] text-xs text-white font-bold flex items-center gap-1.5 transition-all shadow-md shadow-[#FE7733]/20 cursor-pointer"
-                    >
-                      <Download size={13} />
-                      <span>{t("laserai.btnDownload")}</span>
-                    </button>
-                  </div>
-                </div>
-              )}
+            <div className="flex items-center justify-between text-[11px] text-gray-500 pt-0.5">
+              <span>Press Enter to send · Generates closed CAD vector SVG</span>
+              <span className="text-[#B1FA63] font-mono">100% Whitelabel LaserAI</span>
             </div>
+          </div>
+        </div>
 
-            {/* Feature highlights below screenshot */}
-            <div className="grid sm:grid-cols-3 gap-4 pt-6 mt-6 border-t border-white/10 text-xs">
-              <div className="flex items-start gap-2.5">
-                <ShieldCheck size={16} className="text-[#10B981] flex-shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-white block">Kerf Compensated</span>
-                  <span className="text-gray-400 text-[11px]">Exact friction-fit joints</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <ShieldCheck size={16} className="text-[#10B981] flex-shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-white block">Connected Stencils</span>
-                  <span className="text-gray-400 text-[11px]">Auto-bridges inner islands</span>
-                </div>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <ShieldCheck size={16} className="text-[#10B981] flex-shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-white block">1-Click Nesting</span>
-                  <span className="text-gray-400 text-[11px]">Send directly to sheet CAM</span>
-                </div>
-              </div>
+        {/* Value Badges Below Prompt Chat */}
+        <div className="grid sm:grid-cols-3 gap-4 mt-8 text-xs">
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
+            <ShieldCheck size={18} className="text-[#10B981] flex-shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-white block">Kerf Compensated</span>
+              <span className="text-gray-400 text-[11px]">Strict friction-fit outer offsets</span>
+            </div>
+          </div>
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
+            <ShieldCheck size={18} className="text-[#10B981] flex-shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-white block">Connected Stencils</span>
+              <span className="text-gray-400 text-[11px]">Auto-bridges enclosed interior loops</span>
+            </div>
+          </div>
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
+            <ShieldCheck size={18} className="text-[#10B981] flex-shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-white block">1-Click CAM Ready</span>
+              <span className="text-gray-400 text-[11px]">Export direct to LightBurn & xTool</span>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Expanded Modal Video (if user clicks Expand) */}
-      <LaserAiDemoVideo
-        inline={false}
-        isOpen={showDemoVideo}
-        onClose={() => setShowDemoVideo(false)}
-        onTryPrompt={() => {
-          setCustomPrompt("Geometric Wolf Keychain with 3.5mm top hole");
-          setActiveMode("keychain");
-          const el = document.getElementById("laser-ai-generator");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
-
-      {/* LaserAI Credit Paywall Modal */}
-      <LaserAiCreditModal
-        isOpen={showCreditModal}
-        onClose={() => setShowCreditModal(false)}
-        savedPrompt={customPrompt}
-        activeMode={activeMode}
-        onCreditsAcquired={(newCount) => {
-          setCredits(newCount);
-          setShowCreditModal(false);
-        }}
-      />
     </section>
   );
 }

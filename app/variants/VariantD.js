@@ -54,7 +54,7 @@ export default function VariantD() {
       stage: "Stage 02: Organized Professional",
       status: "First 30 Days",
       desc: "Branded PDF quotes, 1-click WhatsApp dispatch, accurate kerf & cost math, zero forgotten off-cuts, 100% on-time delivery.",
-      color: "border-purple-500/30 bg-purple-950/15 text-purple-200",
+      color: "border-accent-500/30 bg-accent-500/10 text-accent-300",
     },
     {
       stage: "Stage 03: Scaled Laser Business",
@@ -69,7 +69,7 @@ export default function VariantD() {
       {/* HERO SECTION */}
       <section className="relative pt-32 pb-24 sm:pt-40 sm:pb-32 overflow-hidden">
         <div className="absolute inset-0 grid-pattern opacity-30 pointer-events-none" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-purple-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center">
           {/* Badge */}
@@ -77,16 +77,16 @@ export default function VariantD() {
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/25 text-purple-400 text-[11px] sm:text-xs font-semibold uppercase tracking-wider mb-6 max-w-full"
+            className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-brand-lime/10 border border-brand-lime/25 text-brand-lime text-[11px] sm:text-xs font-semibold uppercase tracking-wider mb-6 max-w-full"
           >
-            <Briefcase size={14} className="text-purple-400 flex-shrink-0" />
+            <Briefcase size={14} className="text-brand-lime flex-shrink-0" />
             <span className="truncate sm:whitespace-normal">Maker-to-Business Growth Platform</span>
           </motion.div>
 
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-[Outfit] text-white tracking-tight max-w-5xl mx-auto leading-[1.12] sm:leading-[1.1] mb-5 sm:mb-6">
             Turn Your Laser Workshop{" "}
-            <span className="bg-gradient-to-r from-purple-400 via-pink-300 to-accent-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-accent-400 via-accent-300 to-brand-lime bg-clip-text text-transparent">
               Into a Real Business.
             </span>
           </h1>
@@ -114,7 +114,7 @@ export default function VariantD() {
                 e.preventDefault();
                 handleCtaClick("variant_d_hero_primary", buildAppUrl());
               }}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl font-extrabold text-base bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white shadow-xl shadow-purple-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl font-extrabold text-base bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-400 hover:to-accent-500 text-white shadow-xl shadow-accent-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Build a Professional Workshop Free</span>
               <ArrowRight size={18} />
@@ -136,7 +136,7 @@ export default function VariantD() {
               <span>Commands Higher Client Prices</span>
             </span>
             <span className="flex items-center gap-1.5 text-gray-300">
-              <CheckCircle2 size={14} className="text-purple-400" />
+              <CheckCircle2 size={14} className="text-brand-lime" />
               <span>Branded PDF Quotes &amp; WhatsApp</span>
             </span>
             <span className="flex items-center gap-1.5 text-gray-300">
@@ -186,14 +186,14 @@ export default function VariantD() {
             </div>
 
             {/* The 0Machine Professional Experience */}
-            <div className="rounded-2xl border border-purple-500/40 bg-gradient-to-b from-purple-950/20 to-dark-950 p-6 flex flex-col justify-between shadow-xl shadow-purple-500/10">
+            <div className="rounded-2xl border border-accent-500/40 bg-gradient-to-b from-accent-500/10 to-dark-950 p-6 flex flex-col justify-between shadow-xl shadow-accent-500/10">
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-purple-300 bg-purple-500/20 px-2.5 py-0.5 rounded-full border border-purple-500/30 inline-block mb-3">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-brand-lime bg-brand-lime/10 px-2.5 py-0.5 rounded-full border border-brand-lime/30 inline-block mb-3">
                   The 0Machine Way
                 </span>
                 <h3 className="text-lg font-bold text-white mb-2">Instant Branded PDF Quote + WhatsApp</h3>
-                <div className="bg-dark-900 border border-purple-500/20 rounded-xl p-4 font-sans text-xs text-gray-200 space-y-2 mb-4">
-                  <div className="flex justify-between items-center text-[10px] text-purple-300">
+                <div className="bg-dark-900 border border-accent-500/20 rounded-xl p-4 font-sans text-xs text-gray-200 space-y-2 mb-4">
+                  <div className="flex justify-between items-center text-[10px] text-accent-300">
                     <span className="font-bold">📋 QUOTE #QT-1042</span>
                     <span>1-Click WhatsApp Ready</span>
                   </div>
@@ -207,7 +207,7 @@ export default function VariantD() {
                       <span>Included</span>
                     </div>
                   </div>
-                  <div className="pt-2 border-t border-white/10 flex justify-between items-center font-bold text-purple-300 text-xs">
+                  <div className="pt-2 border-t border-white/10 flex justify-between items-center font-bold text-accent-300 text-xs">
                     <span>Total Estimate (Deposit 50%):</span>
                     <span className="text-sm text-white">$85.00</span>
                   </div>
@@ -224,9 +224,9 @@ export default function VariantD() {
                   </li>
                 </ul>
               </div>
-              <div className="pt-4 border-t border-purple-500/20 text-[11px] text-purple-300 font-mono mt-4 flex items-center justify-between">
+              <div className="pt-4 border-t border-accent-500/20 text-[11px] text-accent-300 font-mono mt-4 flex items-center justify-between">
                 <span>Outcome: Higher prices &amp; repeat contracts</span>
-                <span className="font-bold text-emerald-400">+35% Higher Close Rate</span>
+                <span className="font-bold text-brand-lime">+35% Higher Close Rate</span>
               </div>
             </div>
           </motion.div>
@@ -237,7 +237,7 @@ export default function VariantD() {
       <section className="py-24 bg-dark-900/60 border-y border-white/5 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs uppercase font-bold tracking-widest text-purple-400 bg-purple-500/10 px-3 py-1 rounded-full border border-purple-500/20">
+            <span className="text-xs uppercase font-bold tracking-widest text-brand-lime bg-brand-lime/10 px-3 py-1 rounded-full border border-brand-lime/20">
               The Professional Infrastructure
             </span>
             <h2 className="text-3xl sm:text-5xl font-black font-[Outfit] text-white mt-3 mb-4">
@@ -254,14 +254,14 @@ export default function VariantD() {
               return (
                 <div
                   key={idx}
-                  className="rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] p-8 transition-all hover:border-purple-500/40 flex flex-col justify-between group"
+                  className="rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] p-8 transition-all hover:border-accent-500/40 flex flex-col justify-between group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-5">
-                      <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <div className="w-12 h-12 rounded-xl bg-accent-500/10 border border-accent-500/20 text-accent-400 flex items-center justify-center group-hover:scale-105 transition-transform">
                         <Icon size={24} />
                       </div>
-                      <span className="text-xs font-mono font-bold text-purple-300 bg-purple-500/15 px-3 py-1 rounded-full border border-purple-500/25">
+                      <span className="text-xs font-mono font-bold text-brand-lime bg-brand-lime/15 px-3 py-1 rounded-full border border-brand-lime/25">
                         {p.badge}
                       </span>
                     </div>
@@ -269,7 +269,7 @@ export default function VariantD() {
                     <span className="text-xs uppercase font-bold text-gray-400 tracking-wider block mb-1">
                       {p.tagline}
                     </span>
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-accent-300 transition-colors">
                       {p.title}
                     </h3>
                     <p className="text-sm text-gray-300 leading-relaxed mb-6">
@@ -278,7 +278,7 @@ export default function VariantD() {
                   </div>
 
                   <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs text-gray-400 font-mono">
-                    <span className="text-purple-400 font-semibold">Included in Free Forever</span>
+                    <span className="text-brand-lime font-semibold">Included in Free Forever</span>
                     <span>Ready in 1 tap →</span>
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export default function VariantD() {
                 e.preventDefault();
                 handleCtaClick("variant_d_mid_cta", buildAppUrl());
               }}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-sm bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white shadow-lg shadow-purple-500/25 transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-sm bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-400 hover:to-accent-500 text-white shadow-lg shadow-accent-500/25 transition-all cursor-pointer"
             >
               <span>Step Up to a Real Business — Free</span>
               <ArrowRight size={16} />
@@ -332,7 +332,7 @@ export default function VariantD() {
       <Pricing />
 
       {/* FINAL CALL TO ACTION */}
-      <section className="py-24 text-center relative overflow-hidden bg-gradient-to-b from-dark-950 to-purple-950/25 border-t border-white/10">
+      <section className="py-24 text-center relative overflow-hidden bg-gradient-to-b from-dark-950 to-dark-900 border-t border-white/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <h2 className="text-3xl sm:text-5xl font-black font-[Outfit] text-white tracking-tight mb-4">
             Start Winning Better Clients Today.
@@ -346,7 +346,7 @@ export default function VariantD() {
               e.preventDefault();
               handleCtaClick("variant_d_final_cta", buildAppUrl());
             }}
-            className="inline-flex items-center gap-2 px-10 py-5 rounded-xl font-extrabold text-base bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400 text-white shadow-2xl shadow-purple-500/30 transition-all transform hover:-translate-y-1 cursor-pointer"
+            className="inline-flex items-center gap-2 px-10 py-5 rounded-xl font-extrabold text-base bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-400 hover:to-accent-500 text-white shadow-2xl shadow-accent-500/30 transition-all transform hover:-translate-y-1 cursor-pointer"
           >
             <span>Upgrade Your Workshop Reputation Free</span>
             <ArrowRight size={18} />

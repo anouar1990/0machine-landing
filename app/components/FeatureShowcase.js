@@ -47,7 +47,7 @@ export default function FeatureShowcase() {
       screenshot: "/screenshots/screenshot-laser-ai.webp",
       url: "app.0machine.com/laser-ai",
       badge: "Text-to-Laser AI",
-      badgeColor: "text-purple-400 bg-purple-500/10 border-purple-500/20",
+      badgeColor: "text-brand-lime bg-brand-lime/10 border-brand-lime/25",
       stats: [
         { label: "Generation Speed", value: "< 5 sec", sub: "Instant vector geometry" },
         { label: "Path Integrity", value: "100% Closed", sub: "Kerf-aware cut paths" },

@@ -11,44 +11,44 @@ export default function LaserAiCreditModal({
   activeMode = "cut-engrave",
   onCreditsAcquired,
 }) {
-  const [selectedPack, setSelectedPack] = useState("maker"); // 'monthly' | 'basic' | 'maker' | 'studio'
+  const [selectedPack, setSelectedPack] = useState("pack_300"); // 'pack_100' | 'pack_300' | 'pack_700'
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const packs = [
     {
-      id: "basic",
-      name: "Basic",
+      id: "pack_100",
+      name: "Starter",
       badge: null,
-      credits: 15,
-      price: "$9",
-      amount: 9,
-      unitPrice: "$0.60 per generation",
+      credits: 100,
+      price: "$10",
+      amount: 10,
+      unitPrice: "$0.10 per generation",
       savings: null,
       type: "one_time",
-      desc: "Great for weekend projects & single client orders.",
+      desc: "Great for testing & one-off custom workshop orders.",
     },
     {
-      id: "maker",
+      id: "pack_300",
       name: "Maker",
       badge: "⭐ Popular",
-      credits: 40,
-      price: "$15",
-      amount: 15,
-      unitPrice: "$0.37 per generation",
-      savings: "Save 38%",
+      credits: 300,
+      price: "$25",
+      amount: 25,
+      unitPrice: "$0.083 per generation",
+      savings: "Save 20%",
       type: "one_time",
       desc: "The sweet spot for active laser shops & craft fair sellers.",
     },
     {
-      id: "studio",
-      name: "Studio",
+      id: "pack_700",
+      name: "Studio Pro",
       badge: "🔥 Best Value",
-      credits: 80,
-      price: "$25",
-      amount: 25,
-      unitPrice: "$0.31 per generation",
-      savings: "Save 48%",
+      credits: 700,
+      price: "$50",
+      amount: 50,
+      unitPrice: "$0.071 per generation",
+      savings: "Save 40%",
       type: "one_time",
       desc: "Maximum savings for busy commercial production studios.",
     },
@@ -61,27 +61,14 @@ export default function LaserAiCreditModal({
     trackEvent("ai_paywall_checkout_click", { pack: selectedPack, prompt: savedPrompt });
 
     try {
-      let payload = {};
-
-      if (selectedPack === "monthly") {
-        payload = {
-          plan: "laser_ai_membership",
-          cycle: "monthly",
-          mode: "subscription",
-          priceId: process.env.NEXT_PUBLIC_STRIPE_AI_MONTHLY_PRICE_ID || "price_ai_monthly_5",
-          redirectOrigin: window.location.origin,
-        };
-      } else {
-        const packObj = packs.find((p) => p.id === selectedPack);
-        payload = {
-          plan: `ai_credits_${selectedPack}`,
-          mode: "payment",
-          amount: packObj?.amount || 15,
-          credits: packObj?.credits || 40,
-          redirectOrigin: window.location.origin,
-          prompt: savedPrompt,
-        };
-      }
+      const packObj = packs.find((p) => p.id === selectedPack) || packs[1];
+      const payload = {
+        type: "ai_recharge",
+        mode: "payment",
+        packageId: packObj.id,
+        redirectOrigin: window.location.origin,
+        prompt: savedPrompt,
+      };
 
       const res = await fetch("/api/checkout-session", {
         method: "POST",
@@ -91,7 +78,6 @@ export default function LaserAiCreditModal({
 
       const data = await res.json();
       if (!res.ok || !data.url) {
-        // Fallback to app upgrade if direct checkout link not configured
         window.location.href = `https://app.0machine.com?upgrade=${selectedPack}&prompt=${encodeURIComponent(savedPrompt)}`;
         return;
       }
@@ -99,7 +85,6 @@ export default function LaserAiCreditModal({
       window.location.href = data.url;
     } catch (err) {
       console.error("[LaserAiCreditModal] Checkout error:", err);
-      // Seamless fallback to app
       window.location.href = `https://app.0machine.com?upgrade=${selectedPack}&prompt=${encodeURIComponent(savedPrompt)}`;
     } finally {
       setLoading(false);
@@ -160,51 +145,10 @@ export default function LaserAiCreditModal({
             </div>
           )}
 
-          {/* SECTION 1: Monthly Membership (Recommended) */}
-          <div className="mb-5">
-            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-2">
-              Monthly Membership (Recommended)
-            </span>
-
-            <div
-              onClick={() => setSelectedPack("monthly")}
-              className={`p-4 rounded-2xl border transition-all cursor-pointer relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
-                selectedPack === "monthly"
-                  ? "bg-[#23262C] border-[#FE7733] shadow-lg shadow-[#FE7733]/15 ring-1 ring-[#FE7733]"
-                  : "bg-white/5 border-white/10 hover:border-white/20"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                  selectedPack === "monthly" ? "border-[#FE7733] bg-[#FE7733]" : "border-gray-500"
-                }`}>
-                  {selectedPack === "monthly" && <Check size={12} className="text-white" />}
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-white">Monthly Maker Membership</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FE7733]/20 text-[#FE7733] border border-[#FE7733]/30">
-                      Recommended
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    10 credits monthly · credits never expire · cancel online anytime
-                  </p>
-                </div>
-              </div>
-
-              <div className="text-right sm:flex-shrink-0">
-                <span className="text-xl font-black text-white font-[Outfit]">$5</span>
-                <span className="text-xs text-gray-400"> / mo</span>
-              </div>
-            </div>
-          </div>
-
-          {/* SECTION 2: Buy Once (Credit Packs) */}
+          {/* AI Recharge Credit Packs */}
           <div className="mb-6">
             <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-2">
-              Or Buy Once (No Subscription)
+              Select Prepaid AI Credit Package (One-Time Payment)
             </span>
 
             <div className="grid sm:grid-cols-3 gap-3">
@@ -222,7 +166,7 @@ export default function LaserAiCreditModal({
                   >
                     {pack.badge && (
                       <span className={`absolute -top-2.5 right-3 text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-md ${
-                        pack.id === "maker"
+                        pack.id === "pack_300"
                           ? "bg-[#FE7733] text-white"
                           : "bg-[#B1FA63] text-black"
                       }`}>

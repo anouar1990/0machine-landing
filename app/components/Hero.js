@@ -106,7 +106,7 @@ export default function Hero() {
 
       {/* Radial soft laser ambient glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-accent-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-1/4 w-[450px] h-[450px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 left-1/4 w-[450px] h-[450px] bg-brand-lime/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       <div
         className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center"
@@ -277,11 +277,11 @@ export default function Hero() {
           <motion.div
             animate={{ y: [8, -8, 8] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-            className="absolute -left-4 -top-6 sm:-left-8 sm:top-28 glass-card p-3.5 hidden sm:block border-purple-500/30 shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
+            className="absolute -left-4 -top-6 sm:-left-8 sm:top-28 glass-card p-3.5 hidden sm:block border-brand-lime/30 shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs">⚡</span>
-              <p className="text-[10px] text-purple-400 font-semibold tracking-wider uppercase">
+              <p className="text-[10px] text-brand-lime font-semibold tracking-wider uppercase">
                 LaserAI Vector Studio
               </p>
             </div>

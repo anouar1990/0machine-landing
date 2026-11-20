@@ -134,7 +134,7 @@ export default function VariantE() {
                 e.preventDefault();
                 handleCtaClick("variant_e_hero_primary", buildAppUrl());
               }}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl font-extrabold text-base bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-xl shadow-rose-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl font-extrabold text-base bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-400 hover:to-accent-500 text-white shadow-xl shadow-accent-500/25 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>Explore 300,000+ Designs &amp; Tools Free</span>
               <ArrowRight size={18} />
@@ -445,7 +445,7 @@ export default function VariantE() {
               e.preventDefault();
               handleCtaClick("variant_e_final_cta", buildAppUrl());
             }}
-            className="inline-flex items-center gap-2 px-10 py-5 rounded-xl font-extrabold text-base bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white shadow-2xl shadow-rose-500/30 transition-all transform hover:-translate-y-1 cursor-pointer"
+            className="inline-flex items-center gap-2 px-10 py-5 rounded-xl font-extrabold text-base bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-400 hover:to-accent-500 text-white shadow-2xl shadow-accent-500/30 transition-all transform hover:-translate-y-1 cursor-pointer"
           >
             <span>Unlock 300k+ Designs &amp; Creation Studio</span>
             <ArrowRight size={18} />

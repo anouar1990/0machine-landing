@@ -18,8 +18,8 @@ export default function Workflow() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
         </svg>
       ),
-      color: "from-orange-500 to-amber-500",
-      glowColor: "rgba(249,115,22,0.15)",
+      color: "from-accent-500 to-accent-400",
+      glowColor: "rgba(254,119,51,0.2)",
     },
     {
       num: "02",
@@ -42,8 +42,8 @@ export default function Workflow() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17l-5.16-3.01A1.125 1.125 0 016 11.1V5.29a1.125 1.125 0 011.68-.98l5.16 3.01a1.125 1.125 0 01.56.97v5.82a1.125 1.125 0 01-.98 1.06zM17.42 15.17l-5.16-3.01a1.125 1.125 0 01-.56-.97V5.29a1.125 1.125 0 011.68-.98l5.16 3.01a1.125 1.125 0 01.56.97v5.82a1.125 1.125 0 01-1.68.98z" />
         </svg>
       ),
-      color: "from-emerald-500 to-teal-500",
-      glowColor: "rgba(16,185,129,0.15)",
+      color: "from-brand-lime to-emerald-400",
+      glowColor: "rgba(177,250,99,0.2)",
     },
     {
       num: "04",
@@ -54,8 +54,8 @@ export default function Workflow() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
         </svg>
       ),
-      color: "from-purple-500 to-pink-500",
-      glowColor: "rgba(168,85,247,0.15)",
+      color: "from-accent-500 to-accent-600",
+      glowColor: "rgba(254,119,51,0.2)",
     },
   ];
 
@@ -88,7 +88,7 @@ export default function Workflow() {
         {/* Steps timeline */}
         <div className="relative">
           {/* Connecting line */}
-          <div className="absolute left-8 lg:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent-500/30 via-blue-500/20 to-purple-500/30 hidden sm:block" />
+          <div className="absolute left-8 lg:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-accent-500/40 via-blue-500/20 to-brand-lime/40 hidden sm:block" />
 
           <div className="space-y-16 sm:space-y-24">
             {steps.map((step, i) => (

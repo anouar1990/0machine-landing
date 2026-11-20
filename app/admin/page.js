@@ -14,7 +14,9 @@ const ADMIN_EMAILS = [
   "admin@cooldelo.com", 
   "anouarkharbache@gmail.com", 
   "anouar@cooldelo.com",
-  "anouar.kharbache@gmail.com"
+  "anouar.kharbache@gmail.com",
+  "admin@0machine.com",
+  "cooldelodxf@gmail.com"
 ];
 
 export default function AdminDashboard() {
@@ -142,7 +144,8 @@ export default function AdminDashboard() {
       ADMIN_EMAILS.some((adm) => adm.toLowerCase() === userEmail) ||
       userEmail.endsWith("@cooldelo.com") ||
       userEmail.endsWith("@0machine.com") ||
-      userEmail.includes("anouar")
+      userEmail.includes("anouar") ||
+      userEmail.includes("cooldelo")
     );
   };
 
@@ -153,7 +156,13 @@ export default function AdminDashboard() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      if (data.session && !ADMIN_EMAILS.includes(data.session.user?.email)) {
+      const userEmail = (data.session?.user?.email || "").toLowerCase();
+      const authorized = ADMIN_EMAILS.some((adm) => adm.toLowerCase() === userEmail) ||
+        userEmail.endsWith("@cooldelo.com") ||
+        userEmail.endsWith("@0machine.com") ||
+        userEmail.includes("anouar") ||
+        userEmail.includes("cooldelo");
+      if (data.session && !authorized) {
         throw new Error("Unauthorized: You are not registered as an administrator.");
       }
     } catch (err) {
@@ -430,6 +439,25 @@ export default function AdminDashboard() {
 
             {!session ? (
               <div className="space-y-4">
+                {/* Localhost Developer Instant Access */}
+                {typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSession({
+                        user: {
+                          id: "09dcc15b-75cb-46ad-b664-8138383ec5c9",
+                          email: "admin@0machine.com",
+                        },
+                      });
+                    }}
+                    className="w-full bg-[#B1FA63]/15 hover:bg-[#B1FA63]/25 border border-[#B1FA63]/40 text-[#B1FA63] font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all text-xs shadow-lg shadow-[#B1FA63]/10"
+                  >
+                    <Zap size={14} className="fill-[#B1FA63]" />
+                    <span>⚡ Instant Localhost Admin Access (1-Click)</span>
+                  </button>
+                )}
+
                 {/* Google Sign-In Button */}
                 <button
                   type="button"

@@ -11,6 +11,13 @@
   --color-accent-400: #FF925C;
   --color-accent-600: #E85F20;
   --color-accent-300: #FFB189;
+  --color-brand-orange: #FE7733;
+  --color-brand-orange-light: #FF925C;
+  --color-brand-orange-dark: #E85F20;
+  --color-brand-lime: #B1FA63;
+  --color-brand-lime-dark: #8ED638;
+  --color-brand-lime-glow: rgba(177, 250, 99, 0.3);
+  --color-neon-lime: #B1FA63;
   --color-neon-sprout: #B1FA63;
   --color-glow: rgba(254, 119, 51, 0.4);
   --color-glow-subtle: rgba(254, 119, 51, 0.15);
@@ -64,7 +71,7 @@ body {
 .gradient-mesh {
   background: 
     radial-gradient(ellipse 80% 50% at 20% 40%, rgba(254, 119, 51, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(177, 250, 99, 0.05) 0%, transparent 70%),
     radial-gradient(ellipse 50% 60% at 50% 80%, rgba(254, 119, 51, 0.04) 0%, transparent 70%);
 }
 
