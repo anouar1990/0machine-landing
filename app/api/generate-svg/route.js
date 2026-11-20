@@ -141,6 +141,8 @@ export async function POST(req) {
     const cleanPrompt = prompt.trim();
     const clampedWidth = Math.max(30, Math.min(1000, Number(targetWidthMm) || 120));
 
+    const recraftKey = process.env.RECRAFT_API_KEY;
+    const recraftModel = process.env.RECRAFT_MODEL || "recraftv4_1";
     const openrouterKey = process.env.OPENROUTER_API_KEY;
     const openrouterModel = process.env.OPENROUTER_RECRAFT_MODEL || "recraft/recraft-v4.1-flash-v2:free";
     const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -150,8 +152,47 @@ export async function POST(req) {
     let activeModel = "0machine-laserai-v2.0";
     let activeEngine = "laserai";
 
-    // 3. Primary Path: 0machine LaserAI Engine (Strict Monochrome CAM Synthesis)
-    if (openrouterKey) {
+    // 3. Tier 1: Direct Official Recraft API (Highest Speed & Direct Commercial License)
+    if (recraftKey) {
+      try {
+        const laserAiPrompt = transformPromptForLaserAi(cleanPrompt, mode);
+        const rcRes = await fetch("https://external.api.recraft.ai/v1/images/generations", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${recraftKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            prompt: laserAiPrompt,
+            model: recraftModel,
+          }),
+        });
+
+        if (rcRes.ok) {
+          const rcData = await rcRes.json();
+          const imageUrl = rcData.data?.[0]?.url;
+          if (imageUrl) {
+            recraftImageUrl = imageUrl;
+            const vectorResult = await vectorizeRecraftImage(imageUrl, {
+              mode,
+              targetWidthMm: clampedWidth,
+            });
+            cleanedSvg = vectorResult.svg;
+            activeModel = "0machine-laserai-v2.0";
+            activeEngine = "laserai";
+            console.log(`[LaserAI] Direct Recraft API synthesized CAD vector (${vectorResult.outerVertices} outer pts, ${vectorResult.holeCount} holes)`);
+          }
+        } else {
+          const errText = await rcRes.text().catch(() => "");
+          console.warn("[LaserAI] Direct Recraft API returned:", rcRes.status, errText.slice(0, 150));
+        }
+      } catch (rcErr) {
+        console.warn("[LaserAI] Direct Recraft API failed, attempting fallback:", rcErr.message);
+      }
+    }
+
+    // 4. Tier 2: 0machine LaserAI via High-Speed CAM Synthesis Fallback
+    if (!cleanedSvg && openrouterKey) {
       try {
         const laserAiPrompt = transformPromptForLaserAi(cleanPrompt, mode);
 
