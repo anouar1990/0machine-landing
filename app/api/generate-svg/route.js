@@ -142,7 +142,7 @@ export async function POST(req) {
     const clampedWidth = Math.max(30, Math.min(1000, Number(targetWidthMm) || 120));
 
     const recraftKey = process.env.RECRAFT_API_KEY;
-    const recraftModel = process.env.RECRAFT_MODEL || "recraftv4_1";
+    const recraftModel = process.env.RECRAFT_MODEL || "recraftv4_1_flash";
     const openrouterKey = process.env.OPENROUTER_API_KEY;
     const openrouterModel = process.env.OPENROUTER_RECRAFT_MODEL || "recraft/recraft-v4.1-flash-v2:free";
     const geminiApiKey = process.env.GEMINI_API_KEY;
