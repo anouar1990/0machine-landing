@@ -20,7 +20,67 @@ const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 20;
 
 /**
- * Internal LaserAI System Prompt Transformer
+ * AI-Powered Prompt Optimizer & Multilingual Translator (Stage 1 CAM Engine)
+ * Converts user prompt in any language (Darija, French, Arabic, English, slang)
+ * into a precision-engineered master prompt for Recraft V4.1 Flash.
+ * Runs in ~600ms via Gemini Flash Lite.
+ */
+async function enhancePromptWithAi(userPrompt, mode = "cut-engrave", apiKey) {
+  if (!apiKey || !userPrompt) return null;
+
+  const systemInstruction = `You are a Laser Cutting CAM Prompt Specialist for 0Machine LaserAI Studio.
+Convert any raw user prompt (Moroccan Darija, French, English, Arabic, slang, typos) into a single master prompt optimized for Recraft V4.1 Flash to synthesize laser-ready CAD artwork.
+
+CORE GUIDELINES:
+1. Output ONLY the optimized prompt text. Never include conversational filler, explanations, quotes, or markdown backticks.
+2. If text, quotes, or writing are requested (e.g. "I love you mom", custom names, dates, quotes, phrases):
+   - Translate intent into a decorative wooden sign plaque, heart sign, or connected cursive script plaque.
+   - Enforce exact uppercase text in quotes (e.g. "I LOVE YOU MOM").
+   - For stencil mode: specify "stencil font typography with visible 2mm bridge tabs connecting all letter counter islands".
+   - For cut-engrave/keychain: specify "decorative wooden plaque sign with bold engraved lettering and decorative border".
+3. For physical laser modes:
+   - "stencil": enforce "single-piece laser cut stencil, all interior counter islands connected with visible 2mm bridge tabs, zero loose falling pieces".
+   - "keychain": enforce "compact keychain medallion pendant silhouette with integrated circular mounting eyelet hole at the top".
+   - "layered": enforce "multi-layer laser cut shadowbox silhouette with cleanly separated depth planes".
+   - "cut-engrave": enforce "clean closed perimeter boundary contour, high-contrast solid silhouette".
+4. Recraft visual triggers:
+   "Pure solid black silhouette (#000000) on isolated pure clean white background (#FFFFFF), ultra-sharp crisp edges, clean closed boundary cut paths, high contrast, flat 2D graphic. Strictly no color, zero gray tones, no gradients, no photorealism, no 3D shading, no background square frames."`;
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1800); // 1.8s timeout
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`;
+
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{
+          role: "user",
+          parts: [{ text: `User Prompt: "${userPrompt}"\nTarget Mode: "${mode}"\nGenerate the single optimized Recraft prompt:` }]
+        }],
+        systemInstruction: { parts: [{ text: systemInstruction }] },
+        generationConfig: { temperature: 0.25, maxOutputTokens: 350 }
+      }),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const data = await res.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+      if (text && text.length > 20) {
+        return text.replace(/^["'`]+|["'`]+$/g, "").trim();
+      }
+    }
+  } catch (err) {
+    console.warn("[LaserAI Optimizer] AI enhancer skipped (fallback to regex):", err.message);
+  }
+  return null;
+}
+
+/**
+ * Internal LaserAI System Prompt Transformer (Deterministic Fallback)
  * Automatically enforces:
  * - Strict black-and-white monochrome silhouette (#000000)
  * - Complete background removal (pure white #FFFFFF backdrop, zero border box/scenery)
@@ -187,10 +247,22 @@ export async function POST(req) {
     let activeModel = "0machine-laserai-v2.0";
     let activeEngine = "laserai";
 
-    // 3. Tier 1: Direct Official Recraft API (Highest Speed & Direct Commercial License)
+    // 3. Stage 1: AI Prompt Optimization & Multilingual Translation (Runs in ~600ms via Gemini Flash Lite)
+    let laserAiPrompt = null;
+    if (geminiApiKey) {
+      laserAiPrompt = await enhancePromptWithAi(cleanPrompt, mode, geminiApiKey);
+      if (laserAiPrompt) {
+        console.log(`[LaserAI Optimizer] Translated "${cleanPrompt.slice(0, 30)}" -> "${laserAiPrompt.slice(0, 50)}..."`);
+      }
+    }
+    // Instant fallback to deterministic regex transformer if AI optimizer was offline or timed out
+    if (!laserAiPrompt) {
+      laserAiPrompt = transformPromptForLaserAi(cleanPrompt, mode);
+    }
+
+    // 4. Tier 1: Direct Official Recraft API (Highest Speed & Direct Commercial License)
     if (recraftKey) {
       try {
-        const laserAiPrompt = transformPromptForLaserAi(cleanPrompt, mode);
         const rcRes = await fetch("https://external.api.recraft.ai/v1/images/generations", {
           method: "POST",
           headers: {
@@ -226,11 +298,9 @@ export async function POST(req) {
       }
     }
 
-    // 4. Tier 2: 0machine LaserAI via High-Speed CAM Synthesis Fallback
+    // 5. Tier 2: 0machine LaserAI via High-Speed CAM Synthesis Fallback
     if (!cleanedSvg && openrouterKey) {
       try {
-        const laserAiPrompt = transformPromptForLaserAi(cleanPrompt, mode);
-
         const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
           method: "POST",
           headers: {
