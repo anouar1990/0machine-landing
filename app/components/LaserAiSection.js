@@ -11,7 +11,8 @@ import {
   Lock,
   Unlock,
   ChevronDown,
-  X
+  X,
+  Download
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
@@ -50,6 +51,36 @@ export default function LaserAiSection() {
   // Current SVG design displayed in the viewport (initialized to null so no ugly box is shown)
   const [currentSvg, setCurrentSvg] = useState(null);
   const [currentPromptTitle, setCurrentPromptTitle] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const handleDownloadSvg = (svgContent) => {
+    if (!isUnlocked) {
+      setShowAuthModal(true);
+      return;
+    }
+    if (!svgContent) return;
+    const blob = new Blob([svgContent], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `0machine-laser-${Date.now()}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCopySvg = (svgContent) => {
+    if (!isUnlocked) {
+      setShowAuthModal(true);
+      return;
+    }
+    if (!svgContent) return;
+    navigator.clipboard.writeText(svgContent).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   // Auth & Unlock state: strictly locked by default so the blur & unlock card are always active
   const [mounted, setMounted] = useState(false);
@@ -188,6 +219,9 @@ export default function LaserAiSection() {
     } catch (err) {
       console.error("[LaserAiSection] Generate error:", err);
       setGenError(err.message || "Error generating vector file.");
+      if (!isUnlocked) {
+        setShowAuthModal(true);
+      }
     } finally {
       if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
       setIsGenerating(false);
@@ -310,11 +344,13 @@ export default function LaserAiSection() {
             {/* Quick Interactive Test Toggle */}
             <button
               onClick={() => {
-                const nextUnlocked = !isUnlocked;
-                setIsUnlocked(nextUnlocked);
-                if (!nextUnlocked) setShowAuthModal(false);
+                if (!isUnlocked) {
+                  setShowAuthModal(true);
+                } else {
+                  setIsUnlocked(false);
+                }
               }}
-              title="Click to toggle lock state for testing"
+              title={isUnlocked ? "Click to lock for testing" : "Click to open Sign Up Unlock Modal"}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 isUnlocked
                   ? "bg-[#10B981]/15 border border-[#10B981]/30 text-[#10B981] hover:bg-[#10B981]/25"
@@ -481,6 +517,104 @@ export default function LaserAiSection() {
                 <span>0Machine CAD Engine v2.0</span>
                 <span>Closed Perimeter · LightBurn C00/C01</span>
               </div>
+            </motion.div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* SYNTHESIZED CAD VECTOR VIEWPORT (BLURRED "FLOW" + SIGN UP UNLOCK)         */}
+          {/* ========================================================================= */}
+          {currentSvg && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="pt-2 space-y-3"
+            >
+              {/* Dark High-Precision CAD Vector Canvas */}
+              <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0E0E12] min-h-[360px] sm:min-h-[420px] flex items-center justify-center p-6 shadow-2xl">
+                {/* CAD Grid Backdrop */}
+                <div
+                  className="absolute inset-0 pointer-events-none opacity-20"
+                  style={{
+                    backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)",
+                    backgroundSize: "24px 24px",
+                  }}
+                />
+
+                {/* SVG Vector Canvas with smooth blur */}
+                <div
+                  id="laser-svg-canvas"
+                  className="w-full max-w-[420px] aspect-square flex items-center justify-center relative transition-all duration-500"
+                  style={{
+                    filter: !isUnlocked ? "blur(14px) brightness(0.85)" : "none",
+                    pointerEvents: !isUnlocked ? "none" : "auto",
+                    userSelect: !isUnlocked ? "none" : "auto",
+                  }}
+                  dangerouslySetInnerHTML={{ __html: currentSvg }}
+                />
+
+                {/* Centered Lock Overlay over the blurred vector */}
+                {!isUnlocked && (
+                  <div className="absolute inset-0 z-20 flex items-center justify-center p-4 bg-black/40 backdrop-blur-[2px]">
+                    <div className="text-center p-6 rounded-3xl bg-[#16181D]/95 border border-[#FE7733]/40 shadow-2xl max-w-sm space-y-3">
+                      <div className="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/30">
+                        <Lock size={22} />
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2.5 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 inline-block">
+                          ⚡ Vector CAD Ready
+                        </span>
+                        <h4 className="text-base sm:text-lg font-bold font-[Outfit] text-white mt-1">
+                          Sign Up Free to Unlock
+                        </h4>
+                        <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                          Closed cutlines synthesized. Click below to open the unlock form & download your clean SVG cut file.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowAuthModal(true)}
+                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs shadow-lg shadow-[#FE7733]/25 transition-all cursor-pointer"
+                      >
+                        Unlock Vector CAD Now
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Unlocked Controls: Download SVG & Copy Code */}
+              {isUnlocked && (
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadSvg(currentSvg)}
+                      className="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer bg-[#FE7733] hover:bg-[#E85F20] text-white shadow-lg shadow-[#FE7733]/20"
+                    >
+                      <Download size={14} />
+                      <span>Download Clean SVG (Free)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleCopySvg(currentSvg)}
+                      className="px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer bg-white/10 hover:bg-white/15 text-gray-200 border border-white/10"
+                    >
+                      {copied ? (
+                        <>
+                          <Check size={14} className="text-[#B1FA63]" />
+                          <span className="text-[#B1FA63]">Copied!</span>
+                        </>
+                      ) : (
+                        <span>Copy SVG Code</span>
+                      )}
+                    </button>
+                  </div>
+                  <div className="text-[11px] font-mono text-[#B1FA63] flex items-center gap-1.5">
+                    <Check size={13} />
+                    <span>Closed Contours · LightBurn C00/C01</span>
+                  </div>
+                </div>
+              )}
             </motion.div>
           )}
         </div>
