@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
@@ -12,7 +13,8 @@ import {
   Lock,
   Unlock,
   ExternalLink,
-  ChevronDown
+  ChevronDown,
+  X
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
@@ -87,8 +89,10 @@ export default function LaserAiSection() {
   const [currentPromptTitle, setCurrentPromptTitle] = useState("A six-fold mandala for a 30 cm wooden wall piece");
 
   // Auth & Unlock state: strictly locked by default so the blur & unlock card are always active
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false); // Standalone Pop-up Modal state
   const [authMode, setAuthMode] = useState("signup"); // "signup" | "login"
   const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
@@ -100,6 +104,7 @@ export default function LaserAiSection() {
 
   // Check initial authentication from real Supabase session
   useEffect(() => {
+    setMounted(true);
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setUser(session.user);
@@ -110,6 +115,9 @@ export default function LaserAiSection() {
           const params = new URLSearchParams(window.location.search);
           if (params.get("unlocked") === "true") {
             setIsUnlocked(true);
+          }
+          if (params.get("modal") === "true") {
+            setShowAuthModal(true);
           }
         }
       }
@@ -135,6 +143,7 @@ export default function LaserAiSection() {
       if (session?.user) {
         setUser(session.user);
         setIsUnlocked(true);
+        setShowAuthModal(false);
       }
     });
 
@@ -208,6 +217,11 @@ export default function LaserAiSection() {
       // Update current displayed SVG
       setCurrentSvg(data.svg);
       setCurrentPromptTitle(p);
+
+      // Automatically open the clean unlock pop-up modal if user is not unlocked
+      if (!isUnlocked) {
+        setShowAuthModal(true);
+      }
     } catch (err) {
       console.error("[LaserAiSection] Generate error:", err);
       setGenError(err.message || "Error generating vector file.");
@@ -246,6 +260,7 @@ export default function LaserAiSection() {
         }
 
         setIsUnlocked(true);
+        setShowAuthModal(false);
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: authEmail.trim(),
@@ -254,6 +269,7 @@ export default function LaserAiSection() {
 
         if (error) throw error;
         setIsUnlocked(true);
+        setShowAuthModal(false);
       }
     } catch (err) {
       console.error("[LaserAiSection] Auth error:", err);
@@ -293,7 +309,7 @@ export default function LaserAiSection() {
 
   const handleDownloadSvg = (svgContent) => {
     if (!isUnlocked) {
-      setAuthError("Please create a free account to download the clean vector file.");
+      setShowAuthModal(true);
       return;
     }
     if (!svgContent) return;
@@ -310,7 +326,7 @@ export default function LaserAiSection() {
 
   const handleCopySvg = (svgContent) => {
     if (!isUnlocked) {
-      setAuthError("Please sign up free to copy clean vector code.");
+      setShowAuthModal(true);
       return;
     }
     if (!svgContent) return;
@@ -358,7 +374,11 @@ export default function LaserAiSection() {
 
             {/* Quick Interactive Test Toggle */}
             <button
-              onClick={() => setIsUnlocked(!isUnlocked)}
+              onClick={() => {
+                const nextUnlocked = !isUnlocked;
+                setIsUnlocked(nextUnlocked);
+                if (!nextUnlocked) setShowAuthModal(false);
+              }}
               title="Click to toggle lock state for testing"
               className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 isUnlocked
@@ -535,7 +555,7 @@ export default function LaserAiSection() {
           )}
 
           {/* ========================================================================= */}
-          {/* VECTOR RESULT VIEWPORT (BLURRED "FLOW" + SIGN UP TO UNLOCK CARD OVERLAY) */}
+          {/* VECTOR RESULT VIEWPORT (BLURRED "FLOW" + UNLOCK TEASER BUTTON)            */}
           {/* ========================================================================= */}
           {currentSvg && (
             <div className="space-y-3 pt-2">
@@ -569,144 +589,57 @@ export default function LaserAiSection() {
                 />
 
                 {/* =================================================================== */}
-                {/* OVERLAY SIGN UP TO UNLOCK CARD ("moraha yban liih direct")          */}
+                {/* OVERLAY TEASER CARD ON BLURRED CANVAS (OPENS FULL POPUP MODAL)      */}
                 {/* =================================================================== */}
                 {!isUnlocked && (
                   <div
-                    id="laser-unlock-card"
-                    className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-black/50 backdrop-blur-[2px]"
+                    onClick={() => setShowAuthModal(true)}
+                    className="absolute inset-0 z-20 flex items-center justify-center p-4 bg-black/40 backdrop-blur-[2px] cursor-pointer group"
                   >
                     <motion.div
-                      initial={{ scale: 0.94, opacity: 0 }}
+                      initial={{ scale: 0.95, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className="w-full max-w-sm bg-[#16181D]/95 backdrop-blur-2xl border border-[#FE7733]/40 rounded-3xl p-5 shadow-2xl text-center space-y-3"
+                      transition={{ duration: 0.25 }}
+                      className="text-center p-5 sm:p-6 rounded-3xl bg-[#16181D]/95 border border-[#FE7733]/40 shadow-2xl space-y-3.5 max-w-xs backdrop-blur-xl group-hover:scale-105 transition-all"
                     >
-                      <div className="w-10 h-10 mx-auto rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/30">
-                        <Lock size={20} />
+                      <div className="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/30">
+                        <Lock size={22} />
                       </div>
 
                       <div>
-                        <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/20">
+                        <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2.5 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/20">
                           ⚡ Vector CAD Ready
                         </span>
-                        <h3 className="text-lg font-bold font-[Outfit] text-white mt-1">
+                        <h3 className="text-base font-bold text-white mt-1.5 font-[Outfit]">
                           Sign Up Free to Unlock
                         </h3>
                         <p className="text-xs text-gray-300 mt-1 leading-relaxed">
-                          Closed cutlines synthesized. Register free in 5 seconds to unblur and export clean SVG vector.
+                          Closed cutlines synthesized. Click to open unlock modal & export clean SVG.
                         </p>
                       </div>
 
-                      {/* 1-Click Google OAuth */}
                       <button
                         type="button"
-                        id="google-signin-btn"
-                        onClick={() => handleGoogleSignIn()}
-                        disabled={googleLoading}
-                        className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-900 font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setShowAuthModal(true);
+                        }}
+                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs shadow-lg shadow-[#FE7733]/25 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        {googleLoading ? (
-                          <RefreshCw size={14} className="animate-spin text-gray-700" />
-                        ) : (
-                          <>
-                            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
-                              <path
-                                fill="#4285F4"
-                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                              />
-                              <path
-                                fill="#34A853"
-                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                              />
-                              <path
-                                fill="#FBBC05"
-                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                              />
-                              <path
-                                fill="#EA4335"
-                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                              />
-                            </svg>
-                            <span>Continue with Google</span>
-                          </>
-                        )}
+                        <Lock size={13} />
+                        <span>Unlock Vector (Free) →</span>
                       </button>
 
-                      {/* Divider */}
-                      <div className="flex items-center gap-2 my-1 text-[10px] text-gray-500 uppercase tracking-wider">
-                        <div className="flex-1 h-px bg-white/10" />
-                        <span>or with email</span>
-                        <div className="flex-1 h-px bg-white/10" />
-                      </div>
-
-                      {/* Auth Tab Toggle */}
-                      <div className="flex p-0.5 bg-black/40 rounded-xl border border-white/10 text-xs">
-                        <button
-                          type="button"
-                          onClick={() => setAuthMode("signup")}
-                          className={`flex-1 py-1 rounded-lg font-bold text-xs transition-all ${
-                            authMode === "signup" ? "bg-[#FE7733] text-white shadow" : "text-gray-400 hover:text-white"
-                          }`}
-                        >
-                          Sign Up Free
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setAuthMode("login")}
-                          className={`flex-1 py-1 rounded-lg font-bold text-xs transition-all ${
-                            authMode === "login" ? "bg-[#FE7733] text-white shadow" : "text-gray-400 hover:text-white"
-                          }`}
-                        >
-                          Log In
-                        </button>
-                      </div>
-
-                      <form onSubmit={handleEmailAuth} className="space-y-2 pt-1 text-left">
-                        <input
-                          type="email"
-                          required
-                          value={authEmail}
-                          onChange={(e) => setAuthEmail(e.target.value)}
-                          placeholder="Enter your email..."
-                          className="w-full bg-[#1A1D21] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733]"
-                        />
-                        <input
-                          type="password"
-                          required
-                          value={authPassword}
-                          onChange={(e) => setAuthPassword(e.target.value)}
-                          placeholder="Password..."
-                          className="w-full bg-[#1A1D21] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733]"
-                        />
-
-                        {authError && (
-                          <p className="text-[11px] text-red-400 leading-tight">{authError}</p>
-                        )}
-
-                        <button
-                          type="submit"
-                          disabled={authLoading}
-                          className="w-full py-2 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
-                        >
-                          {authLoading ? (
-                            <RefreshCw size={13} className="animate-spin" />
-                          ) : (
-                            <span>{authMode === "signup" ? "Create Free Account & Unlock" : "Log In & Unlock"}</span>
-                          )}
-                        </button>
-                      </form>
-
-                      {/* Instant Demo Unlock Pill */}
-                      <div className="pt-1">
-                        <button
-                          type="button"
-                          onClick={() => setIsUnlocked(true)}
-                          className="text-[11px] text-gray-400 hover:text-[#B1FA63] underline cursor-pointer transition-colors"
-                        >
-                          ⚡ Instant Unlock (Demo Test)
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsUnlocked(true);
+                        }}
+                        className="text-[11px] text-gray-400 hover:text-[#B1FA63] underline cursor-pointer transition-colors block mx-auto"
+                      >
+                        ⚡ Instant Unlock (Demo Test)
+                      </button>
                     </motion.div>
                   </div>
                 )}
@@ -720,7 +653,7 @@ export default function LaserAiSection() {
                     className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                       isUnlocked
                         ? "bg-[#FE7733] hover:bg-[#E85F20] text-white shadow-lg shadow-[#FE7733]/20"
-                        : "bg-white/5 text-gray-500 hover:text-gray-300 border border-white/5"
+                        : "bg-white/5 text-gray-400 hover:text-white border border-white/10"
                     }`}
                   >
                     <Download size={14} />
@@ -732,7 +665,7 @@ export default function LaserAiSection() {
                     className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                       isUnlocked
                         ? "bg-white/10 hover:bg-white/15 text-gray-200 border border-white/10"
-                        : "bg-white/5 text-gray-500 hover:text-gray-300 border border-white/5"
+                        : "bg-white/5 text-gray-400 hover:text-white border border-white/10"
                     }`}
                   >
                     {copied ? <Check size={14} className="text-[#10B981]" /> : <Code2 size={14} />}
@@ -754,6 +687,185 @@ export default function LaserAiSection() {
           )}
         </div>
       </div>
+
+      {/* ========================================================================= */}
+      {/* POP-UP MODAL: SIGN UP FREE TO UNLOCK (PORTAL TO BODY - NEVER CUT OFF)     */}
+      {/* ========================================================================= */}
+      {mounted &&
+        showAuthModal &&
+        !isUnlocked &&
+        createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+            {/* Click backdrop to dismiss */}
+            <div
+              className="fixed inset-0 -z-10"
+              onClick={() => setShowAuthModal(false)}
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ duration: 0.25 }}
+              className="w-full max-w-md bg-[#16181D] border border-[#FE7733]/50 rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(254,119,51,0.25)] relative text-center space-y-4 my-auto max-h-[92vh] overflow-y-auto scrollbar-thin"
+            >
+              {/* Close Button (X) */}
+              <button
+                type="button"
+                onClick={() => setShowAuthModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+
+              {/* Glowing Lock Badge */}
+              <div className="w-14 h-14 mx-auto rounded-3xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-xl shadow-[#FE7733]/30">
+                <Lock size={26} />
+              </div>
+
+              <div>
+                <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-3 py-1 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 inline-block">
+                  ⚡ 100% Free Maker Access
+                </span>
+                <h3 className="text-xl sm:text-2xl font-bold font-[Outfit] text-white mt-2">
+                  Sign Up Free to Unlock Vector
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-300 mt-1.5 leading-relaxed">
+                  Closed cutlines synthesized. Register in 5 seconds to unblur and download your clean SVG & LightBurn cut files.
+                </p>
+              </div>
+
+              {/* 1-Click Google OAuth */}
+              <button
+                type="button"
+                id="modal-google-signin-btn"
+                onClick={() => handleGoogleSignIn()}
+                disabled={googleLoading}
+                className="w-full py-3 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-900 font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50 mt-1"
+              >
+                {googleLoading ? (
+                  <RefreshCw size={16} className="animate-spin text-gray-700" />
+                ) : (
+                  <>
+                    <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+                      <path
+                        fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      />
+                      <path
+                        fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      />
+                      <path
+                        fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                      />
+                      <path
+                        fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                      />
+                    </svg>
+                    <span>Continue with Google</span>
+                  </>
+                )}
+              </button>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 my-2 text-[10px] text-gray-500 uppercase tracking-widest font-mono">
+                <div className="flex-1 h-px bg-white/10" />
+                <span>or with email</span>
+                <div className="flex-1 h-px bg-white/10" />
+              </div>
+
+              {/* Auth Tab Toggle */}
+              <div className="flex p-1 bg-black/40 rounded-xl border border-white/10 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setAuthMode("signup")}
+                  className={`flex-1 py-1.5 rounded-lg font-bold text-xs transition-all ${
+                    authMode === "signup" ? "bg-[#FE7733] text-white shadow" : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  Sign Up Free
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAuthMode("login")}
+                  className={`flex-1 py-1.5 rounded-lg font-bold text-xs transition-all ${
+                    authMode === "login" ? "bg-[#FE7733] text-white shadow" : "text-gray-400 hover:text-white"
+                  }`}
+                >
+                  Log In
+                </button>
+              </div>
+
+              {/* Email Form */}
+              <form onSubmit={handleEmailAuth} className="space-y-3 pt-1 text-left">
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-400 block mb-1">
+                    Work Email
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={authEmail}
+                    onChange={(e) => setAuthEmail(e.target.value)}
+                    placeholder="you@workshop.com"
+                    className="w-full bg-[#1A1D21] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733] transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-semibold text-gray-400 block mb-1">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-[#1A1D21] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733] transition-colors"
+                  />
+                </div>
+
+                {authError && (
+                  <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
+                    {authError}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={authLoading}
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-[#FE7733]/25 transition-all cursor-pointer flex items-center justify-center gap-1.5 mt-2"
+                >
+                  {authLoading ? (
+                    <RefreshCw size={15} className="animate-spin" />
+                  ) : (
+                    <span>{authMode === "signup" ? "Create Free Account & Unlock" : "Log In & Unlock"}</span>
+                  )}
+                </button>
+              </form>
+
+              {/* Instant Demo Unlock Pill */}
+              <div className="pt-2 border-t border-white/5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsUnlocked(true);
+                    setShowAuthModal(false);
+                  }}
+                  className="text-xs text-gray-400 hover:text-[#B1FA63] underline cursor-pointer transition-colors"
+                >
+                  ⚡ Instant Unlock (Demo Test)
+                </button>
+              </div>
+            </motion.div>
+          </div>,
+          document.body
+        )}
     </section>
   );
 }
