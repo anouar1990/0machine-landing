@@ -25,9 +25,44 @@ const MAX_REQUESTS_PER_WINDOW = 20;
  * - Strict black-and-white monochrome silhouette (#000000)
  * - Complete background removal (pure white #FFFFFF backdrop, zero border box/scenery)
  * - Laser cut closed contour CAD readiness
+ * - Intelligent Typography & Stencil Bridge Awareness for text requests
  */
 function transformPromptForLaserAi(userPrompt, mode = "standard") {
   const clean = userPrompt.trim().replace(/[.]+$/, "");
+
+  // Detect if user prompt asks for text, quotes, or custom wording
+  const quoteMatch = clean.match(/["'«»]([^"'«»]+)["'«»]/);
+  const textKeywordMatch = clean.match(/\b(?:text|write|written|quote|saying|maktoba|maktoub|ktaba|word|words|name)\s*:?\s*["']?([^"',.;\n]+)["']?/i);
+  const commonPhrases = clean.match(/\b(i love you\s*\w*|happy birthday|welcome|merry christmas|congratulations|baba|mama|mom|dad)\b/i);
+
+  let detectedText = quoteMatch ? quoteMatch[1].trim() :
+                     textKeywordMatch ? textKeywordMatch[1].trim() :
+                     commonPhrases ? commonPhrases[1].trim() : null;
+
+  if (detectedText) {
+    // Strip common material phrases (Darija/French/English) so only pure quote remains
+    const cleanPattern = /^(?:f\s*khechba|fkhechba|f\s*lkhcheb|sur\s*bois|on\s*wood|b\s*laser|b\s*l-laser|laser)\s+/i;
+    while (cleanPattern.test(detectedText)) {
+      detectedText = detectedText.replace(cleanPattern, "").trim();
+    }
+    detectedText = detectedText.replace(/\s+(?:b\s*laser|b\s*l-laser|f\s*khechba|fkhechba|on\s*wood)$/i, "").trim();
+  }
+
+  let subjectDescription = clean;
+  let typographyDirective = "";
+
+  if (detectedText) {
+    const textUpper = detectedText.toUpperCase();
+    if (mode === "stencil" || mode === "connected-stencil") {
+      typographyDirective = ` Laser cut typography sign plaque featuring the exact legible text quote "${textUpper}". Solid stencil font lettering with visible 2mm bridge tabs connecting all letter counter islands (like 'O', 'A', 'B', 'D', 'e') so no loose parts fall out when cut from wood.`;
+    } else if (mode === "keychain" || mode === "keychain-medallion") {
+      typographyDirective = ` Laser cut wooden keychain medallion plaque featuring the bold legible text quote "${textUpper}" inside a clean circular, oval, or heart silhouette boundary with an integrated top mounting hole.`;
+    } else {
+      typographyDirective = ` Laser cut decorative wooden plaque sign or connected cursive script lettering featuring the exact text quote "${textUpper}". Clean bold stencil typography or connected script letters welded into a single solid wooden piece, inside a decorative wooden plaque, heart, or frame.`;
+    }
+    subjectDescription = `decorative wooden plaque sign with quote "${textUpper}"`;
+  }
+
   let modeDirective = "Clean closed contour silhouette, solid vector shape, 2D flat artwork.";
   if (mode === "stencil" || mode === "connected-stencil") {
     modeDirective = "Single-piece laser cut stencil. All interior counter islands connected with solid bridges, zero loose falling pieces.";
@@ -37,7 +72,7 @@ function transformPromptForLaserAi(userPrompt, mode = "standard") {
     modeDirective = "Multi-layer laser cut shadowbox silhouette, cleanly separated depth planes, distinct contours.";
   }
 
-  return `Ultra-sharp solid monochrome stencil vector line art of ${clean}. ${modeDirective} High contrast pure solid black shapes (#000000) on an isolated, completely pure clean white background (#FFFFFF). Background completely removed, zero background scenery, zero borders, zero bounding square frames, no rectangular backdrop. Crisp smooth edges, clean closed boundary cut paths. Strictly no colors, zero shades of gray, no soft gradients, no photographic textures, no 3D shading, no blur, no drop shadows. Laser cut CAD/CAM ready.`;
+  return `Ultra-sharp solid monochrome stencil vector line art of ${subjectDescription}.${typographyDirective} ${modeDirective} High contrast pure solid black shapes (#000000) on an isolated, completely pure clean white background (#FFFFFF). Background completely removed, zero background scenery, zero borders, zero bounding square frames, no rectangular backdrop. Crisp smooth edges, clean closed boundary cut paths. Strictly no colors, zero shades of gray, no soft gradients, no photographic textures, no 3D shading, no blur, no drop shadows. Laser cut CAD/CAM ready.`;
 }
 
 function checkRateLimit(clientIp) {
@@ -281,7 +316,9 @@ STRICT RULES:
 5. Geometry Integrity:
    - All cut paths must be closed (<path d="... Z"/> or <circle>, <polygon>).
    - Accurately draw the requested subject ("${cleanPrompt}").
-6. Specific Mode Requirements:
+6. Text and Typography Rule:
+   - NEVER output raw un-vectored <text> elements under any circumstance, because CNC laser cutting machines and SVG parsers require vector paths. If text, quotes, or wording are requested, draw the letters as vectorized path contours (<path d="..."/>) inside <g id="CUT_00"> (if stencil cutout) or <g id="SCORE_01"> / <g id="ENGRAVE_02"> (if surface engraved onto a plaque).
+7. Specific Mode Requirements:
 ${modeGuidelines}
 
 Return ONLY raw SVG code inside:
