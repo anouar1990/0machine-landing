@@ -161,14 +161,14 @@ export default function Navbar() {
             <a
               href="https://app.0machine.com"
               onClick={() => trackEvent('cta_click', { button: 'navbar_signin_mobile_header' })}
-              className="text-xs font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/15 px-3 py-1.5 rounded-lg transition-all font-[Outfit]"
+              className="text-xs font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/15 px-3 py-1.5 min-h-[38px] flex items-center rounded-lg transition-all font-[Outfit] cursor-pointer focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:outline-none active:scale-95"
             >
               {t("nav.signin")}
             </a>
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-1.5 rounded-lg cursor-pointer focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:outline-none active:scale-95"
               aria-label="Toggle navigation menu"
             >
               <motion.span

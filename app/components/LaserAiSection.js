@@ -334,15 +334,16 @@ export default function LaserAiSection() {
         {/* STANDALONE DEDICATED LASERAI PROMPT CHAT V2.0 CONTAINER ("bohdha")         */}
         {/* MATCHING EXACT USER REFERENCE SCREENSHOT (100% PIXEL PERFECT ALIGNMENT)  */}
         {/* ========================================================================= */}
-        <div className="bg-[#18181B] border border-white/10 rounded-3xl shadow-2xl overflow-hidden p-6 sm:p-8 space-y-5">
+        <div className="bg-[#18181B] border border-white/10 rounded-3xl shadow-2xl overflow-hidden p-5 sm:p-8 space-y-5">
           {/* Top Label & Quick Toggle for Lock/Unlock Testing */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <div className="text-xs sm:text-sm font-normal text-gray-300">
               Start with a shape, a theme, or a full brief.
             </div>
 
             {/* Quick Interactive Test Toggle */}
             <button
+              type="button"
               onClick={() => {
                 if (!isUnlocked) {
                   setShowAuthModal(true);
@@ -351,7 +352,8 @@ export default function LaserAiSection() {
                 }
               }}
               title={isUnlocked ? "Click to lock for testing" : "Click to open Sign Up Unlock Modal"}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              aria-label={isUnlocked ? "Laser CAD unlocked. Click to test locked mode." : "Laser CAD locked. Click to sign up and unlock."}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 min-h-[36px] rounded-full text-xs font-bold transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#FFA526] focus-visible:outline-none active:scale-95 ${
                 isUnlocked
                   ? "bg-[#10B981]/15 border border-[#10B981]/30 text-[#10B981] hover:bg-[#10B981]/25"
                   : "bg-[#FE7733]/15 border border-[#FE7733]/30 text-[#FE7733] hover:bg-[#FE7733]/25"
@@ -359,28 +361,29 @@ export default function LaserAiSection() {
             >
               {isUnlocked ? (
                 <>
-                  <Unlock size={13} />
+                  <Unlock size={13} aria-hidden="true" />
                   <span>Unlocked ✓</span>
                 </>
               ) : (
                 <>
-                  <Lock size={13} />
+                  <Lock size={13} aria-hidden="true" />
                   <span>Locked (Sign Up)</span>
                 </>
               )}
             </button>
           </div>
 
-          {/* 4 Reference Pills (Matching Screenshot Exactly: rounded-full pills) */}
+          {/* 4 Reference Pills (Matching Screenshot Exactly: rounded-full pills, 44px min touch target) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {REFERENCE_PILLS.map((pill, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => handleSelectPill(pill)}
-                className="text-left text-xs px-4 py-2.5 rounded-full bg-[#111115] hover:bg-[#1C1D23] border border-white/10 hover:border-[#FFA526]/40 text-gray-300 hover:text-white transition-all cursor-pointer leading-snug truncate"
+                title={pill.title}
+                className="text-left text-xs px-4 py-2.5 min-h-[44px] flex items-center rounded-full bg-[#111115] hover:bg-[#1C1D23] border border-white/10 hover:border-[#FFA526]/50 text-gray-200 hover:text-white transition-all cursor-pointer leading-snug truncate focus-visible:ring-2 focus-visible:ring-[#FFA526] focus-visible:outline-none active:scale-[0.98]"
               >
-                {pill.title}
+                <span className="truncate">{pill.title}</span>
               </button>
             ))}
           </div>
@@ -395,7 +398,7 @@ export default function LaserAiSection() {
               <button
                 type="button"
                 onClick={() => setFileTypeTab("svg")}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 min-h-[38px] rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#FFA526] focus-visible:outline-none active:scale-95 ${
                   fileTypeTab === "svg"
                     ? "bg-[#1C1D24] text-white shadow-sm"
                     : "text-gray-400 hover:text-gray-200"
@@ -407,7 +410,7 @@ export default function LaserAiSection() {
               <button
                 type="button"
                 onClick={() => setFileTypeTab("preview")}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 min-h-[38px] rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#FFA526] focus-visible:outline-none active:scale-95 ${
                   fileTypeTab === "preview"
                     ? "bg-[#1C1D24] text-white shadow-sm"
                     : "text-gray-400 hover:text-gray-200"
@@ -420,19 +423,21 @@ export default function LaserAiSection() {
 
             {/* Right: Style Dropdown */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 font-medium">Style</span>
+              <label htmlFor="laser-style-select" className="text-xs text-gray-300 font-medium">Style</label>
               <div className="relative">
                 <select
+                  id="laser-style-select"
+                  aria-label="Laser cut generation style preset"
                   value={activeMode}
                   onChange={(e) => setActiveMode(e.target.value)}
-                  className="appearance-none bg-[#111216] border border-white/10 text-gray-200 text-xs rounded-full pl-3.5 pr-8 py-1.5 focus:outline-none focus:border-[#FFA526] cursor-pointer"
+                  className="appearance-none bg-[#111216] border border-white/10 text-gray-200 text-xs rounded-full pl-3.5 pr-8 py-2 min-h-[38px] focus:outline-none focus:border-[#FFA526] focus:ring-1 focus:ring-[#FFA526] cursor-pointer"
                 >
                   <option value="cut-engrave">Open brief (Cut + Engrave)</option>
                   <option value="keychain">Keychain (3.5mm hole)</option>
                   <option value="stencil">Connected Stencil (Bridge tabs)</option>
                   <option value="layered">Multi-layer 3D Shadowbox</option>
                 </select>
-                <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" aria-hidden="true" />
               </div>
             </div>
           </div>
@@ -452,21 +457,22 @@ export default function LaserAiSection() {
               }}
               rows={2}
               placeholder="e.g. a geometric stag head for a 30 cm wall piece"
-              className="flex-1 bg-[#0E0E12] border border-white/10 rounded-2xl p-4 text-xs sm:text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#FFA526] transition-colors resize-none font-mono"
+              className="flex-1 bg-[#0E0E12] border border-white/10 rounded-2xl p-4 text-xs sm:text-sm text-gray-100 placeholder-gray-400 focus:outline-none focus:border-[#FFA526] focus:ring-1 focus:ring-[#FFA526] transition-colors resize-none font-mono"
             />
 
             <button
+              type="button"
               onClick={() => handleSendPrompt()}
               disabled={isGenerating || !customPrompt.trim()}
-              className={`sm:w-36 px-6 py-4 rounded-2xl text-sm font-bold tracking-wide transition-all cursor-pointer shadow-lg flex items-center justify-center ${
+              className={`w-full sm:w-36 min-h-[48px] px-6 py-4 rounded-2xl text-sm font-extrabold tracking-wide transition-all cursor-pointer shadow-lg flex items-center justify-center focus-visible:ring-2 focus-visible:ring-[#FFA526] focus-visible:outline-none ${
                 isGenerating || !customPrompt.trim()
-                  ? "bg-[#333] text-gray-500 cursor-not-allowed opacity-60"
+                  ? "bg-[#252528] text-gray-500 cursor-not-allowed opacity-60"
                   : "bg-[#FDB237] hover:bg-[#FFA526] text-black shadow-[#FDB237]/25 active:scale-95"
               }`}
             >
               {isGenerating ? (
                 <span className="flex items-center gap-1.5">
-                  <RefreshCw size={15} className="animate-spin text-black" />
+                  <RefreshCw size={15} className="animate-spin text-black" aria-hidden="true" />
                   <span>Synthesizing</span>
                 </span>
               ) : (
@@ -503,7 +509,14 @@ export default function LaserAiSection() {
               </div>
 
               {/* The Live Charging Bar ("Samta") */}
-              <div className="w-full bg-[#0E0E12] h-3.5 rounded-full p-0.5 border border-white/10 overflow-hidden relative shadow-inner">
+              <div
+                role="progressbar"
+                aria-valuenow={progressPercent}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Laser CAD Vector Synthesis Progress"
+                className="w-full bg-[#0E0E12] h-3.5 rounded-full p-0.5 border border-white/10 overflow-hidden relative shadow-inner"
+              >
                 <motion.div
                   className="h-full rounded-full bg-gradient-to-r from-[#FE7733] via-[#FFA559] to-[#B1FA63] shadow-lg shadow-[#FE7733]/40 relative"
                   style={{ width: `${progressPercent}%` }}
@@ -639,31 +652,31 @@ export default function LaserAiSection() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 16 }}
               transition={{ duration: 0.25 }}
-              className="w-full max-w-md bg-[#16181D] border border-[#FE7733]/50 rounded-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(254,119,51,0.25)] relative text-center space-y-4 my-auto max-h-[92vh] overflow-y-auto scrollbar-thin"
+              className="w-full max-w-sm sm:max-w-md bg-[#16181D] border border-[#FE7733]/50 rounded-3xl p-5 sm:p-6 shadow-[0_0_50px_rgba(254,119,51,0.25)] relative text-center space-y-3 my-auto max-h-[96vh] overflow-y-auto scrollbar-thin"
             >
-              {/* Close Button (X) */}
+              {/* Close Button (X) - 44px min touch target */}
               <button
                 type="button"
                 onClick={() => setShowAuthModal(false)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer"
-                aria-label="Close"
+                className="absolute top-3 right-3 w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#FFA526] focus-visible:outline-none active:scale-95"
+                aria-label="Close unlock modal"
               >
-                <X size={18} />
+                <X size={18} aria-hidden="true" />
               </button>
 
               {/* Glowing Lock Badge */}
-              <div className="w-14 h-14 mx-auto rounded-3xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-xl shadow-[#FE7733]/30">
-                <Lock size={26} />
+              <div className="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-xl shadow-[#FE7733]/30">
+                <Lock size={22} aria-hidden="true" />
               </div>
 
               <div>
-                <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-3 py-1 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 inline-block">
+                <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2.5 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 inline-block">
                   ⚡ 100% Free Maker Access
                 </span>
-                <h3 className="text-xl sm:text-2xl font-bold font-[Outfit] text-white mt-2">
+                <h3 className="text-lg sm:text-xl font-bold font-[Outfit] text-white mt-1.5">
                   Sign Up Free to Unlock Vector
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-300 mt-1.5 leading-relaxed">
+                <p className="text-xs text-gray-300 mt-1 leading-relaxed">
                   Closed cutlines synthesized. Register in 5 seconds to unblur and download your clean SVG & LightBurn cut files.
                 </p>
               </div>
@@ -674,13 +687,13 @@ export default function LaserAiSection() {
                 id="modal-google-signin-btn"
                 onClick={() => handleGoogleSignIn()}
                 disabled={googleLoading}
-                className="w-full py-3 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-900 font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50 mt-1"
+                className="w-full min-h-[44px] py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-900 font-bold text-xs sm:text-sm transition-all shadow-md flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50 mt-1 focus-visible:ring-2 focus-visible:ring-[#4285F4] focus-visible:outline-none active:scale-[0.98]"
               >
                 {googleLoading ? (
-                  <RefreshCw size={16} className="animate-spin text-gray-700" />
+                  <RefreshCw size={16} className="animate-spin text-gray-700" aria-hidden="true" />
                 ) : (
                   <>
-                    <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
                       <path
                         fill="#4285F4"
                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -704,7 +717,7 @@ export default function LaserAiSection() {
               </button>
 
               {/* Divider */}
-              <div className="flex items-center gap-3 my-2 text-[10px] text-gray-500 uppercase tracking-widest font-mono">
+              <div className="flex items-center gap-3 my-1.5 text-[10px] text-gray-500 uppercase tracking-widest font-mono">
                 <div className="flex-1 h-px bg-white/10" />
                 <span>or with email</span>
                 <div className="flex-1 h-px bg-white/10" />
@@ -715,7 +728,7 @@ export default function LaserAiSection() {
                 <button
                   type="button"
                   onClick={() => setAuthMode("signup")}
-                  className={`flex-1 py-1.5 rounded-lg font-bold text-xs transition-all ${
+                  className={`flex-1 min-h-[36px] py-1.5 rounded-lg font-bold text-xs transition-all focus-visible:ring-2 focus-visible:ring-[#FFA526] focus-visible:outline-none ${
                     authMode === "signup" ? "bg-[#FE7733] text-white shadow" : "text-gray-400 hover:text-white"
                   }`}
                 >
@@ -724,7 +737,7 @@ export default function LaserAiSection() {
                 <button
                   type="button"
                   onClick={() => setAuthMode("login")}
-                  className={`flex-1 py-1.5 rounded-lg font-bold text-xs transition-all ${
+                  className={`flex-1 min-h-[36px] py-1.5 rounded-lg font-bold text-xs transition-all focus-visible:ring-2 focus-visible:ring-[#FFA526] focus-visible:outline-none ${
                     authMode === "login" ? "bg-[#FE7733] text-white shadow" : "text-gray-400 hover:text-white"
                   }`}
                 >
@@ -733,48 +746,53 @@ export default function LaserAiSection() {
               </div>
 
               {/* Email Form */}
-              <form onSubmit={handleEmailAuth} className="space-y-3 pt-1 text-left">
+              <form onSubmit={handleEmailAuth} className="space-y-2.5 pt-0.5 text-left">
                 <div>
-                  <label className="text-[11px] font-semibold text-gray-400 block mb-1">
+                  <label htmlFor="modal-email-input" className="text-[11px] font-semibold text-gray-300 block mb-1">
                     Work Email
                   </label>
                   <input
+                    id="modal-email-input"
                     type="email"
                     required
+                    autoComplete="email"
                     value={authEmail}
                     onChange={(e) => setAuthEmail(e.target.value)}
                     placeholder="you@workshop.com"
-                    className="w-full bg-[#1A1D21] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733] transition-colors"
+                    className="w-full min-h-[42px] bg-[#1A1D21] border border-white/10 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-[#FE7733] focus:ring-1 focus:ring-[#FE7733] transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-semibold text-gray-400 block mb-1">
+                  <label htmlFor="modal-password-input" className="text-[11px] font-semibold text-gray-300 block mb-1">
                     Password
                   </label>
                   <input
+                    id="modal-password-input"
                     type="password"
                     required
+                    autoComplete={authMode === "signup" ? "new-password" : "current-password"}
                     value={authPassword}
                     onChange={(e) => setAuthPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-[#1A1D21] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733] transition-colors"
+                    className="w-full min-h-[42px] bg-[#1A1D21] border border-white/10 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-[#FE7733] focus:ring-1 focus:ring-[#FE7733] transition-colors"
                   />
                 </div>
 
                 {authError && (
-                  <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
-                    {authError}
+                  <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                    <AlertCircle size={14} className="flex-shrink-0" />
+                    <span>{authError}</span>
                   </div>
                 )}
 
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-[#FE7733]/25 transition-all cursor-pointer flex items-center justify-center gap-1.5 mt-2"
+                  className="w-full min-h-[44px] py-2.5 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-[#FE7733]/25 transition-all cursor-pointer flex items-center justify-center gap-1.5 mt-2 focus-visible:ring-2 focus-visible:ring-[#FE7733] focus-visible:outline-none active:scale-[0.98]"
                 >
                   {authLoading ? (
-                    <RefreshCw size={15} className="animate-spin" />
+                    <RefreshCw size={15} className="animate-spin" aria-hidden="true" />
                   ) : (
                     <span>{authMode === "signup" ? "Create Free Account & Unlock" : "Log In & Unlock"}</span>
                   )}
@@ -782,14 +800,14 @@ export default function LaserAiSection() {
               </form>
 
               {/* Instant Demo Unlock Pill */}
-              <div className="pt-2 border-t border-white/5">
+              <div className="pt-1.5 border-t border-white/5">
                 <button
                   type="button"
                   onClick={() => {
                     setIsUnlocked(true);
                     setShowAuthModal(false);
                   }}
-                  className="text-xs text-gray-400 hover:text-[#B1FA63] underline cursor-pointer transition-colors"
+                  className="min-h-[36px] inline-flex items-center justify-center px-4 py-1.5 text-xs text-gray-400 hover:text-[#B1FA63] underline cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-[#B1FA63] focus-visible:outline-none active:scale-95"
                 >
                   ⚡ Instant Unlock (Demo Test)
                 </button>
