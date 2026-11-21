@@ -38,39 +38,6 @@ const REFERENCE_PILLS = [
   },
 ];
 
-// High-quality laser cut SVG preview (Mandala with LightBurn cut and engrave layers)
-const DEFAULT_PREVIEW_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
-  <!-- Outer Closed Perimeter Cutline (LightBurn C00 Red Hairline) -->
-  <circle cx="200" cy="200" r="185" fill="none" stroke="#EF4444" stroke-width="2" class="cut" />
-  <circle cx="200" cy="200" r="172" fill="none" stroke="#1A1108" stroke-width="1.5" class="engrave" />
-  
-  <!-- Sacred 6-Fold Geometry Engraved Pattern (LightBurn C01 Burnt Wood) -->
-  <g class="engrave" fill="#1A1108" fill-opacity="0.85">
-    <circle cx="200" cy="200" r="28" fill="#1A1108" />
-    <circle cx="200" cy="200" r="38" fill="none" stroke="#1A1108" stroke-width="1.5" />
-    <!-- 6 Petals -->
-    <path d="M 200,85 Q 242,148 200,200 Q 158,148 200,85 Z" />
-    <path d="M 200,315 Q 242,252 200,200 Q 158,252 200,315 Z" />
-    <path d="M 100,142 Q 163,122 200,200 Q 137,222 100,142 Z" />
-    <path d="M 300,258 Q 237,278 200,200 Q 263,178 300,258 Z" />
-    <path d="M 100,258 Q 137,178 200,200 Q 163,278 100,258 Z" />
-    <path d="M 300,142 Q 263,222 200,200 Q 237,122 300,142 Z" />
-  </g>
-  <!-- Decorative Rings & Star Points -->
-  <g stroke="#1A1108" stroke-width="1.2" fill="none" class="engrave">
-    <circle cx="200" cy="200" r="148" stroke-dasharray="6,4" />
-    <circle cx="200" cy="200" r="118" />
-    <circle cx="200" cy="200" r="72" stroke-dasharray="4,3" />
-    <!-- Inner geometric diamonds -->
-    <polygon points="200,105 215,145 200,185 185,145" fill="#1A1108" fill-opacity="0.7" />
-    <polygon points="200,295 215,255 200,215 185,255" fill="#1A1108" fill-opacity="0.7" />
-    <polygon points="118,152 158,162 188,192 148,182" fill="#1A1108" fill-opacity="0.7" />
-    <polygon points="282,248 242,238 212,208 252,218" fill="#1A1108" fill-opacity="0.7" />
-    <polygon points="118,248 148,218 188,208 158,238" fill="#1A1108" fill-opacity="0.7" />
-    <polygon points="282,152 252,182 212,192 242,162" fill="#1A1108" fill-opacity="0.7" />
-  </g>
-</svg>`;
-
 export default function LaserAiSection() {
   const [customPrompt, setCustomPrompt] = useState("");
   const [activeMode, setActiveMode] = useState("cut-engrave");
@@ -80,9 +47,9 @@ export default function LaserAiSection() {
   const [progressStage, setProgressStage] = useState("");
   const [genError, setGenError] = useState(null);
 
-  // Current SVG design displayed in the viewport (initialized with default so blur & unlock are immediately visible)
-  const [currentSvg, setCurrentSvg] = useState(DEFAULT_PREVIEW_SVG);
-  const [currentPromptTitle, setCurrentPromptTitle] = useState("A six-fold mandala for a 30 cm wooden wall piece");
+  // Current SVG design displayed in the viewport (initialized to null so no ugly box is shown)
+  const [currentSvg, setCurrentSvg] = useState(null);
+  const [currentPromptTitle, setCurrentPromptTitle] = useState("");
 
   // Auth & Unlock state: strictly locked by default so the blur & unlock card are always active
   const [mounted, setMounted] = useState(false);
@@ -515,87 +482,6 @@ export default function LaserAiSection() {
                 <span>Closed Perimeter · LightBurn C00/C01</span>
               </div>
             </motion.div>
-          )}
-
-          {/* ========================================================================= */}
-          {/* VECTOR RESULT VIEWPORT (BLURRED "FLOW" + UNLOCK TEASER BUTTON)            */}
-          {/* ========================================================================= */}
-          {currentSvg && (
-            <div className="pt-2">
-              <div className="relative rounded-2xl overflow-hidden border border-[#CBB28D] bg-gradient-to-br from-[#F6EEDC] via-[#ECE1C8] to-[#E2D2B5] min-h-[340px] sm:min-h-[380px] flex items-center justify-center p-6 shadow-2xl">
-                {/* CAD Grid Backdrop */}
-                <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
-
-                {/* SVG Canvas with conditional blur ("flow hta ytsejel") */}
-                <div
-                  id="laser-svg-canvas"
-                  style={{
-                    filter: !isUnlocked ? "blur(14px) brightness(0.95)" : "none",
-                    pointerEvents: !isUnlocked ? "none" : "auto",
-                    userSelect: !isUnlocked ? "none" : "auto",
-                    transition: "filter 0.5s ease-in-out",
-                  }}
-                  className="w-full h-full max-h-[320px] flex items-center justify-center relative z-10 [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto [&_.engrave]:fill-[#1A1108] [&_.cut]:stroke-[#EF4444] drop-shadow-[0_4px_12px_rgba(40,25,12,0.35)]"
-                  dangerouslySetInnerHTML={{ __html: currentSvg }}
-                />
-
-                {/* =================================================================== */}
-                {/* OVERLAY TEASER CARD ON BLURRED CANVAS (OPENS FULL POPUP MODAL)      */}
-                {/* =================================================================== */}
-                {!isUnlocked && (
-                  <div
-                    onClick={() => setShowAuthModal(true)}
-                    className="absolute inset-0 z-20 flex items-center justify-center p-4 bg-black/40 backdrop-blur-[2px] cursor-pointer group"
-                  >
-                    <motion.div
-                      initial={{ scale: 0.95, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.25 }}
-                      className="text-center p-5 sm:p-6 rounded-3xl bg-[#16181D]/95 border border-[#FE7733]/40 shadow-2xl space-y-3.5 max-w-xs backdrop-blur-xl group-hover:scale-105 transition-all"
-                    >
-                      <div className="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/30">
-                        <Lock size={22} />
-                      </div>
-
-                      <div>
-                        <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2.5 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/20">
-                          ⚡ Vector CAD Ready
-                        </span>
-                        <h3 className="text-base font-bold text-white mt-1.5 font-[Outfit]">
-                          Sign Up Free to Unlock
-                        </h3>
-                        <p className="text-xs text-gray-300 mt-1 leading-relaxed">
-                          Closed cutlines synthesized. Click to open unlock modal & export clean SVG.
-                        </p>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowAuthModal(true);
-                        }}
-                        className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs shadow-lg shadow-[#FE7733]/25 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                      >
-                        <Lock size={13} />
-                        <span>Unlock Vector (Free) →</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setIsUnlocked(true);
-                        }}
-                        className="text-[11px] text-gray-400 hover:text-[#B1FA63] underline cursor-pointer transition-colors block mx-auto"
-                      >
-                        ⚡ Instant Unlock (Demo Test)
-                      </button>
-                    </motion.div>
-                  </div>
-                )}
-              </div>
-            </div>
           )}
         </div>
       </div>
