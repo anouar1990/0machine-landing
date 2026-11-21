@@ -5,8 +5,6 @@ import {
   Sparkles,
   Cpu,
   Download,
-  ShieldCheck,
-  Zap,
   Code2,
   RefreshCw,
   Check,
@@ -14,65 +12,81 @@ import {
   Lock,
   Unlock,
   ExternalLink,
-  Send,
-  Layers,
-  ArrowRight
+  ChevronDown
 } from "lucide-react";
 import { supabase } from "../lib/supabase";
 
-const SAMPLE_PROMPTS = [
+const REFERENCE_PILLS = [
   {
-    id: "wolf",
-    icon: "🐺",
-    title: "Lone Wolf Silhouette",
-    prompt: "Majestic howling wolf on a rocky cliff surrounded by pine trees, stark woodcut crosshatching, closed contour cutline.",
+    title: "A six-fold mandala for a 30 cm wooden wall piece",
+    prompt: "Intricate six-fold sacred geometry mandala for a 30 cm wooden wall art piece, clean closed cutting contours",
     mode: "cut-engrave",
-    modeLabel: "Cut + Engrave",
   },
   {
-    id: "keychain",
-    icon: "🔑",
-    title: "Art Deco Eagle Keychain",
-    prompt: "Geometric Art Deco eagle medallion, 40mm circular pendant with integrated 3.5mm top jump-ring hole.",
+    title: "Minimal snowflake ornament with a hanging hole",
+    prompt: "Minimalist geometric snowflake ornament with integrated 3.5mm top hanging hole for jump ring",
     mode: "keychain",
-    modeLabel: "Keychain (3.5mm Hole)",
   },
   {
-    id: "owl_clock",
-    icon: "⚙️",
-    title: "Steampunk Gear Clock",
-    prompt: "Mechanical owl with exposed clockwork gears, Roman numerals ring, 8mm center shaft hole for quartz movement.",
+    title: "Geometric stag head made of three stacked layers",
+    prompt: "Geometric polygonal stag deer head trophy silhouette for multi-layer stacked wood shadowbox",
+    mode: "layered",
+  },
+  {
+    title: "Rectangular frame with leaves in the corners",
+    prompt: "Decorative rectangular photo frame with botanical leaves and vine corner flourishes, closed cut borders",
     mode: "cut-engrave",
-    modeLabel: "Precision CAM",
-  },
-  {
-    id: "coaster",
-    icon: "🌸",
-    title: "Mandala Floral Coaster",
-    prompt: "Sacred geometry mandala flower pattern coaster, circular laser cut border with concentric engraved lace detail.",
-    mode: "cut-engrave",
-    modeLabel: "Coaster Pack",
-  },
-  {
-    id: "stencil",
-    icon: "🌿",
-    title: "Monogram Stencil",
-    prompt: "Intricate vine monogram letter 'M' stencil, connected tabs on all inner enclosed loops, single-piece cut.",
-    mode: "stencil",
-    modeLabel: "Bridged Stencil",
   },
 ];
+
+// High-quality laser cut SVG preview (Mandala with LightBurn cut and engrave layers)
+const DEFAULT_PREVIEW_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <!-- Outer Closed Perimeter Cutline (LightBurn C00 Red Hairline) -->
+  <circle cx="200" cy="200" r="185" fill="none" stroke="#EF4444" stroke-width="2" class="cut" />
+  <circle cx="200" cy="200" r="172" fill="none" stroke="#1A1108" stroke-width="1.5" class="engrave" />
+  
+  <!-- Sacred 6-Fold Geometry Engraved Pattern (LightBurn C01 Burnt Wood) -->
+  <g class="engrave" fill="#1A1108" fill-opacity="0.85">
+    <circle cx="200" cy="200" r="28" fill="#1A1108" />
+    <circle cx="200" cy="200" r="38" fill="none" stroke="#1A1108" stroke-width="1.5" />
+    <!-- 6 Petals -->
+    <path d="M 200,85 Q 242,148 200,200 Q 158,148 200,85 Z" />
+    <path d="M 200,315 Q 242,252 200,200 Q 158,252 200,315 Z" />
+    <path d="M 100,142 Q 163,122 200,200 Q 137,222 100,142 Z" />
+    <path d="M 300,258 Q 237,278 200,200 Q 263,178 300,258 Z" />
+    <path d="M 100,258 Q 137,178 200,200 Q 163,278 100,258 Z" />
+    <path d="M 300,142 Q 263,222 200,200 Q 237,122 300,142 Z" />
+  </g>
+  <!-- Decorative Rings & Star Points -->
+  <g stroke="#1A1108" stroke-width="1.2" fill="none" class="engrave">
+    <circle cx="200" cy="200" r="148" stroke-dasharray="6,4" />
+    <circle cx="200" cy="200" r="118" />
+    <circle cx="200" cy="200" r="72" stroke-dasharray="4,3" />
+    <!-- Inner geometric diamonds -->
+    <polygon points="200,105 215,145 200,185 185,145" fill="#1A1108" fill-opacity="0.7" />
+    <polygon points="200,295 215,255 200,215 185,255" fill="#1A1108" fill-opacity="0.7" />
+    <polygon points="118,152 158,162 188,192 148,182" fill="#1A1108" fill-opacity="0.7" />
+    <polygon points="282,248 242,238 212,208 252,218" fill="#1A1108" fill-opacity="0.7" />
+    <polygon points="118,248 148,218 188,208 158,238" fill="#1A1108" fill-opacity="0.7" />
+    <polygon points="282,152 252,182 212,192 242,162" fill="#1A1108" fill-opacity="0.7" />
+  </g>
+</svg>`;
 
 export default function LaserAiSection() {
   const [customPrompt, setCustomPrompt] = useState("");
   const [activeMode, setActiveMode] = useState("cut-engrave");
+  const [fileTypeTab, setFileTypeTab] = useState("svg"); // "svg" | "preview"
   const [isGenerating, setIsGenerating] = useState(false);
   const [progressPercent, setProgressPercent] = useState(0);
   const [progressStage, setProgressStage] = useState("");
   const [genError, setGenError] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  // Auth & Unlock state
+  // Current SVG design displayed in the viewport (initialized with default so blur & unlock are immediately visible)
+  const [currentSvg, setCurrentSvg] = useState(DEFAULT_PREVIEW_SVG);
+  const [currentPromptTitle, setCurrentPromptTitle] = useState("A six-fold mandala for a 30 cm wooden wall piece");
+
+  // Auth & Unlock state: strictly locked by default so the blur & unlock card are always active
   const [user, setUser] = useState(null);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [authMode, setAuthMode] = useState("signup"); // "signup" | "login"
@@ -82,56 +96,32 @@ export default function LaserAiSection() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
 
-  // Chat conversation messages
-  const [messages, setMessages] = useState([
-    {
-      id: "welcome",
-      sender: "assistant",
-      text: "👋 Welcome to LaserAI Prompt Chat v2.0! Describe any design you want to laser cut (keychains, signs, wall art, stencils). Our CAD engine will synthesize closed cutlines (C00) and engrave contours (C01).",
-      timestamp: "Just now",
-    },
-  ]);
-
-  const chatContainerRef = useRef(null);
   const progressIntervalRef = useRef(null);
 
-  // Check initial authentication & restore pending design after OAuth redirect
+  // Check initial authentication from real Supabase session
   useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        const isLocalOrAdmin = 
-          localStorage.getItem("0machine_user_unlocked") === "true" ||
-          window.location.hostname === "localhost" ||
-          window.location.hostname === "127.0.0.1" ||
-          window.location.search.includes("unlock=true") ||
-          window.location.search.includes("access=granted");
-
-        if (isLocalOrAdmin) {
-          setIsUnlocked(true);
-        }
-      }
-    } catch (e) {}
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setUser(session.user);
         setIsUnlocked(true);
+      } else {
+        // Respect explicit URL parameter if present
+        if (typeof window !== "undefined") {
+          const params = new URLSearchParams(window.location.search);
+          if (params.get("unlocked") === "true") {
+            setIsUnlocked(true);
+          }
+        }
+      }
+
+      // Check if user returned from Google OAuth redirect with a pending SVG
+      if (typeof window !== "undefined") {
         try {
-          localStorage.setItem("0machine_user_unlocked", "true");
           const pendingSvg = sessionStorage.getItem("0machine_pending_laser_svg");
-          const pendingPrompt = sessionStorage.getItem("0machine_pending_laser_prompt") || "Your Custom Laser Vector";
+          const pendingPrompt = sessionStorage.getItem("0machine_pending_laser_prompt");
           if (pendingSvg) {
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: `ai-restored-${Date.now()}`,
-                sender: "assistant",
-                text: `⚡ Design unlocked! Clean vector ready for "${pendingPrompt}".`,
-                svg: pendingSvg,
-                prompt: pendingPrompt,
-                timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-              },
-            ]);
+            setCurrentSvg(pendingSvg);
+            if (pendingPrompt) setCurrentPromptTitle(pendingPrompt);
             sessionStorage.removeItem("0machine_pending_laser_svg");
             sessionStorage.removeItem("0machine_pending_laser_prompt");
           }
@@ -145,9 +135,6 @@ export default function LaserAiSection() {
       if (session?.user) {
         setUser(session.user);
         setIsUnlocked(true);
-        try {
-          localStorage.setItem("0machine_user_unlocked", "true");
-        } catch (e) {}
       }
     });
 
@@ -156,26 +143,16 @@ export default function LaserAiSection() {
     };
   }, []);
 
-  // Auto-scroll chat to latest message
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messages, isGenerating, progressPercent]);
-
-  // Clean up progress intervals on unmount
+  // Clean up progress interval on unmount
   useEffect(() => {
     return () => {
       if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
     };
   }, []);
 
-  const handleSelectSample = (sample) => {
-    setCustomPrompt(sample.prompt);
-    setActiveMode(sample.mode);
+  const handleSelectPill = (pill) => {
+    setCustomPrompt(pill.prompt);
+    setActiveMode(pill.mode);
   };
 
   const handleSendPrompt = async (promptToSend = null, modeToSend = null) => {
@@ -183,41 +160,30 @@ export default function LaserAiSection() {
     const m = modeToSend || activeMode;
     if (!p || isGenerating) return;
 
-    // Add user message
-    const userMsg = {
-      id: `user-${Date.now()}`,
-      sender: "user",
-      text: p,
-      mode: m,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    };
-
-    setMessages((prev) => [...prev, userMsg]);
-    setCustomPrompt("");
     setGenError(null);
     setIsGenerating(true);
-    setProgressPercent(10);
+    setProgressPercent(8);
     setProgressStage("Analyzing prompt & vector geometry...");
 
-    // Animate progress bar ("samta katcharja")
+    // Animate progress bar ("samta katcharja") live from 8% to 92%
     if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
-    let currentPercent = 10;
+    let currentP = 8;
     progressIntervalRef.current = setInterval(() => {
-      currentPercent += Math.floor(Math.random() * 8) + 4;
-      if (currentPercent > 92) {
-        currentPercent = 92;
+      currentP += Math.floor(Math.random() * 7) + 4;
+      if (currentP > 92) {
+        currentP = 92;
         clearInterval(progressIntervalRef.current);
       }
-      setProgressPercent(currentPercent);
+      setProgressPercent(currentP);
 
-      if (currentPercent > 30 && currentPercent <= 60) {
+      if (currentP > 25 && currentP <= 55) {
         setProgressStage("Tracing closed boundary cutlines (#EF4444)...");
-      } else if (currentPercent > 60 && currentPercent <= 85) {
+      } else if (currentP > 55 && currentP <= 80) {
         setProgressStage("Synthesizing LightBurn/DXF layers & kerf offset...");
-      } else if (currentPercent > 85) {
+      } else if (currentP > 80) {
         setProgressStage("Finalizing vector smoothing & CAM export...");
       }
-    }, 280);
+    }, 220);
 
     try {
       const res = await fetch("/api/generate-svg", {
@@ -237,33 +203,14 @@ export default function LaserAiSection() {
       setProgressPercent(100);
       setProgressStage("Vector CAD Synthesis Complete! ✓");
 
-      await new Promise((r) => setTimeout(r, 400));
+      await new Promise((r) => setTimeout(r, 450));
 
-      // Append assistant message with generated SVG
-      const aiResultMsg = {
-        id: `ai-${Date.now()}`,
-        sender: "assistant",
-        text: `⚡ Clean vector synthesized for: "${p}"`,
-        svg: data.svg,
-        prompt: p,
-        mode: m,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      };
-
-      setMessages((prev) => [...prev, aiResultMsg]);
+      // Update current displayed SVG
+      setCurrentSvg(data.svg);
+      setCurrentPromptTitle(p);
     } catch (err) {
       console.error("[LaserAiSection] Generate error:", err);
       setGenError(err.message || "Error generating vector file.");
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `ai-err-${Date.now()}`,
-          sender: "assistant",
-          text: `⚠️ Generation failed: ${err.message || "Please try another prompt."}`,
-          isError: true,
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        },
-      ]);
     } finally {
       if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
       setIsGenerating(false);
@@ -272,17 +219,12 @@ export default function LaserAiSection() {
     }
   };
 
-  const handleAuthSubmit = async (e) => {
-    e?.preventDefault();
+  const handleEmailAuth = async (e) => {
+    e.preventDefault();
     if (!authEmail || !authPassword) {
-      setAuthError("Please enter your email and password.");
+      setAuthError("Please enter both email and password.");
       return;
     }
-    if (authPassword.length < 6) {
-      setAuthError("Password must be at least 6 characters.");
-      return;
-    }
-
     setAuthLoading(true);
     setAuthError(null);
 
@@ -291,11 +233,6 @@ export default function LaserAiSection() {
         const { data, error } = await supabase.auth.signUp({
           email: authEmail.trim(),
           password: authPassword,
-          options: {
-            data: {
-              source: "laserai_prompt_chat_v2",
-            },
-          },
         });
 
         if (error) {
@@ -308,12 +245,7 @@ export default function LaserAiSection() {
           throw error;
         }
 
-        // Grant instant unlock
         setIsUnlocked(true);
-        try {
-          localStorage.setItem("0machine_user_unlocked", "true");
-          localStorage.setItem("0machine_user_email", authEmail.trim());
-        } catch (e) {}
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: authEmail.trim(),
@@ -321,12 +253,7 @@ export default function LaserAiSection() {
         });
 
         if (error) throw error;
-
         setIsUnlocked(true);
-        try {
-          localStorage.setItem("0machine_user_unlocked", "true");
-          localStorage.setItem("0machine_user_email", authEmail.trim());
-        } catch (e) {}
       }
     } catch (err) {
       console.error("[LaserAiSection] Auth error:", err);
@@ -336,14 +263,14 @@ export default function LaserAiSection() {
     }
   };
 
-  const handleGoogleSignIn = async (pendingSvg = null, pendingPrompt = "") => {
+  const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     setAuthError(null);
 
-    if (typeof window !== "undefined" && pendingSvg) {
+    if (typeof window !== "undefined" && currentSvg) {
       try {
-        sessionStorage.setItem("0machine_pending_laser_svg", pendingSvg);
-        sessionStorage.setItem("0machine_pending_laser_prompt", pendingPrompt || "");
+        sessionStorage.setItem("0machine_pending_laser_svg", currentSvg);
+        sessionStorage.setItem("0machine_pending_laser_prompt", currentPromptTitle || "");
       } catch (e) {}
     }
 
@@ -393,510 +320,438 @@ export default function LaserAiSection() {
   };
 
   return (
-    <section id="laser-ai" className="relative py-24 sm:py-32 bg-[#111317] text-gray-200 overflow-hidden">
-      {/* Background neon ambient gradients */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-[#FE7733]/10 rounded-full blur-[160px] pointer-events-none -z-10" />
+    <section id="laser-ai" className="relative py-20 sm:py-28 bg-[#0D0E11] text-gray-200 overflow-hidden">
+      {/* Background ambient lighting */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-[#FE7733]/10 rounded-full blur-[160px] pointer-events-none -z-10" />
       <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#B1FA63]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 text-[#B1FA63] text-xs font-extrabold uppercase tracking-[0.2em] mb-4">
+        <div className="text-center max-w-2xl mx-auto mb-8">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 text-[#B1FA63] text-xs font-bold uppercase tracking-widest mb-3">
             <Cpu size={14} />
             <span>0MACHINE LASERAI ENGINE V2.0</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-bold font-[Outfit] text-white tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl font-extrabold font-[Outfit] text-white tracking-tight mb-3">
             LaserAI Prompt Chat <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FE7733] via-[#FF8F50] to-[#B1FA63]">
               Text to Clean Laser Cut Vector
             </span>
           </h2>
 
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-            Type any prompt below. Watch the CAD engine charge in real-time and synthesize closed cut contours ready for LightBurn and laser cutters.
+          <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
+            Enter your design idea in any language (Darija, French, English). Watch the CAD engine charge live from 0% to 100% and synthesize production-ready vector contours.
           </p>
         </div>
 
-        {/* ============================================================== */}
-        {/* STANDALONE LASERAI PROMPT CHAT V2.0 CONTAINER                 */}
-        {/* ============================================================== */}
-        <div className="bg-[#1A1D21] border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
-          {/* Chat Top Bar */}
-          <div className="p-4 sm:p-5 border-b border-white/10 bg-[#16181D] flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/20">
-                <Sparkles size={20} />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm sm:text-base font-bold text-white font-[Outfit]">LaserAI Prompt Chat</span>
-                  <span className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded-md bg-[#B1FA63]/15 text-[#B1FA63] border border-[#B1FA63]/30">
-                    v2.0
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-                  <span>0machine Cloud Active · 2.0s Average Synthesize</span>
-                </div>
-              </div>
+        {/* ========================================================================= */}
+        {/* STANDALONE DEDICATED LASERAI PROMPT CHAT V2.0 CONTAINER ("bohdha")         */}
+        {/* MATCHING EXACT USER REFERENCE SCREENSHOT (100% PIXEL PERFECT ALIGNMENT)  */}
+        {/* ========================================================================= */}
+        <div className="bg-[#18181B] border border-white/10 rounded-3xl shadow-2xl overflow-hidden p-6 sm:p-8 space-y-5">
+          {/* Top Label & Quick Toggle for Lock/Unlock Testing */}
+          <div className="flex items-center justify-between">
+            <div className="text-xs sm:text-sm font-normal text-gray-300">
+              Start with a shape, a theme, or a full brief.
             </div>
 
-            {isUnlocked ? (
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#10B981]/15 border border-[#10B981]/30 text-[#10B981] text-xs font-bold">
-                <Unlock size={13} />
-                <span>Unlocked ✓</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FE7733]/15 border border-[#FE7733]/30 text-[#FE7733] text-xs font-bold">
-                <Lock size={13} />
-                <span>Sign Up to Unlock</span>
-              </div>
-            )}
+            {/* Quick Interactive Test Toggle */}
+            <button
+              onClick={() => setIsUnlocked(!isUnlocked)}
+              title="Click to toggle lock state for testing"
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                isUnlocked
+                  ? "bg-[#10B981]/15 border border-[#10B981]/30 text-[#10B981] hover:bg-[#10B981]/25"
+                  : "bg-[#FE7733]/15 border border-[#FE7733]/30 text-[#FE7733] hover:bg-[#FE7733]/25"
+              }`}
+            >
+              {isUnlocked ? (
+                <>
+                  <Unlock size={13} />
+                  <span>Unlocked ✓</span>
+                </>
+              ) : (
+                <>
+                  <Lock size={13} />
+                  <span>Locked (Sign Up)</span>
+                </>
+              )}
+            </button>
           </div>
 
-          {/* Chat Messages Stream */}
-          <div
-            ref={chatContainerRef}
-            className="p-5 sm:p-7 space-y-6 max-h-[520px] overflow-y-auto scrollbar-thin bg-gradient-to-b from-[#1A1D21] to-[#14161A]"
-          >
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}
-              >
-                {/* User Message Bubble */}
-                {msg.sender === "user" && (
-                  <div className="max-w-[85%] rounded-2xl rounded-tr-none p-4 bg-gradient-to-r from-[#FE7733] to-[#FF8F50] text-white shadow-lg shadow-[#FE7733]/20 text-xs sm:text-sm font-medium space-y-1.5">
-                    {msg.mode && (
-                      <div className="text-[10px] font-mono font-extrabold uppercase tracking-wider text-white/80">
-                        Mode: {msg.mode}
-                      </div>
-                    )}
-                    <p>{msg.text}</p>
-                    <div className="text-right text-[10px] text-white/70">{msg.timestamp}</div>
-                  </div>
-                )}
-
-                {/* Assistant Message Bubble */}
-                {msg.sender === "assistant" && (
-                  <div className="max-w-[95%] sm:max-w-[90%] rounded-2xl rounded-tl-none p-4 sm:p-5 bg-[#16181D] border border-white/10 text-gray-200 text-xs sm:text-sm space-y-4 shadow-xl">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-xs font-bold text-[#B1FA63]">
-                        <Cpu size={14} />
-                        <span>0machine LaserAI Assistant</span>
-                      </div>
-                      <span className="text-[10px] text-gray-500">{msg.timestamp}</span>
-                    </div>
-
-                    <p className="leading-relaxed text-gray-300">{msg.text}</p>
-
-                    {/* Rendered SVG Result (if message has SVG) */}
-                    {msg.svg && (
-                      <div className="space-y-4 pt-2">
-                        {/* Vector Viewport Canvas */}
-                        <div className="relative rounded-2xl overflow-hidden border border-[#CBB28D] bg-gradient-to-br from-[#F6EEDC] via-[#ECE1C8] to-[#E2D2B5] min-h-[320px] sm:min-h-[380px] flex items-center justify-center p-6 shadow-2xl">
-                          {/* CAD Grid */}
-                          <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
-
-                          {/* Floating Layer Badges */}
-                          <div className="absolute top-3 right-3 bg-black/85 backdrop-blur-md px-3 py-2 rounded-xl border border-white/10 text-[10px] space-y-1 shadow-lg z-20">
-                            <div className="flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
-                              <span className="text-gray-200 font-mono">Layer 00: CUT (Hairline)</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="w-2 h-2 rounded-full bg-[#1A1108]" />
-                              <span className="text-gray-200 font-mono">Layer 01: ENGRAVE (Burnt Wood)</span>
-                            </div>
-                          </div>
-
-                          {/* SVG Canvas with conditional blur ("flow hta ytsejel") */}
-                          <div
-                            id="laser-svg-canvas"
-                            style={{
-                              filter: !isUnlocked ? "blur(14px) brightness(0.95)" : "none",
-                              pointerEvents: !isUnlocked ? "none" : "auto",
-                              userSelect: !isUnlocked ? "none" : "auto",
-                              transition: "filter 0.5s ease-in-out",
-                            }}
-                            className="w-full h-full max-h-[340px] flex items-center justify-center relative z-10 [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto [&_.engrave]:fill-[#1A1108] [&_.cut]:stroke-[#EF4444] drop-shadow-[0_4px_12px_rgba(40,25,12,0.35)]"
-                            dangerouslySetInnerHTML={{ __html: msg.svg }}
-                          />
-
-                          {/* ==================================================== */}
-                          {/* OVERLAY SIGN UP TO UNLOCK CARD ("moraha yban liih")   */}
-                          {/* ==================================================== */}
-                          {!isUnlocked && (
-                            <div
-                              id="laser-unlock-card"
-                              className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-black/45 backdrop-blur-[2px]"
-                            >
-                              <motion.div
-                                initial={{ scale: 0.93, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.3 }}
-                                className="w-full max-w-sm bg-[#16181D]/95 backdrop-blur-2xl border border-[#FE7733]/40 rounded-3xl p-5 sm:p-6 shadow-2xl text-center space-y-3.5"
-                              >
-                                <div className="w-11 h-11 mx-auto rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/30">
-                                  <Lock size={22} />
-                                </div>
-
-                                <div>
-                                  <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/20">
-                                    ⚡ Vector CAD Ready
-                                  </span>
-                                  <h3 className="text-lg sm:text-xl font-bold font-[Outfit] text-white mt-1.5">
-                                    Sign Up Free to Unlock
-                                  </h3>
-                                  <p className="text-xs text-gray-300 mt-1 leading-relaxed">
-                                    Closed cutlines and engrave layers synthesized. Register free in 5 seconds to unblur and export your clean SVG.
-                                  </p>
-                                </div>
-
-                                {/* 1-Click Google OAuth */}
-                                <button
-                                  type="button"
-                                  id="google-signin-btn"
-                                  onClick={() => handleGoogleSignIn(msg.svg, msg.prompt)}
-                                  disabled={googleLoading}
-                                  className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-900 font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-50"
-                                >
-                                  {googleLoading ? (
-                                    <RefreshCw size={14} className="animate-spin text-gray-700" />
-                                  ) : (
-                                    <>
-                                      <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
-                                        <path
-                                          fill="#4285F4"
-                                          d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                                        />
-                                        <path
-                                          fill="#34A853"
-                                          d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                                        />
-                                        <path
-                                          fill="#FBBC05"
-                                          d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                                        />
-                                        <path
-                                          fill="#EA4335"
-                                          d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                                        />
-                                      </svg>
-                                      <span>Continue with Google</span>
-                                    </>
-                                  )}
-                                </button>
-
-                                {/* Divider */}
-                                <div className="flex items-center gap-2 my-1 text-[10px] text-gray-500 uppercase tracking-wider">
-                                  <div className="flex-1 h-px bg-white/10" />
-                                  <span>or with email</span>
-                                  <div className="flex-1 h-px bg-white/10" />
-                                </div>
-
-                                {/* Auth Tab Toggle */}
-                                <div className="flex p-1 bg-black/40 rounded-xl border border-white/10 text-xs">
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setAuthMode("signup");
-                                      setAuthError(null);
-                                    }}
-                                    className={`flex-1 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
-                                      authMode === "signup"
-                                        ? "bg-[#FE7733] text-white shadow"
-                                        : "text-gray-400 hover:text-white"
-                                    }`}
-                                  >
-                                    ⚡ Free Sign Up
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setAuthMode("login");
-                                      setAuthError(null);
-                                    }}
-                                    className={`flex-1 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
-                                      authMode === "login"
-                                        ? "bg-white/10 text-white"
-                                        : "text-gray-400 hover:text-white"
-                                    }`}
-                                  >
-                                    Log In
-                                  </button>
-                                </div>
-
-                                {/* Auth Form */}
-                                <form onSubmit={handleAuthSubmit} className="space-y-2.5 text-left">
-                                  <div>
-                                    <input
-                                      type="email"
-                                      required
-                                      value={authEmail}
-                                      onChange={(e) => setAuthEmail(e.target.value)}
-                                      placeholder="Your email address"
-                                      className="w-full bg-[#111317] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733]"
-                                    />
-                                  </div>
-                                  <div>
-                                    <input
-                                      type="password"
-                                      required
-                                      minLength={6}
-                                      value={authPassword}
-                                      onChange={(e) => setAuthPassword(e.target.value)}
-                                      placeholder="Password (min 6 chars)"
-                                      className="w-full bg-[#111317] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733]"
-                                    />
-                                  </div>
-
-                                  {authError && (
-                                    <div className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-1.5">
-                                      <AlertCircle size={13} className="flex-shrink-0" />
-                                      <span>{authError}</span>
-                                    </div>
-                                  )}
-
-                                  <button
-                                    type="submit"
-                                    disabled={authLoading}
-                                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs transition-all shadow-lg shadow-[#FE7733]/25 flex items-center justify-center gap-2 cursor-pointer"
-                                  >
-                                    {authLoading ? (
-                                      <RefreshCw size={14} className="animate-spin" />
-                                    ) : (
-                                      <>
-                                        <Unlock size={14} />
-                                        <span>
-                                          {authMode === "signup"
-                                            ? "⚡ Sign Up & Reveal Unblurred Vector"
-                                            : "Log In & Reveal Vector"}
-                                        </span>
-                                      </>
-                                    )}
-                                  </button>
-                                </form>
-
-                                <div className="text-[10px] text-gray-400 flex items-center justify-center gap-2 pt-0.5">
-                                  <span>✓ 100% Free</span>
-                                  <span>·</span>
-                                  <span>✓ Zero Card Needed</span>
-                                  <span>·</span>
-                                  <span>✓ LightBurn Ready</span>
-                                </div>
-                              </motion.div>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Export Action Toolbar */}
-                        <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-white/5 border border-white/10 rounded-2xl">
-                          <div className="text-xs">
-                            {isUnlocked ? (
-                              <span className="text-[#10B981] font-mono font-semibold flex items-center gap-1.5">
-                                <Check size={14} />
-                                <span>Vector Unlocked (Closed CAD Paths)</span>
-                              </span>
-                            ) : (
-                              <span className="text-[#FE7733] font-mono font-semibold flex items-center gap-1.5">
-                                <Lock size={14} />
-                                <span>Blurred Preview · Sign Up Free to Unlock</span>
-                              </span>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => handleCopySvg(msg.svg)}
-                              className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs text-white font-medium flex items-center gap-1.5 transition-all cursor-pointer"
-                            >
-                              <Code2 size={13} />
-                              <span>{copied ? "Copied SVG!" : "Copy SVG Code"}</span>
-                            </button>
-                            <button
-                              onClick={() => handleDownloadSvg(msg.svg)}
-                              className="px-4 py-1.5 rounded-xl bg-[#FE7733] hover:bg-[#E85F20] text-xs text-white font-bold flex items-center gap-1.5 transition-all shadow-md shadow-[#FE7733]/20 cursor-pointer"
-                            >
-                              <Download size={13} />
-                              <span>Download Clean SVG</span>
-                            </button>
-                            <a
-                              href="https://app.0machine.com"
-                              className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#B1FA63]/10 hover:bg-[#B1FA63]/20 border border-[#B1FA63]/25 text-[#B1FA63] text-xs font-bold transition-all"
-                            >
-                              <span>Studio CAM</span>
-                              <ExternalLink size={12} />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {/* ============================================================== */}
-            {/* CHARGING PROGRESS BAR ("SAMTA KATCHARJA")                      */}
-            {/* ============================================================== */}
-            {isGenerating && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-[95%] sm:max-w-[90%] rounded-2xl rounded-tl-none p-5 bg-[#16181D] border border-[#FE7733]/40 text-gray-200 shadow-xl space-y-3"
-              >
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2 text-[#FE7733] font-bold">
-                    <RefreshCw size={14} className="animate-spin" />
-                    <span>{progressStage || "Synthesizing vector contours..."}</span>
-                  </div>
-                  <span className="font-mono font-extrabold text-[#B1FA63] text-xs">
-                    {progressPercent}%
-                  </span>
-                </div>
-
-                {/* The Charging Bar ("Samta") */}
-                <div className="w-full bg-[#111317] h-3.5 rounded-full p-0.5 border border-white/10 overflow-hidden relative shadow-inner">
-                  <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-[#FE7733] via-[#FFA559] to-[#B1FA63] shadow-lg shadow-[#FE7733]/40 relative"
-                    style={{ width: `${progressPercent}%` }}
-                    transition={{ ease: "easeOut", duration: 0.25 }}
-                  >
-                    {/* Glowing lead edge shine */}
-                    <div className="absolute top-0 right-0 bottom-0 w-4 bg-white/40 blur-[2px] rounded-full" />
-                  </motion.div>
-                </div>
-
-                <div className="flex items-center justify-between text-[11px] text-gray-400 pt-0.5 font-mono">
-                  <span>0machine CAD Engine v2.0</span>
-                  <span>Closed Perimeter · LightBurn C00/C01</span>
-                </div>
-              </motion.div>
-            )}
-          </div>
-
-          {/* Quick Suggestion Pills ("Popular Presets") */}
-          <div className="p-3.5 sm:p-4 border-t border-white/10 bg-[#16181D]/80">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                Popular Presets (Tap to Load)
-              </span>
-              <span className="text-[10px] font-mono text-[#B1FA63] font-semibold">1-Click CAM Vector</span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {SAMPLE_PROMPTS.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleSelectSample(item)}
-                  className="text-xs px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15 text-gray-300 hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
-                >
-                  <span>{item.icon}</span>
-                  <span className="font-medium">{item.title}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Chat Input Bar */}
-          <div className="p-4 sm:p-5 border-t border-white/10 bg-[#111317] space-y-3">
-            {/* Mode selection chips */}
-            <div className="flex items-center gap-2">
-              {[
-                { id: "cut-engrave", label: "✂️ Cut + Engrave" },
-                { id: "keychain", label: "🔑 Keychain (3.5mm Hole)" },
-                { id: "stencil", label: "🌿 Bridged Stencil" },
-              ].map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => setActiveMode(m.id)}
-                  className={`text-[11px] font-semibold px-3 py-1 rounded-lg border transition-all cursor-pointer ${
-                    activeMode === m.id
-                      ? "bg-[#FE7733]/20 border-[#FE7733] text-[#FE7733]"
-                      : "bg-white/5 border-white/5 text-gray-400 hover:text-white"
-                  }`}
-                >
-                  {m.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Prompt Input Box */}
-            <div className="relative">
-              <textarea
-                id="laser-prompt-input"
-                aria-label="Laser cut design prompt"
-                value={customPrompt}
-                onChange={(e) => setCustomPrompt(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendPrompt();
-                  }
-                }}
-                rows={2}
-                placeholder="Describe your laser cut design (e.g. Wolf howling at moon keychain, geometric coaster, vintage sign)..."
-                className="w-full bg-[#1A1D21] border border-white/10 rounded-2xl p-3.5 pr-28 text-xs sm:text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#FE7733] transition-colors resize-none font-mono"
-              />
-
+          {/* 4 Reference Pills (Matching Screenshot Exactly: rounded-full pills) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            {REFERENCE_PILLS.map((pill, idx) => (
               <button
-                onClick={() => handleSendPrompt()}
-                disabled={isGenerating || !customPrompt.trim()}
-                className={`absolute right-2.5 bottom-3 px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer ${
-                  isGenerating || !customPrompt.trim()
-                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                    : "bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white shadow-lg shadow-[#FE7733]/25"
+                key={idx}
+                type="button"
+                onClick={() => handleSelectPill(pill)}
+                className="text-left text-xs px-4 py-2.5 rounded-full bg-[#111115] hover:bg-[#1C1D23] border border-white/10 hover:border-[#FFA526]/40 text-gray-300 hover:text-white transition-all cursor-pointer leading-snug truncate"
+              >
+                {pill.title}
+              </button>
+            ))}
+          </div>
+
+          {/* Horizontal Divider Line */}
+          <div className="border-t border-white/10 my-4" />
+
+          {/* Controls Row: Segmented Toggle (Left) + Style Selector (Right) */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Left: SVG cut file FREE | Image preview LIMITED */}
+            <div className="inline-flex p-1 bg-[#111216] rounded-full border border-white/10">
+              <button
+                type="button"
+                onClick={() => setFileTypeTab("svg")}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  fileTypeTab === "svg"
+                    ? "bg-[#1C1D24] text-white shadow-sm"
+                    : "text-gray-400 hover:text-gray-200"
                 }`}
               >
-                {isGenerating ? (
-                  <RefreshCw size={14} className="animate-spin" />
-                ) : (
-                  <>
-                    <Zap size={14} />
-                    <span>Generate</span>
-                  </>
-                )}
+                <span>SVG cut file</span>
+                <span className="text-[10px] font-mono text-[#FFA526] font-black uppercase">FREE</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setFileTypeTab("preview")}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  fileTypeTab === "preview"
+                    ? "bg-[#1C1D24] text-white shadow-sm"
+                    : "text-gray-400 hover:text-gray-200"
+                }`}
+              >
+                <span>Image preview</span>
+                <span className="text-[10px] font-mono text-gray-500 font-semibold uppercase">LIMITED</span>
               </button>
             </div>
 
-            {genError && (
-              <div className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
-                <AlertCircle size={14} className="flex-shrink-0" />
-                <span>{genError}</span>
+            {/* Right: Style Dropdown */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-400 font-medium">Style</span>
+              <div className="relative">
+                <select
+                  value={activeMode}
+                  onChange={(e) => setActiveMode(e.target.value)}
+                  className="appearance-none bg-[#111216] border border-white/10 text-gray-200 text-xs rounded-full pl-3.5 pr-8 py-1.5 focus:outline-none focus:border-[#FFA526] cursor-pointer"
+                >
+                  <option value="cut-engrave">Open brief (Cut + Engrave)</option>
+                  <option value="keychain">Keychain (3.5mm hole)</option>
+                  <option value="stencil">Connected Stencil (Bridge tabs)</option>
+                  <option value="layered">Multi-layer 3D Shadowbox</option>
+                </select>
+                <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
-            )}
+            </div>
+          </div>
 
-            <div className="flex items-center justify-between text-[11px] text-gray-500 pt-0.5">
-              <span>Press Enter to send · Generates closed CAD vector SVG</span>
-              <span className="text-[#B1FA63] font-mono">100% Whitelabel LaserAI</span>
-            </div>
-          </div>
-        </div>
+          {/* Input Row: Textarea (Left) + Large Golden-Orange Generate Button (Right) */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-1">
+            <textarea
+              id="laser-prompt-input"
+              aria-label="Laser cut design prompt"
+              value={customPrompt}
+              onChange={(e) => setCustomPrompt(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendPrompt();
+                }
+              }}
+              rows={2}
+              placeholder="e.g. a geometric stag head for a 30 cm wall piece"
+              className="flex-1 bg-[#0E0E12] border border-white/10 rounded-2xl p-4 text-xs sm:text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-[#FFA526] transition-colors resize-none font-mono"
+            />
 
-        {/* Value Badges Below Prompt Chat */}
-        <div className="grid sm:grid-cols-3 gap-4 mt-8 text-xs">
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-            <ShieldCheck size={18} className="text-[#10B981] flex-shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold text-white block">Kerf Compensated</span>
-              <span className="text-gray-400 text-[11px]">Strict friction-fit outer offsets</span>
-            </div>
+            <button
+              onClick={() => handleSendPrompt()}
+              disabled={isGenerating || !customPrompt.trim()}
+              className={`sm:w-36 px-6 py-4 rounded-2xl text-sm font-bold tracking-wide transition-all cursor-pointer shadow-lg flex items-center justify-center ${
+                isGenerating || !customPrompt.trim()
+                  ? "bg-[#333] text-gray-500 cursor-not-allowed opacity-60"
+                  : "bg-[#FDB237] hover:bg-[#FFA526] text-black shadow-[#FDB237]/25 active:scale-95"
+              }`}
+            >
+              {isGenerating ? (
+                <span className="flex items-center gap-1.5">
+                  <RefreshCw size={15} className="animate-spin text-black" />
+                  <span>Synthesizing</span>
+                </span>
+              ) : (
+                <span>Generate</span>
+              )}
+            </button>
           </div>
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-            <ShieldCheck size={18} className="text-[#10B981] flex-shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold text-white block">Connected Stencils</span>
-              <span className="text-gray-400 text-[11px]">Auto-bridges enclosed interior loops</span>
-            </div>
+
+          {/* Footer Warning Note */}
+          <div className="text-[11px] text-gray-400 font-normal">
+            First drafts, not finished cut files — check kerf, bridges and joints before cutting.
           </div>
-          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-start gap-3">
-            <ShieldCheck size={18} className="text-[#10B981] flex-shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold text-white block">1-Click CAM Ready</span>
-              <span className="text-gray-400 text-[11px]">Export direct to LightBurn & xTool</span>
+
+          {genError && (
+            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+              <AlertCircle size={15} className="flex-shrink-0" />
+              <span>{genError}</span>
             </div>
-          </div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* ANIMATED CHARGING PROGRESS BAR ("Samta katcharja")                         */}
+          {/* 0% to 100% with Live CAD Synthesis Stages                                  */}
+          {/* ========================================================================= */}
+          {isGenerating && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full rounded-2xl p-4 sm:p-5 bg-[#121316] border border-[#FE7733]/30 space-y-3 shadow-xl"
+            >
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-[#FE7733] font-bold">
+                  <RefreshCw size={14} className="animate-spin" />
+                  <span>{progressStage || "Synthesizing vector contours..."}</span>
+                </div>
+                <span className="font-mono font-extrabold text-[#B1FA63] text-xs">
+                  {progressPercent}%
+                </span>
+              </div>
+
+              {/* The Live Charging Bar ("Samta") */}
+              <div className="w-full bg-[#0E0E12] h-3.5 rounded-full p-0.5 border border-white/10 overflow-hidden relative shadow-inner">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-[#FE7733] via-[#FFA559] to-[#B1FA63] shadow-lg shadow-[#FE7733]/40 relative"
+                  style={{ width: `${progressPercent}%` }}
+                  transition={{ ease: "easeOut", duration: 0.25 }}
+                >
+                  <div className="absolute top-0 right-0 bottom-0 w-4 bg-white/40 blur-[2px] rounded-full" />
+                </motion.div>
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-gray-400 pt-0.5 font-mono">
+                <span>0Machine CAD Engine v2.0</span>
+                <span>Closed Perimeter · LightBurn C00/C01</span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* ========================================================================= */}
+          {/* VECTOR RESULT VIEWPORT (BLURRED "FLOW" + SIGN UP TO UNLOCK CARD OVERLAY) */}
+          {/* ========================================================================= */}
+          {currentSvg && (
+            <div className="space-y-3 pt-2">
+              <div className="relative rounded-2xl overflow-hidden border border-[#CBB28D] bg-gradient-to-br from-[#F6EEDC] via-[#ECE1C8] to-[#E2D2B5] min-h-[340px] sm:min-h-[380px] flex items-center justify-center p-6 shadow-2xl">
+                {/* CAD Grid Backdrop */}
+                <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
+
+                {/* Floating LightBurn Layer Badges */}
+                <div className="absolute top-3 right-3 bg-black/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] space-y-0.5 shadow-lg z-20">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
+                    <span className="text-gray-200 font-mono">Layer 00: CUT (Hairline)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#1A1108]" />
+                    <span className="text-gray-200 font-mono">Layer 01: ENGRAVE (Burnt Wood)</span>
+                  </div>
+                </div>
+
+                {/* SVG Canvas with conditional blur ("flow hta ytsejel") */}
+                <div
+                  id="laser-svg-canvas"
+                  style={{
+                    filter: !isUnlocked ? "blur(14px) brightness(0.95)" : "none",
+                    pointerEvents: !isUnlocked ? "none" : "auto",
+                    userSelect: !isUnlocked ? "none" : "auto",
+                    transition: "filter 0.5s ease-in-out",
+                  }}
+                  className="w-full h-full max-h-[320px] flex items-center justify-center relative z-10 [&>svg]:max-w-full [&>svg]:max-h-full [&>svg]:w-auto [&>svg]:h-auto [&_.engrave]:fill-[#1A1108] [&_.cut]:stroke-[#EF4444] drop-shadow-[0_4px_12px_rgba(40,25,12,0.35)]"
+                  dangerouslySetInnerHTML={{ __html: currentSvg }}
+                />
+
+                {/* =================================================================== */}
+                {/* OVERLAY SIGN UP TO UNLOCK CARD ("moraha yban liih direct")          */}
+                {/* =================================================================== */}
+                {!isUnlocked && (
+                  <div
+                    id="laser-unlock-card"
+                    className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-black/50 backdrop-blur-[2px]"
+                  >
+                    <motion.div
+                      initial={{ scale: 0.94, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="w-full max-w-sm bg-[#16181D]/95 backdrop-blur-2xl border border-[#FE7733]/40 rounded-3xl p-5 shadow-2xl text-center space-y-3"
+                    >
+                      <div className="w-10 h-10 mx-auto rounded-2xl bg-gradient-to-br from-[#FE7733] to-[#FF8F50] flex items-center justify-center text-white shadow-lg shadow-[#FE7733]/30">
+                        <Lock size={20} />
+                      </div>
+
+                      <div>
+                        <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/20">
+                          ⚡ Vector CAD Ready
+                        </span>
+                        <h3 className="text-lg font-bold font-[Outfit] text-white mt-1">
+                          Sign Up Free to Unlock
+                        </h3>
+                        <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                          Closed cutlines synthesized. Register free in 5 seconds to unblur and export clean SVG vector.
+                        </p>
+                      </div>
+
+                      {/* 1-Click Google OAuth */}
+                      <button
+                        type="button"
+                        id="google-signin-btn"
+                        onClick={() => handleGoogleSignIn()}
+                        disabled={googleLoading}
+                        className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-gray-900 font-bold text-xs transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                      >
+                        {googleLoading ? (
+                          <RefreshCw size={14} className="animate-spin text-gray-700" />
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+                              <path
+                                fill="#4285F4"
+                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                              />
+                              <path
+                                fill="#34A853"
+                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                              />
+                              <path
+                                fill="#FBBC05"
+                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                              />
+                              <path
+                                fill="#EA4335"
+                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                              />
+                            </svg>
+                            <span>Continue with Google</span>
+                          </>
+                        )}
+                      </button>
+
+                      {/* Divider */}
+                      <div className="flex items-center gap-2 my-1 text-[10px] text-gray-500 uppercase tracking-wider">
+                        <div className="flex-1 h-px bg-white/10" />
+                        <span>or with email</span>
+                        <div className="flex-1 h-px bg-white/10" />
+                      </div>
+
+                      {/* Auth Tab Toggle */}
+                      <div className="flex p-0.5 bg-black/40 rounded-xl border border-white/10 text-xs">
+                        <button
+                          type="button"
+                          onClick={() => setAuthMode("signup")}
+                          className={`flex-1 py-1 rounded-lg font-bold text-xs transition-all ${
+                            authMode === "signup" ? "bg-[#FE7733] text-white shadow" : "text-gray-400 hover:text-white"
+                          }`}
+                        >
+                          Sign Up Free
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAuthMode("login")}
+                          className={`flex-1 py-1 rounded-lg font-bold text-xs transition-all ${
+                            authMode === "login" ? "bg-[#FE7733] text-white shadow" : "text-gray-400 hover:text-white"
+                          }`}
+                        >
+                          Log In
+                        </button>
+                      </div>
+
+                      <form onSubmit={handleEmailAuth} className="space-y-2 pt-1 text-left">
+                        <input
+                          type="email"
+                          required
+                          value={authEmail}
+                          onChange={(e) => setAuthEmail(e.target.value)}
+                          placeholder="Enter your email..."
+                          className="w-full bg-[#1A1D21] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733]"
+                        />
+                        <input
+                          type="password"
+                          required
+                          value={authPassword}
+                          onChange={(e) => setAuthPassword(e.target.value)}
+                          placeholder="Password..."
+                          className="w-full bg-[#1A1D21] border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FE7733]"
+                        />
+
+                        {authError && (
+                          <p className="text-[11px] text-red-400 leading-tight">{authError}</p>
+                        )}
+
+                        <button
+                          type="submit"
+                          disabled={authLoading}
+                          className="w-full py-2 rounded-xl bg-gradient-to-r from-[#FE7733] to-[#FF8F50] hover:brightness-110 text-white font-extrabold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                        >
+                          {authLoading ? (
+                            <RefreshCw size={13} className="animate-spin" />
+                          ) : (
+                            <span>{authMode === "signup" ? "Create Free Account & Unlock" : "Log In & Unlock"}</span>
+                          )}
+                        </button>
+                      </form>
+
+                      {/* Instant Demo Unlock Pill */}
+                      <div className="pt-1">
+                        <button
+                          type="button"
+                          onClick={() => setIsUnlocked(true)}
+                          className="text-[11px] text-gray-400 hover:text-[#B1FA63] underline cursor-pointer transition-colors"
+                        >
+                          ⚡ Instant Unlock (Demo Test)
+                        </button>
+                      </div>
+                    </motion.div>
+                  </div>
+                )}
+              </div>
+
+              {/* Unlocked Vector Controls: Download SVG & Copy Code */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleDownloadSvg(currentSvg)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      isUnlocked
+                        ? "bg-[#FE7733] hover:bg-[#E85F20] text-white shadow-lg shadow-[#FE7733]/20"
+                        : "bg-white/5 text-gray-500 hover:text-gray-300 border border-white/5"
+                    }`}
+                  >
+                    <Download size={14} />
+                    <span>Download SVG (Free)</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleCopySvg(currentSvg)}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      isUnlocked
+                        ? "bg-white/10 hover:bg-white/15 text-gray-200 border border-white/10"
+                        : "bg-white/5 text-gray-500 hover:text-gray-300 border border-white/5"
+                    }`}
+                  >
+                    {copied ? <Check size={14} className="text-[#10B981]" /> : <Code2 size={14} />}
+                    <span>{copied ? "Copied!" : "Copy Code"}</span>
+                  </button>
+                </div>
+
+                <a
+                  href="https://app.0machine.com/laser-ai"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-[#B1FA63] hover:underline flex items-center gap-1 font-semibold"
+                >
+                  <span>Open in Studio</span>
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
