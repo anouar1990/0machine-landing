@@ -8,7 +8,14 @@ import dynamic from "next/dynamic";
 import { trackPageView } from "./lib/analytics";
 
 const DesignsVault = dynamic(() => import("./components/DesignsVault"), { ssr: true });
-const LaserAiSection = dynamic(() => import("./components/LaserAiSection"), { ssr: true });
+const LaserAiSection = dynamic(() => import("./components/LaserAiSection"), {
+  ssr: false,
+  loading: () => (
+    <div className="py-20 bg-[#0D0E11] flex items-center justify-center min-h-[300px]">
+      <div className="w-8 h-8 rounded-full border-2 border-[#FE7733] border-t-transparent animate-spin" />
+    </div>
+  ),
+});
 const Benefits = dynamic(() => import("./components/Benefits"), { ssr: true });
 const FeatureShowcase = dynamic(() => import("./components/FeatureShowcase"), { ssr: true });
 const RoiCalculator = dynamic(() => import("./components/RoiCalculator"), { ssr: true });

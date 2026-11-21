@@ -336,7 +336,7 @@ export default function LaserAiSection() {
   };
 
   return (
-    <section id="laser-ai" className="relative py-20 sm:py-28 bg-[#0D0E11] text-gray-200 overflow-hidden">
+    <section id="laser-ai" suppressHydrationWarning className="relative py-20 sm:py-28 bg-[#0D0E11] text-gray-200 overflow-hidden">
       {/* Background ambient lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-[#FE7733]/10 rounded-full blur-[160px] pointer-events-none -z-10" />
       <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#B1FA63]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
