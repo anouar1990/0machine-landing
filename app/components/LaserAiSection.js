@@ -5,14 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
   Cpu,
-  Download,
-  Code2,
   RefreshCw,
   Check,
   AlertCircle,
   Lock,
   Unlock,
-  ExternalLink,
   ChevronDown,
   X
 } from "lucide-react";
@@ -82,7 +79,6 @@ export default function LaserAiSection() {
   const [progressPercent, setProgressPercent] = useState(0);
   const [progressStage, setProgressStage] = useState("");
   const [genError, setGenError] = useState(null);
-  const [copied, setCopied] = useState(false);
 
   // Current SVG design displayed in the viewport (initialized with default so blur & unlock are immediately visible)
   const [currentSvg, setCurrentSvg] = useState(DEFAULT_PREVIEW_SVG);
@@ -307,34 +303,6 @@ export default function LaserAiSection() {
     }
   };
 
-  const handleDownloadSvg = (svgContent) => {
-    if (!isUnlocked) {
-      setShowAuthModal(true);
-      return;
-    }
-    if (!svgContent) return;
-    const blob = new Blob([svgContent], { type: "image/svg+xml;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `0machine-laser-${Date.now()}.svg`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
-  const handleCopySvg = (svgContent) => {
-    if (!isUnlocked) {
-      setShowAuthModal(true);
-      return;
-    }
-    if (!svgContent) return;
-    navigator.clipboard.writeText(svgContent);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <section id="laser-ai" suppressHydrationWarning className="relative py-20 sm:py-28 bg-[#0D0E11] text-gray-200 overflow-hidden">
       {/* Background ambient lighting */}
@@ -504,11 +472,6 @@ export default function LaserAiSection() {
             </button>
           </div>
 
-          {/* Footer Warning Note */}
-          <div className="text-[11px] text-gray-400 font-normal">
-            First drafts, not finished cut files — check kerf, bridges and joints before cutting.
-          </div>
-
           {genError && (
             <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
               <AlertCircle size={15} className="flex-shrink-0" />
@@ -558,22 +521,10 @@ export default function LaserAiSection() {
           {/* VECTOR RESULT VIEWPORT (BLURRED "FLOW" + UNLOCK TEASER BUTTON)            */}
           {/* ========================================================================= */}
           {currentSvg && (
-            <div className="space-y-3 pt-2">
+            <div className="pt-2">
               <div className="relative rounded-2xl overflow-hidden border border-[#CBB28D] bg-gradient-to-br from-[#F6EEDC] via-[#ECE1C8] to-[#E2D2B5] min-h-[340px] sm:min-h-[380px] flex items-center justify-center p-6 shadow-2xl">
                 {/* CAD Grid Backdrop */}
                 <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
-
-                {/* Floating LightBurn Layer Badges */}
-                <div className="absolute top-3 right-3 bg-black/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-[10px] space-y-0.5 shadow-lg z-20">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#EF4444]" />
-                    <span className="text-gray-200 font-mono">Layer 00: CUT (Hairline)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#1A1108]" />
-                    <span className="text-gray-200 font-mono">Layer 01: ENGRAVE (Burnt Wood)</span>
-                  </div>
-                </div>
 
                 {/* SVG Canvas with conditional blur ("flow hta ytsejel") */}
                 <div
@@ -643,45 +594,6 @@ export default function LaserAiSection() {
                     </motion.div>
                   </div>
                 )}
-              </div>
-
-              {/* Unlocked Vector Controls: Download SVG & Copy Code */}
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleDownloadSvg(currentSvg)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                      isUnlocked
-                        ? "bg-[#FE7733] hover:bg-[#E85F20] text-white shadow-lg shadow-[#FE7733]/20"
-                        : "bg-white/5 text-gray-400 hover:text-white border border-white/10"
-                    }`}
-                  >
-                    <Download size={14} />
-                    <span>Download SVG (Free)</span>
-                  </button>
-
-                  <button
-                    onClick={() => handleCopySvg(currentSvg)}
-                    className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
-                      isUnlocked
-                        ? "bg-white/10 hover:bg-white/15 text-gray-200 border border-white/10"
-                        : "bg-white/5 text-gray-400 hover:text-white border border-white/10"
-                    }`}
-                  >
-                    {copied ? <Check size={14} className="text-[#10B981]" /> : <Code2 size={14} />}
-                    <span>{copied ? "Copied!" : "Copy Code"}</span>
-                  </button>
-                </div>
-
-                <a
-                  href="https://app.0machine.com/laser-ai"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs text-[#B1FA63] hover:underline flex items-center gap-1 font-semibold"
-                >
-                  <span>Open in Studio</span>
-                  <ExternalLink size={12} />
-                </a>
               </div>
             </div>
           )}
