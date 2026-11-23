@@ -116,22 +116,22 @@ export default function Hero() {
         <div className="inline-flex items-center gap-2 px-4 py-1.5 sm:py-2 rounded-full border border-[#42433d] bg-[#141513] backdrop-blur-md mb-6 sm:mb-8 shadow-lg shadow-black/40 max-w-full">
           <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse flex-shrink-0" />
           <span className="text-[11px] sm:text-xs text-[#abff84] font-mono font-semibold tracking-wider uppercase truncate sm:whitespace-normal">
-            300,000+ DESIGNS · CREATIVE ATELIER
+            0MACHINE // CREATIVE ATELIER OS
           </span>
         </div>
 
-        {/* Editorial Headline (GSAP Warm Cream + Tight Tracking) */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black font-[Outfit] leading-[0.96] sm:leading-[0.92] tracking-[-0.04em] mb-6 max-w-6xl mx-auto text-[#fffce1]">
-          300,000+ DESIGNS.
-          <br className="hidden sm:inline" />{" "}
+        {/* Editorial Headline (GSAP Warm Cream + Precision Typography) */}
+        <h1 className="text-[28px] xs:text-[32px] sm:text-5xl md:text-7xl lg:text-8xl font-bold font-[Outfit] leading-[1.08] sm:leading-[0.98] tracking-[-0.03em] mb-6 max-w-5xl mx-auto text-[#fffce1] px-2 sm:px-0">
+          Design. Nest. Cut.
+          <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
-            ONE CREATIVE ATELIER.
+            At Studio Precision.
           </span>
         </h1>
 
         {/* Subheadline (GSAP Muted Stone #7c7c6f) */}
-        <p className="text-base sm:text-lg lg:text-xl text-[#7c7c6f] max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed font-normal px-2 sm:px-0">
-          Discover an extensive collection of laser-ready SVG, DXF, CDR, EPS and creative files for laser cutting, CNC and crafting projects — powered by LaserAI CAD engine and True-Shape nesting.
+        <p className="text-sm sm:text-lg lg:text-xl text-[#7c7c6f] max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed font-normal px-4 sm:px-0">
+          Transform text briefs into kerf-compensated vector CAD, maximize sheet yield with automated nesting, and access a curated 300,000+ commercial cut library.
         </p>
 
         {/* Feature Tags (GSAP Hairline Pill Badges) */}
