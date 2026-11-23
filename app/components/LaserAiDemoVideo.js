@@ -172,10 +172,10 @@ export default function LaserAiDemoVideo({
 
             <div className="flex justify-center gap-2 text-[11px] text-gray-400">
               <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 font-bold text-[#B1FA63]">
-                ✓ Keychain Mode (Hole Tab)
+                Keychain Mode (Hole Tab)
               </span>
               <span className="px-2.5 py-1 rounded bg-white/5 border border-white/10 text-gray-300">
-                ⚡ Auto Kerf 0.15mm
+                Auto Kerf 0.15mm
               </span>
             </div>
           </motion.div>
@@ -265,7 +265,7 @@ export default function LaserAiDemoVideo({
                 <span className="font-bold">ENGRAVE_01: Black</span>
               </div>
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-[#10B981]/20 border border-[#10B981]/40 rounded-full px-3 py-0.5 text-[10px] text-[#10B981] font-bold font-mono">
-                ✓ 100% Closed Contours &amp; Kerf Ready
+                100% Closed Contours &amp; Kerf Ready
               </div>
             </div>
           </motion.div>

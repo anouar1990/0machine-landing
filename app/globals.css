@@ -138,90 +138,67 @@ body {
   min-height: 100vh;
 }
 
-/* Animated gradient mesh background */
+/* Subtle atelier background */
 .gradient-mesh {
-  background: 
-    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(254, 119, 51, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(177, 250, 99, 0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 60% at 50% 80%, rgba(254, 119, 51, 0.04) 0%, transparent 70%);
+  background: transparent;
 }
 
 /* Glassmorphism card */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #141513;
+  border: 1px solid #42433d;
   border-radius: 20px;
 }
 
 .glass-card-hover {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #141513;
+  border: 1px solid #42433d;
   border-radius: 20px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card-hover:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(254, 119, 51, 0.2);
-  box-shadow: 0 0 40px rgba(254, 119, 51, 0.08);
-  transform: translateY(-4px);
+  background: #191919;
+  border-color: #7c7c6f;
+  transform: translateY(-2px);
 }
 
-/* Glowing CTA Button */
+/* Clean CTA Button */
 .glow-btn {
   position: relative;
-  background: linear-gradient(135deg, #FE7733, #E85F20);
-  color: white;
-  font-weight: 600;
-  padding: 14px 32px;
-  border-radius: 14px;
-  border: none;
+  background: #fffce1;
+  color: #0e100f;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  border: 1px solid #fffce1;
   cursor: pointer;
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.glow-btn::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  background: linear-gradient(135deg, #FE7733, #FF925C, #FE7733);
-  border-radius: 16px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glow-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(254, 119, 51, 0.4);
-}
-
-.glow-btn:hover::before {
-  opacity: 1;
+  background: #abff84;
+  border-color: #abff84;
+  color: #0e100f;
+  transform: translateY(-1px);
 }
 
 .glow-btn-outline {
   position: relative;
-  background: transparent;
-  color: #e5e7eb;
+  background: #141513;
+  color: #fffce1;
   font-weight: 600;
-  padding: 14px 32px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px 28px;
+  border-radius: 9999px;
+  border: 1px solid #42433d;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glow-btn-outline:hover {
-  border-color: rgba(254, 119, 51, 0.5);
-  background: rgba(254, 119, 51, 0.08);
-  transform: translateY(-2px);
+  border-color: #abff84;
+  color: #fffce1;
+  transform: translateY(-1px);
 }
 
 /* Floating animation */
@@ -340,15 +317,7 @@ body {
 /* Pricing card highlight */
 .pricing-highlight {
   position: relative;
-}
-
-.pricing-highlight::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  background: linear-gradient(135deg, #FE7733, #FF925C, #FE7733);
-  border-radius: 21px;
-  z-index: -1;
+  border-color: #abff84 !important;
 }
 
 /* Animated border */

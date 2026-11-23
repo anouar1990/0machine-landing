@@ -88,9 +88,8 @@ export default function SocialProof() {
   ];
 
   return (
-    <section ref={ref} className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 gradient-mesh opacity-40" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-500/20 to-transparent" />
+    <section ref={ref} className="relative py-32 overflow-hidden bg-[#0e100f] border-t border-[#42433d]/40">
+      <div className="absolute inset-0 grid-pattern opacity-15 pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Stats Row */}

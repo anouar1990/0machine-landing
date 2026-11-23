@@ -11,9 +11,6 @@ export default function StudioApertureViewport({
 }) {
   return (
     <div className="relative w-full max-w-5xl mx-auto">
-      {/* Ambient Glow behind Studio Viewport (GSAP Electric Lime + Laser Orange) */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0ae448]/15 via-transparent to-[#ff8709]/15 rounded-[36px] blur-[60px] -z-10 scale-95" />
-
       {/* Main Studio Aperture Container */}
       <div className="relative rounded-[28px] sm:rounded-[36px] overflow-hidden border border-[#42433d] shadow-2xl shadow-black/90 bg-[#0e100f] select-none">
         {/* Aspect Ratio Box that scales smoothly on all viewports */}

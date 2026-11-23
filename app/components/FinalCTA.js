@@ -24,11 +24,7 @@ export default function FinalCTA() {
 
   return (
     <section ref={ref} className="relative py-32 overflow-hidden bg-[#0e100f] border-t border-[#42433d]/40">
-      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
-
-      {/* Large glow orbs */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#0ae448]/8 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-[#ff8709]/8 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute inset-0 grid-pattern opacity-15 pointer-events-none -z-10" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
         <motion.div

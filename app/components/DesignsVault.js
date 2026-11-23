@@ -163,7 +163,7 @@ const DESIGN_PACKS = [
 
 const CATEGORY_ITEMS = [
   { id: "all", key: "vault.cats.all", label: "All Packs" },
-  { id: "bestsellers", key: "vault.cats.bestsellers", label: "🔥 Bestsellers", isBestseller: true },
+  { id: "bestsellers", key: "vault.cats.bestsellers", label: "Bestsellers", isBestseller: true },
   { id: "3D Layered", key: "vault.cats.3d", label: "3D Layered", category: "3D Layered" },
   { id: "Jewelry", key: "vault.cats.jewelry", label: "Jewelry", category: "Jewelry" },
   { id: "Home Decor", key: "vault.cats.decor", label: "Home Decor", category: "Home Decor" },
@@ -184,10 +184,8 @@ export default function DesignsVault() {
 
   return (
     <section id="designs-vault" className="relative py-28 bg-[#0e100f] text-[#fffce1] overflow-hidden border-t border-[#42433d]/40">
-      {/* Background glow effects (GSAP Lime + Laser Orange) */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#0ae448]/10 rounded-full blur-[150px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#ff8709]/10 rounded-full blur-[130px] pointer-events-none -z-10" />
-      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none -z-10" />
+      {/* Ambient subtle technical grid */}
+      <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
@@ -272,8 +270,8 @@ export default function DesignsVault() {
                   {/* Top Badges */}
                   <div className="absolute top-3 left-3 flex items-center gap-2">
                     {pack.bestseller && (
-                      <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#ff8709] text-white shadow">
-                        ★ Bestseller
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#ff8709] text-white">
+                        Bestseller
                       </span>
                     )}
                     <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#0e100f]/80 backdrop-blur-md text-[#abff84] border border-[#42433d]">
@@ -382,7 +380,7 @@ export default function DesignsVault() {
                 <span className="px-3 py-1 rounded-md text-[11px] font-extrabold uppercase tracking-wider bg-[#FE7733] text-white">
                   {activeModalDesign.category}
                 </span>
-                <span className="text-xs text-[#B1FA63] font-bold">★ Commercial License Guaranteed</span>
+                <span className="text-xs text-[#B1FA63] font-bold">Commercial License Guaranteed</span>
               </div>
 
               <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4 font-[Outfit]">

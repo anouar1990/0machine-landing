@@ -11,7 +11,7 @@ const HERO_TABS = [
     labelKey: "hero.tab.vault",
     shortLabelKey: "hero.tab.vault.short",
     tagKey: "hero.tab.vault.tag",
-    label: "💎 Designs Vault",
+    label: "Designs Vault",
     shortLabel: "Designs",
     path: "app.0machine.com/library",
     src: "/screenshots/screenshot-designs-vault.webp",
@@ -25,7 +25,7 @@ const HERO_TABS = [
     labelKey: "hero.tab.laserai",
     shortLabelKey: "hero.tab.laserai.short",
     tagKey: "hero.tab.laserai.tag",
-    label: "🤖 LaserAI Studio",
+    label: "LaserAI Studio",
     shortLabel: "LaserAI",
     path: "app.0machine.com/laser-ai",
     src: "/screenshots/screenshot-laser-ai.webp",
@@ -38,7 +38,7 @@ const HERO_TABS = [
     labelKey: "hero.tab.nesting",
     shortLabelKey: "hero.tab.nesting.short",
     tagKey: "hero.tab.nesting.tag",
-    label: "🧩 Nesting Studio",
+    label: "Nesting Studio",
     shortLabel: "Nesting",
     path: "app.0machine.com/nesting",
     src: "/screenshots/screenshot-nesting.webp",
@@ -51,7 +51,7 @@ const HERO_TABS = [
     labelKey: "hero.tab.dashboard",
     shortLabelKey: "hero.tab.dashboard.short",
     tagKey: "hero.tab.dashboard.tag",
-    label: "📊 Workshop Hub",
+    label: "Workshop Hub",
     shortLabel: "Dashboard",
     path: "app.0machine.com/dashboard",
     src: "/screenshots/screenshot-dashboard.webp",
@@ -101,13 +101,8 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-dark-950 via-transparent to-dark-950 opacity-90" />
       </div>
 
-      {/* Ambient glowing meshes */}
-      <div className="absolute inset-0 gradient-mesh opacity-70 pointer-events-none -z-10" />
-      <div className="absolute inset-0 grid-pattern opacity-40 pointer-events-none -z-10" />
-
-      {/* Radial soft laser ambient glow (GSAP Lime + Laser Orange) */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-[#0ae448]/10 rounded-full blur-[150px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-1/4 w-[450px] h-[450px] bg-[#ff8709]/10 rounded-full blur-[130px] pointer-events-none -z-10" />
+      {/* Ambient subtle technical grid */}
+      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none -z-10" />
 
       <div
         className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center"
@@ -134,32 +129,32 @@ export default function Hero() {
           Transform text briefs into kerf-compensated vector CAD, maximize sheet yield with automated nesting, and access a curated 300,000+ commercial cut library.
         </p>
 
-        {/* Feature Tags (GSAP Hairline Pill Badges) */}
+        {/* Feature Tags (Minimal Hairline Pill Badges) */}
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-8 sm:mb-10 max-w-3xl mx-auto">
-          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">⚡ 300,000+ Vectors</span>
+          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">300,000+ Vectors</span>
           <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">Commercial Resale License</span>
           <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">LightBurn C00/C01 Ready</span>
-          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">Instant SVG · DXF · CDR · EPS</span>
+          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">SVG · DXF · CDR · EPS</span>
         </div>
 
-        {/* CTAs (GSAP Outlined Pill Buttons) */}
+        {/* CTAs (Crisp Outlined Pill Buttons) */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-4 max-w-md mx-auto sm:max-w-none w-full">
           <a
             href="#designs-vault"
             onClick={() => trackEvent("cta_click", { button: "hero_designs_vault" })}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] font-black text-sm sm:text-base tracking-tight transition-all font-[Outfit] shadow-xl hover:shadow-[0_0_30px_rgba(171,255,132,0.35)] active:scale-95 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] font-bold text-sm sm:text-base tracking-tight transition-all font-[Outfit] shadow-lg hover:shadow-[0_0_24px_rgba(171,255,132,0.25)] active:scale-95 cursor-pointer"
           >
-            <span>💎 Explore 300K+ Vault</span>
+            <span>Explore 300K+ Vault</span>
             <span className="text-xs">↓</span>
           </a>
           <a
             href="#laser-ai"
             onClick={() => trackEvent("cta_click", { button: "hero_laser_ai" })}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#141513] hover:bg-[#191919] border border-[#42433d] hover:border-[#abff84] text-[#fffce1] font-bold text-sm sm:text-base tracking-tight transition-all font-[Outfit] hover:shadow-[0_0_20px_rgba(171,255,132,0.18)] active:scale-95 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#141513] hover:bg-[#191919] border border-[#42433d] hover:border-[#abff84] text-[#fffce1] font-bold text-sm sm:text-base tracking-tight transition-all font-[Outfit] hover:shadow-[0_0_16px_rgba(171,255,132,0.15)] active:scale-95 cursor-pointer"
           >
-            <span>🤖 Try LaserAI Studio</span>
+            <span>Try LaserAI Studio</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0ae448]/15 text-[#abff84] border border-[#0ae448]/30 font-bold ml-1">
-              ⚡ LIVE CAD
+              LIVE CAD
             </span>
           </a>
         </div>
@@ -215,42 +210,6 @@ export default function Hero() {
             onSelectTab={setActiveTab}
             t={t}
           />
-
-          {/* Floating HUD Card 1: Commercial Designs Vault */}
-          <motion.div
-            animate={{ y: [-8, 8, -8] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -right-4 -bottom-6 sm:-right-8 sm:bottom-12 p-4 hidden sm:block rounded-2xl bg-[#141513]/90 border border-[#42433d] shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-[#abff84] animate-ping" />
-              <p className="text-[10px] text-[#abff84] font-mono font-semibold tracking-wider uppercase">
-                {t("vault.badge") || "DESIGNS VAULT"}
-              </p>
-            </div>
-            <p className="text-sm font-bold text-[#fffce1] font-[Outfit]">300,000+ Ready-to-Cut Vectors</p>
-            <p className="text-[10px] text-[#7c7c6f] font-mono mt-0.5">
-              Full Resale License · SVG, DXF, CDR, EPS
-            </p>
-          </motion.div>
-
-          {/* Floating HUD Card 2: LaserAI Engine */}
-          <motion.div
-            animate={{ y: [8, -8, 8] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-            className="absolute -left-4 -top-6 sm:-left-8 sm:top-28 p-4 hidden sm:block rounded-2xl bg-[#141513]/90 border border-[#42433d] shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs">⚡</span>
-              <p className="text-[10px] text-[#abff84] font-mono font-semibold tracking-wider uppercase">
-                LaserAI Vector Studio
-              </p>
-            </div>
-            <p className="text-sm font-bold text-[#fffce1] font-[Outfit]">Prompt → Closed SVG/DXF</p>
-            <p className="text-[10px] text-[#7c7c6f] font-mono mt-0.5">
-              Cut (Red) + Engrave (Burnt) split layers
-            </p>
-          </motion.div>
         </motion.div>
       </div>
 

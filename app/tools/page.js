@@ -12,7 +12,7 @@ export default function ToolsHubPage() {
       desc: "Calculate true production costs by factoring cutting speeds, pierce times, material unit cost, gas consumption, electricity, and labor.",
       href: "/calculator",
       icon: Calculator,
-      badge: "💰 Profit Optimizer",
+      badge: "Profit Optimizer",
       action: "Open Cost Calculator →",
       features: ["Real-Time Selling Price Formula", "Electricity & Machine Wear Rates", "Dynamic Margin Percentage", "Client-Ready PDF Estimates & WhatsApp"],
     },
@@ -21,7 +21,7 @@ export default function ToolsHubPage() {
       desc: "Generate custom finger-joint boxes with live 2D preview, kerf compensation, and instant LightBurn SVG & AutoCAD DXF download.",
       href: "/tools/box-generator",
       icon: Box,
-      badge: "⭐ Most Popular",
+      badge: "Most Popular",
       action: "Launch Box Generator →",
       features: ["Custom W × H × D & Thickness", "Automatic Kerf Offset (0.15mm)", "1-Click DXF & SVG Export", "100% Free · No Sign Up"],
     },
@@ -30,7 +30,7 @@ export default function ToolsHubPage() {
       desc: "Generate custom speed vs. power calibration grids with kerf test slits for CO2, Fiber, and Diode lasers. Zero test waste on new material batches.",
       href: "/tools/test-matrix",
       icon: Grid,
-      badge: "⚡ Zero Guesswork",
+      badge: "Zero Guesswork",
       action: "Generate Test Matrix →",
       features: ["Speed & Power Step Grids", "Kerf Slits for Friction Fit", "LightBurn C00/C01 Layer Export", "CO2, Fiber & Diode Calibrated"],
     },
@@ -39,7 +39,7 @@ export default function ToolsHubPage() {
       desc: "Parametric flexible wood lattice patterns. Bend rigid 3mm–6mm plywood and acrylic into smooth curved boxes, notebook spines, and lamps.",
       href: "/tools/living-hinge",
       icon: Layers,
-      badge: "🌀 Flexible Wood CAD",
+      badge: "Flexible Wood CAD",
       action: "Generate Living Hinge →",
       features: ["Custom Width, Height & Cut Length", "Staggered Lattice Slit Layout", "Instant LightBurn SVG & DXF", "3-6mm Plywood Tolerances"],
     },
@@ -48,7 +48,7 @@ export default function ToolsHubPage() {
       desc: "Calculate exact parts per sheet, sheet yield percentage, scrap waste, and material costs. Stop guessing sheet quantities on production runs.",
       href: "/tools/nesting",
       icon: Layers,
-      badge: "🧩 Scrap Reducer",
+      badge: "Scrap Reducer",
       action: "Estimate Sheet Yield →",
       features: ["Standard Bed Presets (600×400, 1200×600)", "90° Rotational Optimization", "Total Material Cost & Gross Profit", "Instant Scrap Waste %"],
     },
@@ -57,7 +57,7 @@ export default function ToolsHubPage() {
       desc: "Turn text prompts into production-ready closed vector contours with separate Cut (#EF4444) and Engrave (#000000) layers in under 3 seconds.",
       href: "/#laser-ai",
       icon: Sparkles,
-      badge: "🤖 AI Vector Engine",
+      badge: "AI Vector Engine",
       action: "Generate Vector Now →",
       features: ["Prompt-to-SVG in 2.1s", "Automatic Kerf Compensation", "Keychain & Stencil Modes", "Direct LightBurn C00/C01 Layers"],
     },
@@ -142,7 +142,7 @@ export default function ToolsHubPage() {
                 href="https://app.0machine.com"
                 className="w-full sm:w-auto px-8 py-3.5 bg-[#FE7733] hover:bg-[#E85F20] text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-[#FE7733]/25 flex items-center justify-center gap-2"
               >
-                <span>⚡ Start Free Forever</span>
+                <span>Start Free Forever</span>
                 <ArrowRight size={16} />
               </a>
               <Link

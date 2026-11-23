@@ -62,7 +62,7 @@ export default function PublicCalculatorPage() {
   const totalProfit = totalSellingPrice - totalProductionCost;
 
   const handleCopyQuote = () => {
-    const text = `📋 *Laser Cutting Job Quote*\n` +
+    const text = `*Laser Cutting Job Quote*\n` +
       `• Part Size: ${pw} × ${ph} mm (Qty: ${qty})\n` +
       `• Unit Price: $${unitSellingPrice.toFixed(2)}\n` +
       `• Total Estimate: $${totalSellingPrice.toFixed(2)}\n\n` +
@@ -73,7 +73,7 @@ export default function PublicCalculatorPage() {
   };
 
   const handleWhatsAppQuote = () => {
-    const text = `📋 *Laser Cutting Job Quote*\n` +
+    const text = `*Laser Cutting Job Quote*\n` +
       `• Part Size: ${pw} × ${ph} mm (Qty: ${qty})\n` +
       `• Unit Price: $${unitSellingPrice.toFixed(2)}\n` +
       `• Total Estimate: $${totalSellingPrice.toFixed(2)}\n\n` +

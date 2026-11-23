@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ParticleField from "../components/ParticleField";
 import { supabase } from "../lib/supabase";
+import { MapPin, Mail, Phone, Clock } from "lucide-react";
 
 export default function ContactUs() {
   const [name, setName] = useState("");
@@ -100,7 +101,7 @@ export default function ContactUs() {
                 disabled={status === "loading"}
                 className="w-full glow-btn text-base py-3.5 flex justify-center items-center gap-2 disabled:opacity-50"
               >
-                {status === "loading" ? "Sending..." : "Send Message ✉️"}
+                {status === "loading" ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>
@@ -117,7 +118,9 @@ export default function ContactUs() {
 
             <div className="space-y-6">
               <div className="flex gap-4 items-start">
-                <div className="text-2xl mt-1">📍</div>
+                <div className="w-10 h-10 rounded-xl bg-[#141513] border border-[#42433d] flex items-center justify-center text-[#abff84] shrink-0 mt-0.5">
+                  <MapPin size={18} strokeWidth={1.75} />
+                </div>
                 <div>
                   <h4 className="font-bold text-white font-[Outfit]">Address</h4>
                   <p className="text-sm text-gray-400 mt-1">
@@ -129,7 +132,9 @@ export default function ContactUs() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="text-2xl mt-1">✉️</div>
+                <div className="w-10 h-10 rounded-xl bg-[#141513] border border-[#42433d] flex items-center justify-center text-[#abff84] shrink-0 mt-0.5">
+                  <Mail size={18} strokeWidth={1.75} />
+                </div>
                 <div>
                   <h4 className="font-bold text-white font-[Outfit]">Email</h4>
                   <p className="text-sm text-gray-400 mt-1">
@@ -141,7 +146,9 @@ export default function ContactUs() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="text-2xl mt-1">📞</div>
+                <div className="w-10 h-10 rounded-xl bg-[#141513] border border-[#42433d] flex items-center justify-center text-[#abff84] shrink-0 mt-0.5">
+                  <Phone size={18} strokeWidth={1.75} />
+                </div>
                 <div>
                   <h4 className="font-bold text-white font-[Outfit]">Phone</h4>
                   <p className="text-sm text-gray-400 mt-1">
@@ -153,7 +160,9 @@ export default function ContactUs() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="text-2xl mt-1">🕒</div>
+                <div className="w-10 h-10 rounded-xl bg-[#141513] border border-[#42433d] flex items-center justify-center text-[#abff84] shrink-0 mt-0.5">
+                  <Clock size={18} strokeWidth={1.75} />
+                </div>
                 <div>
                   <h4 className="font-bold text-white font-[Outfit]">Working Hours</h4>
                   <p className="text-sm text-gray-400 mt-1">

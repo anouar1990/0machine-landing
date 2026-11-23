@@ -43,7 +43,7 @@ export default function LaserAiCreditModal({
     {
       id: "pack_700",
       name: "Studio Pro",
-      badge: "🔥 Best Value",
+      badge: "Best Value",
       credits: 700,
       price: "$50",
       amount: 50,
@@ -256,7 +256,7 @@ export default function LaserAiCreditModal({
 
           {/* Refund Guarantee & Stripe Security Footnote */}
           <p className="text-[11px] text-gray-500 text-center mt-3">
-            Failed generations are refunded automatically. 🔒 Secure checkout by Stripe.
+            Failed generations are refunded automatically · Secure checkout by Stripe
           </p>
         </motion.div>
       </div>

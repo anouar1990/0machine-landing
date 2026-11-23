@@ -52,9 +52,9 @@ export default function Pricing() {
           : (t("price.billed_mo") || "Billed monthly"),
       description: t("price.starter.desc") || "Perfect for makers and small workshops.",
       features: [
-        t("price.starter.f1") || "⚡ 50 LaserAI Vector Generations / mo",
-        t("price.starter.f2") || "💎 50 Commercial Design Packs / mo",
-        t("price.starter.f3") || "🧩 True-Shape Sheet Nesting (Up to 25 parts)",
+        t("price.starter.f1") || "50 LaserAI Vector Generations / mo",
+        t("price.starter.f2") || "50 Commercial Design Packs / mo",
+        t("price.starter.f3") || "True-Shape Sheet Nesting (Up to 25 parts)",
         t("price.starter.f4") || "Unlimited Projects & Machine Profiles",
         t("price.starter.f5") || "Material Inventory & Laser Presets",
         t("price.starter.f6") || "PDF Quotes & Client Invoices",
@@ -62,7 +62,7 @@ export default function Pricing() {
       cta: t("price.starter.cta") || "Upgrade to Starter",
       href: "https://app.0machine.com",
       highlighted: true,
-      badge: t("price.popular") || "⭐ Most Popular",
+      badge: t("price.popular") || "Most Popular",
     },
     {
       name: t("price.pro.name") || "Workshop Pro",
@@ -75,25 +75,24 @@ export default function Pricing() {
           : (t("price.billed_mo") || "Billed monthly"),
       description: t("price.pro.desc") || "Everything in Starter plus advanced production optimization.",
       features: [
-        t("price.pro.f1") || "⚡ 300 LaserAI Vector Generations / mo",
-        t("price.pro.f2") || "💎 Unlimited Commercial Vault (5,000+ Packs)",
-        t("price.pro.f3") || "🧩 Unlimited Multi-Sheet Nesting (ClipperLib)",
-        t("price.pro.f4") || "⏱️ Kerf Compensation & Speed/Pierce Math",
-        t("price.pro.f5") || "📲 1-Click WhatsApp Client Quote Sharing",
-        t("price.pro.f6") || "🚀 Direct LightBurn & xTool DXF Export",
-        t("price.pro.f7") || "🔥 Priority Server AI Pipeline",
+        t("price.pro.f1") || "300 LaserAI Vector Generations / mo",
+        t("price.pro.f2") || "Unlimited Commercial Vault (5,000+ Packs)",
+        t("price.pro.f3") || "Unlimited Multi-Sheet Nesting (ClipperLib)",
+        t("price.pro.f4") || "Kerf Compensation & Speed/Pierce Math",
+        t("price.pro.f5") || "1-Click WhatsApp Client Quote Sharing",
+        t("price.pro.f6") || "Direct LightBurn & xTool DXF Export",
+        t("price.pro.f7") || "Priority Server AI Pipeline",
       ],
       cta: t("price.pro.cta") || "Upgrade to Pro",
       href: "https://app.0machine.com",
       highlighted: false,
-      badge: t("price.best_value") || "🔥 Best Value",
+      badge: t("price.best_value") || "Best Value",
     },
   ];
 
   return (
     <section id="pricing" ref={ref} className="relative py-32 overflow-hidden bg-[#0e100f] border-t border-[#42433d]/40">
-      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#0ae448]/8 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute inset-0 grid-pattern opacity-15 pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <motion.div

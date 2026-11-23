@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -50,12 +51,24 @@ export default function Footer() {
             <p className="text-sm text-[#7c7c6f] leading-relaxed mb-4">
               {t("foot.desc")}
             </p>
-            <div className="space-y-1.5 text-xs text-[#7c7c6f]">
+            <div className="space-y-2 text-xs text-[#7c7c6f]">
               <p className="font-semibold text-[#fffce1]">COOLDELO LABS LLC</p>
-              <p>📍 1209 Mountain Rd Pl NE, Ste R, Albuquerque, NM 87110, United States</p>
-              <p>📞 +1 (917) 814-3657</p>
-              <p>✉️ support@0machine.com</p>
-              <p>🕒 {t("foot.hours")}</p>
+              <div className="flex items-start gap-2">
+                <MapPin size={13} strokeWidth={1.75} className="mt-0.5 shrink-0 text-[#7c7c6f]" />
+                <span>1209 Mountain Rd Pl NE, Ste R, Albuquerque, NM 87110, United States</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone size={13} strokeWidth={1.75} className="shrink-0 text-[#7c7c6f]" />
+                <span>+1 (917) 814-3657</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail size={13} strokeWidth={1.75} className="shrink-0 text-[#7c7c6f]" />
+                <span>support@0machine.com</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock size={13} strokeWidth={1.75} className="shrink-0 text-[#7c7c6f]" />
+                <span>{t("foot.hours")}</span>
+              </div>
             </div>
           </div>
 

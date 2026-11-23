@@ -215,7 +215,7 @@ export default function LaserAiSection() {
 
       // Finish progress bar smoothly to 100%
       setProgressPercent(100);
-      setProgressStage("Vector CAD Synthesis Complete! ✓");
+      setProgressStage("Vector CAD Synthesis Complete");
 
       await new Promise((r) => setTimeout(r, 450));
 
@@ -321,10 +321,9 @@ export default function LaserAiSection() {
   };
 
   return (
-    <section id="laser-ai" suppressHydrationWarning className="relative py-20 sm:py-28 bg-[#0D0E11] text-gray-200 overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-[#FE7733]/10 rounded-full blur-[160px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#B1FA63]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+    <section id="laser-ai" suppressHydrationWarning className="relative py-20 sm:py-28 bg-[#0D0E11] text-gray-200 overflow-hidden border-t border-[#42433d]/40">
+      {/* Background ambient technical grid */}
+      <div className="absolute inset-0 grid-pattern opacity-15 pointer-events-none -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
@@ -378,7 +377,7 @@ export default function LaserAiSection() {
               {isUnlocked ? (
                 <>
                   <Unlock size={13} aria-hidden="true" />
-                  <span>Unlocked ✓</span>
+                  <span>Unlocked</span>
                 </>
               ) : (
                 <>
@@ -590,7 +589,7 @@ export default function LaserAiSection() {
                       </div>
                       <div>
                         <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2.5 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 inline-block">
-                          ⚡ Vector CAD Ready
+                          Vector CAD Ready
                         </span>
                         <h4 className="text-base sm:text-lg font-bold font-[Outfit] text-white mt-1">
                           Sign Up Free to Unlock
@@ -687,7 +686,7 @@ export default function LaserAiSection() {
 
               <div>
                 <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#B1FA63] px-2.5 py-0.5 rounded-full bg-[#B1FA63]/10 border border-[#B1FA63]/25 inline-block">
-                  ⚡ 100% Free Maker Access
+                  Free Maker Access
                 </span>
                 <h3 className="text-lg sm:text-xl font-bold font-[Outfit] text-white mt-1.5">
                   Sign Up Free to Unlock Vector
@@ -825,7 +824,7 @@ export default function LaserAiSection() {
                   }}
                   className="min-h-[36px] inline-flex items-center justify-center px-4 py-1.5 text-xs text-gray-400 hover:text-[#B1FA63] underline cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-[#B1FA63] focus-visible:outline-none active:scale-95"
                 >
-                  ⚡ Instant Unlock (Demo Test)
+                  Instant Unlock (Demo Test)
                 </button>
               </div>
             </motion.div>

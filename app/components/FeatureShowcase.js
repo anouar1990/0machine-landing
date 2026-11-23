@@ -2,6 +2,7 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { Layers, Cpu, Calculator, Package, Activity, SlidersHorizontal, Check, Lock } from "lucide-react";
 
 export default function FeatureShowcase() {
   const { t } = useLanguage();
@@ -12,7 +13,7 @@ export default function FeatureShowcase() {
   const features = [
     {
       id: "nesting",
-      icon: "🧩",
+      icon: Layers,
       label: t("features.tab.nesting"),
       title: t("features.nest.title"),
       subtitle: t("features.nest.subtitle"),
@@ -34,7 +35,7 @@ export default function FeatureShowcase() {
     },
     {
       id: "laserai",
-      icon: "🤖",
+      icon: Cpu,
       label: t("features.tab.laserai"),
       title: t("features.laserai.title"),
       subtitle: t("features.laserai.subtitle"),
@@ -56,7 +57,7 @@ export default function FeatureShowcase() {
     },
     {
       id: "calculator",
-      icon: "💰",
+      icon: Calculator,
       label: t("features.tab.calc"),
       title: t("features.calc.title"),
       subtitle: t("features.calc.subtitle"),
@@ -78,7 +79,7 @@ export default function FeatureShowcase() {
     },
     {
       id: "materials",
-      icon: "📦",
+      icon: Package,
       label: t("features.tab.inventory"),
       title: t("features.inv.title"),
       subtitle: t("features.inv.subtitle"),
@@ -100,7 +101,7 @@ export default function FeatureShowcase() {
     },
     {
       id: "production",
-      icon: "⚡",
+      icon: Activity,
       label: t("features.tab.production"),
       title: t("features.prod.title"),
       subtitle: t("features.prod.subtitle"),
@@ -122,7 +123,7 @@ export default function FeatureShowcase() {
     },
     {
       id: "presets",
-      icon: "⚙️",
+      icon: SlidersHorizontal,
       label: t("features.tab.presets"),
       title: t("features.presets.title"),
       subtitle: t("features.presets.subtitle"),
@@ -188,6 +189,7 @@ export default function FeatureShowcase() {
             <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-3 lg:pb-0 scrollbar-none">
               {features.map((f, i) => {
                 const isActive = active === i;
+                const Icon = f.icon;
                 return (
                   <button
                     key={f.id}
@@ -199,7 +201,9 @@ export default function FeatureShowcase() {
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-lg">{f.icon}</span>
+                      <div className="w-8 h-8 rounded-lg bg-[#0e100f] border border-[#42433d] flex items-center justify-center text-[#abff84] shrink-0">
+                        <Icon size={16} strokeWidth={1.75} />
+                      </div>
                       <div>
                         <span className="text-sm font-bold block font-[Outfit]">{f.label}</span>
                         <span className="text-[11px] text-[#7c7c6f] block font-mono">
@@ -260,7 +264,7 @@ export default function FeatureShowcase() {
                       key={h}
                       className="text-xs px-3 py-1.5 rounded-xl bg-white/5 text-gray-200 border border-white/10 font-medium flex items-center gap-1.5"
                     >
-                      <span className="text-accent-400 text-[10px]">✓</span>
+                      <Check size={12} strokeWidth={2} className="text-[#abff84] shrink-0" />
                       <span>{h}</span>
                     </span>
                   ))}
@@ -283,7 +287,7 @@ export default function FeatureShowcase() {
 
                     {/* Address Bar */}
                     <div className="bg-[#0e100f] border border-[#42433d] rounded-full px-4 py-1 text-xs text-[#7c7c6f] font-mono flex items-center gap-2 max-w-sm w-full justify-center">
-                      <span className="text-[#abff84] text-[10px]">🔒</span>
+                      <Lock size={11} className="text-[#abff84] shrink-0" />
                       <span className="truncate text-[#fffce1]">{currentFeature.url}</span>
                     </div>
 

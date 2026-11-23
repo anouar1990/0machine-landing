@@ -2,6 +2,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { useLanguage } from "../context/LanguageContext";
+import { Clock, Package, ClipboardList, Zap, FileText, Maximize2, Check } from "lucide-react";
 
 export default function Benefits() {
   const { t } = useLanguage();
@@ -10,62 +11,56 @@ export default function Benefits() {
 
   const benefits = [
     {
-      icon: "⏱",
+      icon: Clock,
       feature: t("benefits.calc.feature"),
       title: t("benefits.calc.title"),
       description: t("benefits.calc.desc"),
       outcome: t("benefits.calc.outcome"),
-      gradient: "from-orange-500/20 to-amber-500/20",
       stat: t("benefits.calc.stat"),
       statLabel: t("benefits.calc.statLabel"),
     },
     {
-      icon: "📦",
+      icon: Package,
       feature: t("benefits.inv.feature"),
       title: t("benefits.inv.title"),
       description: t("benefits.inv.desc"),
       outcome: t("benefits.inv.outcome"),
-      gradient: "from-emerald-500/20 to-teal-500/20",
       stat: t("benefits.inv.stat"),
       statLabel: t("benefits.inv.statLabel"),
     },
     {
-      icon: "📋",
+      icon: ClipboardList,
       feature: t("benefits.order.feature"),
       title: t("benefits.order.title"),
       description: t("benefits.order.desc"),
       outcome: t("benefits.order.outcome"),
-      gradient: "from-blue-500/20 to-indigo-500/20",
       stat: t("benefits.order.stat"),
       statLabel: t("benefits.order.statLabel"),
     },
     {
-      icon: "⚡",
+      icon: Zap,
       feature: t("benefits.presets.feature"),
       title: t("benefits.presets.title"),
       description: t("benefits.presets.desc"),
       outcome: t("benefits.presets.outcome"),
-      gradient: "from-purple-500/20 to-pink-500/20",
       stat: t("benefits.presets.stat"),
       statLabel: t("benefits.presets.statLabel"),
     },
     {
-      icon: "📄",
+      icon: FileText,
       feature: t("benefits.quote.feature"),
       title: t("benefits.quote.title"),
       description: t("benefits.quote.desc"),
       outcome: t("benefits.quote.outcome"),
-      gradient: "from-cyan-500/20 to-sky-500/20",
       stat: t("benefits.quote.stat"),
       statLabel: t("benefits.quote.statLabel"),
     },
     {
-      icon: "📐",
+      icon: Maximize2,
       feature: t("benefits.nest.feature"),
       title: t("benefits.nest.title"),
       description: t("benefits.nest.desc"),
       outcome: t("benefits.nest.outcome"),
-      gradient: "from-rose-500/20 to-red-500/20",
       stat: t("benefits.nest.stat"),
       statLabel: t("benefits.nest.statLabel"),
     },
@@ -105,53 +100,58 @@ export default function Benefits() {
 
         {/* Benefits grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {benefits.map((benefit, i) => (
-            <motion.div
-              key={benefit.title}
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.1, duration: 0.6 }}
-              className="p-6 sm:p-8 rounded-[24px] bg-[#141513] border border-[#42433d] hover:border-[#abff84]/50 transition-all shadow-xl group relative overflow-hidden"
-            >
-              <div className="relative z-10">
-                {/* Icon & badge */}
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-3xl">{benefit.icon}</span>
-                  <span className="text-[10px] text-[#abff84] bg-[#abff84]/10 border border-[#abff84]/20 px-2.5 py-1 rounded-full font-mono font-bold">
-                    {benefit.feature}
-                  </span>
-                </div>
+          {benefits.map((benefit, i) => {
+            const Icon = benefit.icon;
+            return (
+              <motion.div
+                key={benefit.title}
+                initial={{ opacity: 0, y: 40 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                className="p-6 sm:p-8 rounded-[24px] bg-[#141513] border border-[#42433d] hover:border-[#abff84]/50 transition-all shadow-xl group relative overflow-hidden"
+              >
+                <div className="relative z-10">
+                  {/* Icon & badge */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-[#0e100f] border border-[#42433d] flex items-center justify-center text-[#abff84]">
+                      <Icon size={18} strokeWidth={1.75} />
+                    </div>
+                    <span className="text-[10px] text-[#abff84] bg-[#abff84]/10 border border-[#abff84]/20 px-2.5 py-1 rounded-full font-mono font-bold">
+                      {benefit.feature}
+                    </span>
+                  </div>
 
-                {/* Title */}
-                <h3 className="text-xl font-bold text-[#fffce1] mb-3 font-[Outfit] leading-tight">
-                  {benefit.title}
-                </h3>
+                  {/* Title */}
+                  <h3 className="text-xl font-bold text-[#fffce1] mb-3 font-[Outfit] leading-tight">
+                    {benefit.title}
+                  </h3>
 
-                {/* Description */}
-                <p className="text-sm text-[#7c7c6f] leading-relaxed mb-5">
-                  {benefit.description}
-                </p>
-
-                {/* Outcome */}
-                <div className="flex items-start gap-2 p-3 rounded-full bg-[#0e100f] border border-[#42433d]/60 mb-5">
-                  <span className="text-[#abff84] text-sm mt-0.5 ml-1">✓</span>
-                  <p className="text-xs text-[#fffce1]/90 leading-relaxed truncate">
-                    {benefit.outcome}
+                  {/* Description */}
+                  <p className="text-sm text-[#7c7c6f] leading-relaxed mb-5">
+                    {benefit.description}
                   </p>
-                </div>
 
-                {/* Stat */}
-                <div className="flex items-end gap-2 pt-4 border-t border-[#42433d]/50">
-                  <span className="text-3xl font-black text-[#fffce1] font-[Outfit]">
-                    {benefit.stat}
-                  </span>
-                  <span className="text-xs text-[#7c7c6f] font-mono mb-1">
-                    {benefit.statLabel}
-                  </span>
+                  {/* Outcome */}
+                  <div className="flex items-start gap-2 p-3 rounded-full bg-[#0e100f] border border-[#42433d]/60 mb-5">
+                    <Check size={14} strokeWidth={2} className="text-[#abff84] mt-0.5 ml-1 flex-shrink-0" />
+                    <p className="text-xs text-[#fffce1]/90 leading-relaxed truncate">
+                      {benefit.outcome}
+                    </p>
+                  </div>
+
+                  {/* Stat */}
+                  <div className="flex items-end gap-2 pt-4 border-t border-[#42433d]/50">
+                    <span className="text-3xl font-black text-[#fffce1] font-[Outfit]">
+                      {benefit.stat}
+                    </span>
+                    <span className="text-xs text-[#7c7c6f] font-mono mb-1">
+                      {benefit.statLabel}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -2331,3 +2331,34 @@
 - **Test Results**: All tests PASS (100%).
 - **Current Status**: COMPLETE
 - **Known Issues**: None.
+
+
+## [2026-11-23 23:05:00] - Complete Visual Decluttering, Zero-Emoji Purge & Premium SaaS Minimalist Refactor
+- **Task**: Make 0Machine visually cleaner, simpler, and more premium across `0machine-landing` and `lasercut-planner`. Eliminate all AI-generated website clichés, glowing blur orbs, and visual clutter, while enforcing a strict zero-emoji policy and restrained monochrome Lucide SVG icon strategy.
+- **Files Changed**:
+  - `0machine-landing/app/components/ParticleField.js`: Disabled canvas particle simulation and web mesh lines (returns null), establishing a calm, deep obsidian background canvas.
+  - `0machine-landing/app/globals.css`: Removed `.gradient-mesh`, `.glow-btn`, and multi-layer glowing hover classes.
+  - `0machine-landing/app/context/LanguageContext.js` & `app/lib/translations.js`: Purged all emojis across EN, FR, and ES translation strings (removed 💎, 🤖, ⚡, 🧩, 📊, ⭐, 📲, 🔥, 🚀, 💡).
+  - `0machine-landing/app/components/Navbar.js`: Removed flag emojis from language selector (EN, FR, ES) and key/lightning emojis from mobile drawer CTAs.
+  - `0machine-landing/app/components/Hero.js`: Stripped emoji icons from pills, category tabs, and action buttons. Removed flanking floating HUD cards to ensure 100% visual emphasis on the bespoke StudioApertureViewport.
+  - `0machine-landing/app/components/Benefits.js`: Replaced raw emojis with clean, monochrome Lucide SVG icons (Clock, Package, ClipboardList, Zap, FileText, Maximize2), inheriting text color at 18px.
+  - `0machine-landing/app/components/FeatureShowcase.js`: Replaced emojis with Lucide SVG icons (Layers, Cpu, Calculator, Package, Activity, SlidersHorizontal).
+  - `0machine-landing/app/components/Comparison.js`: Stripped bullet emojis; replaced check/x emojis with Lucide Check and X.
+  - `0machine-landing/app/components/Pricing.js`: Replaced feature checkmark emojis with monochrome Lucide Check; stripped flame and star emojis from plan headers and badges.
+  - `0machine-landing/app/components/Footer.js`: Replaced location, telephone, email, and schedule emojis with monochrome Lucide MapPin, Phone, Mail, and Clock.
+  - `0machine-landing/app/components/ProductShowcase.js`, `LaserAiCreditModal.js`, `LaserAiDemoVideo.js`, `tools/page.js`, `contact/page.js`, `calculator/page.js`: Removed all decorative emoji prefixes.
+  - `lasercut-planner/src/components/ResponsiveTabBar.tsx`: Cleaned sidebar section labels ("PRO TOOLS", "WORKSHOP TOOLS").
+  - `lasercut-planner/src/screens/PaywallScreen.tsx` & `src/components/ProUpgradeModal.tsx`: Removed emoji prefixes from plan features, value progression, and ROI comparison cards while preserving 100% Stripe checkout logic.
+  - `lasercut-planner/src/screens/DesktopAuthScreen.tsx` & `AuthScreen.tsx`: Cleaned branding badges and login button labels.
+  - `lasercut-planner/src/screens/DashboardScreen.tsx`: Replaced folder emoji with Lucide Folder icon; cleaned inventory warning tags.
+  - `lasercut-planner/src/screens/ClientsScreen.tsx`: Replaced person emoji with Lucide User icon.
+  - `lasercut-planner/src/screens/MachineProfilesScreen.tsx`: Replaced tool emojis with Lucide Zap, Cpu, Scissors, and Wrench icons.
+  - `lasercut-planner/src/screens/InvoiceGeneratorScreen.tsx`, `ProductionScreen.tsx`, `MaterialsScreen.tsx`, `LaserToolsScreen.tsx`, `NestingEstimatorScreen.tsx`, `LaserExpertScreen.tsx`, `ProjectDetailsScreen.tsx`: Cleaned all emojis from WhatsApp templates, status pills, and empty states.
+- **Tests Performed**:
+  - Next.js production build (`npm run build` in `0machine-landing`): PASS (65/65 routes compiled in 5.1s with 0 errors).
+  - TypeScript compilation check (`lasercut-planner`): PASS (`npx tsc --noEmit` passed with 0 errors).
+  - Unicode regex scan: PASS (exactly 0 emojis found in `0machine-landing/app/components` and `lasercut-planner/src/components`).
+  - Headless Chrome visual verification: PASS (verified calm obsidian aesthetic, no cartoonish glows, no horizontal overflow).
+- **Test Results**: All tests PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None.

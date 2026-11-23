@@ -96,7 +96,7 @@ export default function Navbar() {
                 aria-expanded={langOpen}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-[#7c7c6f] hover:text-[#fffce1] border border-[#42433d] bg-[#141513] hover:border-[#abff84]/50 transition-all font-medium font-[Outfit] cursor-pointer"
               >
-                <span>{language === "en" ? "🇺🇸 EN" : language === "fr" ? "🇫🇷 FR" : "🇪🇸 ES"}</span>
+                <span>{language ? language.toUpperCase() : "EN"}</span>
                 <svg
                   className={`w-3.5 h-3.5 transition-transform duration-300 ${langOpen ? "rotate-180" : ""}`}
                   fill="none"
@@ -116,9 +116,9 @@ export default function Navbar() {
                     className="absolute right-0 mt-2 w-36 rounded-2xl border border-[#42433d] bg-[#141513]/98 backdrop-blur-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-0.5"
                   >
                     {[
-                      { code: "en", label: "🇺🇸 English" },
-                      { code: "fr", label: "🇫🇷 Français" },
-                      { code: "es", label: "🇪🇸 Español" },
+                      { code: "en", label: "English" },
+                      { code: "fr", label: "Français" },
+                      { code: "es", label: "Español" },
                     ].map((lang) => (
                       <button
                         key={lang.code}
@@ -225,9 +225,9 @@ export default function Navbar() {
                 <p className="text-[11px] font-mono text-[#7c7c6f] mb-3 font-semibold tracking-widest uppercase">Language</p>
                 <div className="flex gap-2">
                   {[
-                    { code: "en", label: "🇺🇸 EN" },
-                    { code: "fr", label: "🇫🇷 FR" },
-                    { code: "es", label: "🇪🇸 ES" },
+                    { code: "en", label: "EN" },
+                    { code: "fr", label: "FR" },
+                    { code: "es", label: "ES" },
                   ].map((lang) => (
                     <button
                       key={lang.code}
@@ -261,7 +261,7 @@ export default function Navbar() {
                 transition={{ delay: 0.3 }}
                 className="w-full text-center py-3.5 rounded-full border border-[#42433d] bg-[#141513] hover:bg-[#191919] text-[#fffce1] font-bold text-sm transition-all font-[Outfit]"
               >
-                🔑 {t("nav.signin")}
+                {t("nav.signin")}
               </motion.a>
 
               <motion.a
@@ -275,7 +275,7 @@ export default function Navbar() {
                 transition={{ delay: 0.35 }}
                 className="w-full text-center py-3.5 rounded-full bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] font-black text-sm tracking-tight transition-all font-[Outfit] shadow-lg shadow-black/30"
               >
-                ⚡ {t("nav.trial")}
+                {t("nav.trial")}
               </motion.a>
             </div>
           </motion.div>

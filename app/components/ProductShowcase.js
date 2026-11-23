@@ -2,7 +2,7 @@
 import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useLanguage } from "../context/LanguageContext";
-import { Monitor, Tablet, Smartphone, Layers, Sparkles, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
+import { Monitor, Tablet, Smartphone, Layers, Sparkles, CheckCircle2, ShieldCheck, Zap, Lock } from "lucide-react";
 
 function WhatsAppIcon({ className = "w-3.5 h-3.5", ...props }) {
   return (
@@ -24,12 +24,8 @@ export default function ProductShowcase() {
   const [activeDevice, setActiveDevice] = useState("all"); // 'all' | 'desktop' | 'tablet' | 'mobile'
 
   return (
-    <section id="showcase" ref={ref} className="relative py-28 sm:py-36 overflow-hidden bg-dark-950/70">
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-500/20 to-transparent" />
-      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
-
-      {/* Radial ambient glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-accent-500/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+    <section id="showcase" ref={ref} className="relative py-28 sm:py-36 overflow-hidden bg-dark-950/70 border-t border-[#42433d]/40">
+      <div className="absolute inset-0 grid-pattern opacity-15 pointer-events-none -z-10" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
@@ -110,7 +106,8 @@ export default function ProductShowcase() {
                   </div>
 
                   <div className="bg-dark-950/90 border border-white/10 rounded-lg px-4 sm:px-6 py-1 text-xs text-gray-300 font-mono flex items-center gap-2 max-w-sm sm:max-w-md w-full justify-center">
-                    <span className="text-green-400 text-[10px]">🔒 https://</span>
+                    <Lock size={11} className="text-[#abff84] shrink-0" />
+                    <span className="text-gray-400 text-[10px]">https://</span>
                     <span className="text-white font-medium truncate">app.0machine.com/dashboard</span>
                   </div>
 

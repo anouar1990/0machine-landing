@@ -27,8 +27,7 @@ export default function RoiCalculator() {
 
   return (
     <section id="roi-calculator" className="py-20 sm:py-28 bg-[#0e100f] border-t border-[#42433d]/40 relative overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#0ae448]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute inset-0 grid-pattern opacity-15 pointer-events-none -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-10 sm:mb-12">
@@ -75,12 +74,12 @@ export default function RoiCalculator() {
             </div>
 
             {/* Slider 2: Average Sheet Price */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 sm:p-5">
+            <div className="bg-[#0e100f] border border-[#42433d]/60 rounded-2xl p-4 sm:p-5">
               <div className="flex justify-between items-center mb-2">
-                <label htmlFor="sheet-price" className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                <label htmlFor="sheet-price" className="text-xs text-[#7c7c6f] font-mono uppercase tracking-wide">
                   {t("calc.roi.priceLabel")}
                 </label>
-                <span className="text-base sm:text-lg font-black text-white font-[Outfit]">
+                <span className="text-base sm:text-lg font-black text-[#abff84] font-[Outfit]">
                   ${sheetPrice}
                 </span>
               </div>
@@ -102,7 +101,7 @@ export default function RoiCalculator() {
           </div>
 
           {/* Results Grid */}
-          <div className="p-5 sm:p-6 rounded-xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-emerald-500/10 border border-amber-500/25 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+          <div className="p-5 sm:p-6 rounded-2xl bg-[#0e100f] border border-[#42433d] grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
             <div>
               <span className="text-xs text-gray-400 block font-semibold mb-1">
                 {t("calc.roi.savedScrap")}
