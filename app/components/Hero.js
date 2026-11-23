@@ -19,6 +19,7 @@ const HERO_TABS = [
     alt: "0Machine Commercial Designs Vault with 300,000+ Ready-to-Cut Vector Packs",
     tag: "300,000+ Ready-to-Cut",
     badge: "Commercial License",
+    specs: "300K+ Vectors · LightBurn Ready · Instant SVG/DXF",
   },
   {
     id: "laser-ai",
@@ -32,6 +33,7 @@ const HERO_TABS = [
     alt: "0Machine LaserAI Studio Text-to-Vector Generator for laser cut designs",
     tag: "Prompt to SVG/DXF",
     badge: "Kerf-Compensated",
+    specs: "Text-to-CAD · Auto-Bridge Stencils · 0.15mm Kerf Offset",
   },
   {
     id: "nesting",
@@ -45,6 +47,7 @@ const HERO_TABS = [
     alt: "0Machine True-Shape Nesting Studio with ClipperLib collision detection and sheet yield HUD",
     tag: "30-40% Less Scrap",
     badge: "ClipperLib Engine",
+    specs: "True-Shape Nesting · Multi-Sheet · Scrap Reduction",
   },
   {
     id: "dashboard",
@@ -58,6 +61,7 @@ const HERO_TABS = [
     alt: "0Machine Workshop Hub with live revenue analytics, order status, and inventory alerts",
     tag: "Workshop Hub",
     badge: "Live Telemetry",
+    specs: "Revenue Analytics · Order Tracking · Sheet Inventory",
   },
 ];
 

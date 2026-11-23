@@ -2362,3 +2362,34 @@
 - **Test Results**: All tests PASS (100%).
 - **Current Status**: COMPLETE
 - **Known Issues**: None.
+
+
+## [2026-11-23 23:15:00] - Fix React Hydration Mismatch Caused by Stale Turbopack Dev Cache
+- **Task**: Diagnose and fix React recoverable hydration mismatch error reported on `RoiCalculator` and `Workflow` components.
+- **Root Cause**: Next.js Turbopack dev server (PID 86317) had been running continuously in background since Nov 16 (7 days). When component styling was updated across multiple git commits, the server-side Turbopack memory cache kept serving old compiled SSR AST trees (`className="bg-white/[0.02] border border-white/5..."`) while the browser loaded the new client bundles (`className="bg-[#0e100f] border border-[#42433d]/60..."`), triggering a React hydration mismatch.
+- **Resolution**:
+  - Terminated the stale Next.js dev server process.
+  - Cleared `.next/dev/` and `.next/cache/`.
+  - Restarted a fresh Turbopack dev server on `http://localhost:3000`.
+  - Executed automated Chrome DevTools Protocol console verification on both `http://localhost:3000` and `https://0machine-landing.vercel.app`.
+- **Tests Performed**:
+  - Chrome DevTools Protocol native WebSocket console error audit: PASS (0 console errors, 0 hydration warnings).
+  - Next.js production build (`npm run build`): PASS (65/65 routes compiled with 0 errors).
+- **Test Results**: All tests PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None.
+
+
+## [2026-11-23 23:35:00] - Replace Awkward Circular Aperture with Clean Uncropped Studio Window
+- **Task**: Replace the circular lens cutout / aperture mask in the Hero section with a sleek, uncropped, rectangular studio application window.
+- **Root Cause & Feedback**: User reported that the circular aperture frame ("khayeb hadchi asahbii") cropped out critical software controls, navigation sidebars, forms, and tables in the dashboard, nesting, and LaserAI screens, making the app look broken and gimmicky.
+- **Changes Made**:
+  - `0machine-landing/app/components/StudioApertureViewport.js`: Completely eliminated the circular SVG mask, the red concentric circles, and the cream wing borders. Replaced with a sleek dark studio window chassis (`bg-[#121311]`, border `border-[#33352e]`, soft shadow `shadow-[0_25px_80px_-15px_rgba(0,0,0,0.9)]`), refined macOS-style control dots with subtle border, active URL/route pill (`app.0machine.com/[route] · BADGE`), clean "App ↗" action link, and technical status footer (`SVG · DXF · LightBurn C00 · Active Studio`).
+  - `0machine-landing/app/components/Hero.js`: Added technical `specs` telemetry to all `HERO_TABS` (Designs Vault, LaserAI Studio, Nesting Studio, Workshop Hub). Screenshots are now displayed at 100% full, uncropped 16:10 rectangular aspect ratio with responsive picture tag.
+- **Tests Performed**:
+  - Production build (`npm run build` in `0machine-landing`): PASS (65/65 static routes compiled in 5.8s with 0 errors).
+  - Chrome DevTools Protocol visual audit on Desktop (1440x900) & Mobile (375x812): PASS (all 4 tabs tested — Designs Vault, LaserAI Studio, Nesting Studio, Workshop Hub; verified 100% full uncropped visibility of sidebars, tables, and canvases).
+  - Vercel production deployment: PASS.
+- **Test Results**: All tests PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None.
