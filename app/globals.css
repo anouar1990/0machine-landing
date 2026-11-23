@@ -1,29 +1,44 @@
 @import "tailwindcss";
 
 @theme {
-  --color-dark-950: #111317;
-  --color-dark-900: #1A1D21;
-  --color-dark-800: #23262C;
-  --color-dark-700: #2B2F37;
-  --color-dark-600: #333842;
-  --color-dark-500: #444A57;
-  --color-accent-500: #FE7733;
-  --color-accent-400: #FF925C;
-  --color-accent-600: #E85F20;
-  --color-accent-300: #FFB189;
-  --color-brand-orange: #FE7733;
-  --color-brand-orange-light: #FF925C;
-  --color-brand-orange-dark: #E85F20;
-  --color-brand-lime: #B1FA63;
-  --color-brand-lime-dark: #8ED638;
-  --color-brand-lime-glow: rgba(177, 250, 99, 0.3);
-  --color-neon-lime: #B1FA63;
-  --color-neon-sprout: #B1FA63;
-  --color-glow: rgba(254, 119, 51, 0.4);
-  --color-glow-subtle: rgba(254, 119, 51, 0.15);
-  --color-glow-neon: rgba(177, 250, 99, 0.3);
-  --color-glass: rgba(255, 255, 255, 0.05);
-  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-dark-950: #0e100f;
+  --color-dark-900: #141513;
+  --color-dark-800: #191919;
+  --color-dark-700: #222320;
+  --color-dark-600: #2b2f28;
+  --color-dark-500: #42433d;
+  --color-gsap-bg: #0e100f;
+  --color-gsap-surface: #191919;
+  --color-gsap-card: #141513;
+  --color-gsap-elevated: #222320;
+  --color-gsap-cream: #fffce1;
+  --color-gsap-stone: #7c7c6f;
+  --color-gsap-muted: #55564e;
+  --color-gsap-border: #42433d;
+  --color-gsap-border-subtle: #292a26;
+  --color-gsap-green: #0ae448;
+  --color-gsap-lime: #abff84;
+  --color-gsap-orange: #ff8709;
+  --color-gsap-lilac: #9d95ff;
+  --color-gsap-cyan: #00bae2;
+  --color-gsap-pink: #fec5fb;
+  --color-accent-500: #ff8709;
+  --color-accent-400: #ffa526;
+  --color-accent-600: #e85f20;
+  --color-accent-300: #ffc27d;
+  --color-brand-orange: #ff8709;
+  --color-brand-orange-light: #ffa526;
+  --color-brand-orange-dark: #e85f20;
+  --color-brand-lime: #abff84;
+  --color-brand-lime-dark: #0ae448;
+  --color-brand-lime-glow: rgba(171, 255, 132, 0.35);
+  --color-neon-lime: #abff84;
+  --color-neon-sprout: #0ae448;
+  --color-glow: rgba(255, 135, 9, 0.4);
+  --color-glow-subtle: rgba(255, 135, 9, 0.15);
+  --color-glow-neon: rgba(171, 255, 132, 0.3);
+  --color-glass: rgba(255, 252, 225, 0.04);
+  --color-glass-border: rgba(66, 67, 61, 0.6);
   --font-sans: var(--font-inter), 'Inter', 'system-ui', sans-serif;
   --font-display: var(--font-outfit), 'Outfit', sans-serif;
 }
@@ -34,8 +49,8 @@ html {
 }
 
 body {
-  background-color: #111317;
-  color: #e5e7eb;
+  background-color: #0e100f;
+  color: #fffce1;
   font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -44,6 +59,62 @@ body {
 
 .font-\[Outfit\] {
   font-family: var(--font-outfit), 'Outfit', sans-serif;
+}
+
+/* GSAP Creative Studio UI Helpers */
+.gsap-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.75rem 1.6rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  border: 1px solid #42433d;
+  color: #fffce1;
+  background: #141513;
+  text-decoration: none;
+}
+.gsap-pill-btn:hover {
+  border-color: #abff84;
+  box-shadow: 0 0 20px rgba(171, 255, 132, 0.2);
+  transform: translateY(-1px);
+}
+.gsap-pill-primary {
+  background: #fffce1;
+  color: #0e100f;
+  border-color: #fffce1;
+}
+.gsap-pill-primary:hover {
+  background: #abff84;
+  border-color: #abff84;
+  color: #0e100f;
+  box-shadow: 0 0 25px rgba(171, 255, 132, 0.35);
+  transform: translateY(-1px);
+}
+.gsap-card {
+  background: #141513;
+  border: 1px solid #42433d;
+  border-radius: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gsap-card:hover {
+  border-color: rgba(171, 255, 132, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+.text-cream {
+  color: #fffce1;
+}
+.text-stone-warm {
+  color: #7c7c6f;
+}
+.border-gsap {
+  border-color: #42433d;
 }
 
 /* Scrollbar */

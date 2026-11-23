@@ -72,10 +72,9 @@ export default function Benefits() {
   ];
 
   return (
-    <section id="benefits" ref={ref} className="relative py-32 overflow-hidden">
+    <section id="benefits" ref={ref} className="relative py-32 overflow-hidden bg-[#0e100f] border-t border-[#42433d]/40">
       {/* Background */}
-      <div className="absolute inset-0 gradient-mesh opacity-50" />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-500/20 to-transparent" />
+      <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Section header */}
@@ -85,15 +84,21 @@ export default function Benefits() {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <span className="text-xs text-accent-400 tracking-[0.2em] uppercase font-medium">
-            {t("benefits.badge")}
-          </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white mt-4 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433d] bg-[#141513] mb-4 shadow-lg shadow-black/40">
+            <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
+            <span className="text-xs text-[#abff84] tracking-[0.2em] uppercase font-mono font-semibold">
+              {t("benefits.badge") || "WORKSHOP ADVANTAGE"}
+            </span>
+          </div>
+
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-[#fffce1] mt-2 mb-4 tracking-[-0.04em] leading-[1.05]">
             {t("benefits.title")}
             <br />
-            <span className="gradient-text-accent">{t("benefits.titleAccent")}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
+              {t("benefits.titleAccent")}
+            </span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+          <p className="text-[#7c7c6f] max-w-2xl mx-auto text-base sm:text-lg">
             {t("benefits.subtitle")}
           </p>
         </motion.div>
@@ -106,46 +111,41 @@ export default function Benefits() {
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.1, duration: 0.6 }}
-              className="glass-card-hover p-6 sm:p-8 group relative overflow-hidden"
+              className="p-6 sm:p-8 rounded-[24px] bg-[#141513] border border-[#42433d] hover:border-[#abff84]/50 transition-all shadow-xl group relative overflow-hidden"
             >
-              {/* Gradient overlay */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${benefit.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[20px]`}
-              />
-
               <div className="relative z-10">
                 {/* Icon & badge */}
                 <div className="flex items-start justify-between mb-4">
                   <span className="text-3xl">{benefit.icon}</span>
-                  <span className="text-[10px] text-accent-400 bg-accent-500/10 px-2.5 py-1 rounded-full font-medium">
+                  <span className="text-[10px] text-[#abff84] bg-[#abff84]/10 border border-[#abff84]/20 px-2.5 py-1 rounded-full font-mono font-bold">
                     {benefit.feature}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-bold text-white mb-3 font-[Outfit] leading-tight">
+                <h3 className="text-xl font-bold text-[#fffce1] mb-3 font-[Outfit] leading-tight">
                   {benefit.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-sm text-gray-400 leading-relaxed mb-5">
+                <p className="text-sm text-[#7c7c6f] leading-relaxed mb-5">
                   {benefit.description}
                 </p>
 
                 {/* Outcome */}
-                <div className="flex items-start gap-2 p-3 rounded-xl bg-dark-800/50 border border-white/5 mb-5">
-                  <span className="text-green-400 text-sm mt-0.5">✓</span>
-                  <p className="text-xs text-gray-300 leading-relaxed">
+                <div className="flex items-start gap-2 p-3 rounded-full bg-[#0e100f] border border-[#42433d]/60 mb-5">
+                  <span className="text-[#abff84] text-sm mt-0.5 ml-1">✓</span>
+                  <p className="text-xs text-[#fffce1]/90 leading-relaxed truncate">
                     {benefit.outcome}
                   </p>
                 </div>
 
                 {/* Stat */}
-                <div className="flex items-end gap-2 pt-4 border-t border-white/5">
-                  <span className="text-3xl font-bold text-accent-400 font-[Outfit]">
+                <div className="flex items-end gap-2 pt-4 border-t border-[#42433d]/50">
+                  <span className="text-3xl font-black text-[#fffce1] font-[Outfit]">
                     {benefit.stat}
                   </span>
-                  <span className="text-xs text-gray-500 mb-1">
+                  <span className="text-xs text-[#7c7c6f] font-mono mb-1">
                     {benefit.statLabel}
                   </span>
                 </div>

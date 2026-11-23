@@ -23,12 +23,12 @@ export default function FinalCTA() {
   ];
 
   return (
-    <section ref={ref} className="relative py-32 overflow-hidden">
-      <div className="absolute inset-0 gradient-mesh" />
+    <section ref={ref} className="relative py-32 overflow-hidden bg-[#0e100f] border-t border-[#42433d]/40">
+      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
 
       {/* Large glow orbs */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent-500/8 rounded-full blur-[150px]" />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-brand-lime/5 rounded-full blur-[100px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#0ae448]/8 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[450px] h-[450px] bg-[#ff8709]/8 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
         <motion.div
@@ -36,54 +36,46 @@ export default function FinalCTA() {
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.8 }}
         >
-          {/* Icon */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500 to-accent-600 shadow-xl shadow-accent-500/30 mb-8"
-          >
-            <svg
-              className="w-8 h-8 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-          </motion.div>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433d] bg-[#141513] mb-8 shadow-lg shadow-black/40">
+            <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
+            <span className="text-xs text-[#abff84] tracking-[0.2em] uppercase font-mono font-semibold">
+              ATELIER PASS · COMMERCIAL RESALE
+            </span>
+          </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold font-[Outfit] text-white mb-6 leading-tight">
-            {t("final.title")}
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-black font-[Outfit] text-[#fffce1] mb-6 leading-[0.96] tracking-[-0.04em]">
+            {t("final.title") || "Ready to Transform"}
             <br />
-            {t("final.titleMid")}
+            {t("final.titleMid") || "Your Laser Workshop?"}
             <br />
-            <span className="gradient-text-accent">{t("final.titleAccent")}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
+              {t("final.titleAccent") || "Start Free in Seconds."}
+            </span>
           </h2>
 
-          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg sm:text-xl text-[#7c7c6f] max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
             {t("final.subtitle")}
           </p>
 
-          {/* CTA buttons */}
+          {/* CTA buttons (GSAP Outlined Pill) */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
             <a
               href="https://app.0machine.com"
               onClick={() => trackEvent('cta_click', { button: 'final_cta_trial' })}
-              className="glow-btn text-lg px-10 py-5"
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 rounded-full bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] font-black text-base sm:text-lg tracking-tight transition-all font-[Outfit] shadow-2xl hover:shadow-[0_0_35px_rgba(171,255,132,0.35)] active:scale-95 cursor-pointer w-full sm:w-auto"
             >
-              {t("final.cta.trial")}
+              <span>{t("final.cta.trial") || "Launch Studio Free →"}</span>
             </a>
-            <a href="#features" className="glow-btn-outline text-lg px-10 py-5">
-              {t("final.cta.features")}
+            <a
+              href="#designs-vault"
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 rounded-full bg-[#141513] hover:bg-[#191919] border border-[#42433d] hover:border-[#abff84] text-[#fffce1] font-bold text-base sm:text-lg tracking-tight transition-all font-[Outfit] hover:shadow-[0_0_20px_rgba(171,255,132,0.18)] active:scale-95 cursor-pointer w-full sm:w-auto"
+            >
+              <span>{t("final.cta.features") || "Explore 300K+ Vault ↓"}</span>
             </a>
           </div>
 
-          <p className="text-sm text-gray-600">
+          <p className="text-xs sm:text-sm text-[#7c7c6f] max-w-md mx-auto">
             {t("final.terms")}
           </p>
 
@@ -92,12 +84,12 @@ export default function FinalCTA() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-3 mt-12"
+            className="flex flex-wrap justify-center gap-2.5 mt-12"
           >
             {features.map((feature) => (
               <span
                 key={feature}
-                className="text-xs px-3 py-1.5 rounded-full bg-white/[0.03] text-gray-500 border border-white/5"
+                className="text-xs px-3.5 py-1.5 rounded-full bg-[#141513] text-[#7c7c6f] border border-[#42433d] font-mono"
               >
                 {feature}
               </span>

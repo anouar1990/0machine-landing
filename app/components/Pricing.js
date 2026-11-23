@@ -91,53 +91,62 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" ref={ref} className="relative py-32 overflow-hidden bg-[#111317]">
-      <div className="absolute inset-0 grid-pattern opacity-30" />
+    <section id="pricing" ref={ref} className="relative py-32 overflow-hidden bg-[#0e100f] border-t border-[#42433d]/40">
+      <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#0ae448]/8 rounded-full blur-[140px] pointer-events-none -z-10" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-14"
         >
-          <span className="text-xs text-[#B1FA63] tracking-[0.2em] uppercase font-bold">
-            {t("price.badge") || "TRANSPARENT PRICING"}
-          </span>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mt-3 mb-4 font-[Outfit]">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433d] bg-[#141513] mb-4 shadow-lg shadow-black/40">
+            <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
+            <span className="text-xs text-[#abff84] tracking-[0.2em] uppercase font-mono font-semibold">
+              {t("price.badge") || "TRANSPARENT PRICING"}
+            </span>
+          </div>
+
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#fffce1] mb-4 font-[Outfit] tracking-[-0.04em] leading-[1.05]">
             {t("price.title") || "Run Your Entire Laser Workshop"} <br />
-            <span className="text-[#FE7733]">{t("price.titleAccent") || "From One Dashboard."}</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
+              {t("price.titleAccent") || "From One Studio Atelier."}
+            </span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-base">
+          <p className="text-[#7c7c6f] max-w-2xl mx-auto text-base sm:text-lg">
             {t("price.subtitle") || "Start free forever. Upgrade anytime as your workshop grows."}
           </p>
 
-          {/* Monthly vs Annual Cycle Toggle */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-            <button
-              onClick={() => setCycle("monthly")}
-              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                cycle === "monthly"
-                  ? "bg-[#FE7733] text-white shadow-lg shadow-[#FE7733]/20"
-                  : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10"
-              }`}
-            >
-              {t("price.cycle.monthly") || "Monthly Billing"}
-            </button>
+          {/* Monthly vs Annual Cycle Toggle (GSAP Outlined Island) */}
+          <div className="flex items-center justify-center mt-8">
+            <div className="inline-flex p-1.5 rounded-full bg-[#141513] border border-[#42433d] shadow-2xl gap-1">
+              <button
+                onClick={() => setCycle("monthly")}
+                className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold font-[Outfit] transition-all cursor-pointer ${
+                  cycle === "monthly"
+                    ? "bg-[#abff84] text-[#0e100f] shadow-lg shadow-[#abff84]/20"
+                    : "text-[#7c7c6f] hover:text-[#fffce1] hover:bg-[#191919]"
+                }`}
+              >
+                {t("price.cycle.monthly") || "Monthly Billing"}
+              </button>
 
-            <button
-              onClick={() => setCycle("annual")}
-              className={`relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                cycle === "annual"
-                  ? "bg-[#FE7733] text-white shadow-lg shadow-[#FE7733]/20"
-                  : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10"
-              }`}
-            >
-              {t("price.cycle.annual") || "Annual Billing"}
-              <span className="absolute -top-3 -right-2 sm:-right-3 bg-[#B1FA63] text-[#111317] text-[9px] sm:text-[10px] uppercase font-extrabold px-1.5 sm:px-2 py-0.5 rounded-full shadow whitespace-nowrap">
-                {t("price.cycle.save_badge") || "Save up to 35%"}
-              </span>
-            </button>
+              <button
+                onClick={() => setCycle("annual")}
+                className={`relative px-5 py-2 rounded-full text-xs sm:text-sm font-bold font-[Outfit] transition-all cursor-pointer ${
+                  cycle === "annual"
+                    ? "bg-[#abff84] text-[#0e100f] shadow-lg shadow-[#abff84]/20"
+                    : "text-[#7c7c6f] hover:text-[#fffce1] hover:bg-[#191919]"
+                }`}
+              >
+                {t("price.cycle.annual") || "Annual Billing"}
+                <span className="absolute -top-2.5 -right-2 bg-[#ff8709] text-white text-[9px] font-mono font-black uppercase px-2 py-0.5 rounded-full shadow whitespace-nowrap">
+                  {t("price.cycle.save_badge") || "Save ~25%"}
+                </span>
+              </button>
+            </div>
           </div>
         </motion.div>
 
@@ -149,33 +158,33 @@ export default function Pricing() {
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.12, duration: 0.6 }}
-              className={`relative flex flex-col h-full rounded-2xl p-6 sm:p-8 border transition-all ${
+              className={`relative flex flex-col h-full rounded-[28px] p-6 sm:p-8 border transition-all ${
                 plan.highlighted
-                  ? "bg-[#23262C] border-[#B1FA63] shadow-2xl shadow-[#B1FA63]/10 md:scale-105"
-                  : "bg-[#1A1D21] border-white/10 hover:border-white/20"
+                  ? "bg-[#161814] border-2 border-[#abff84] shadow-2xl shadow-[#abff84]/15 md:scale-105 z-10"
+                  : "bg-[#141513] border-[#42433d] hover:border-[#7c7c6f]"
               }`}
             >
               {plan.badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#B1FA63] text-[#111317] text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#abff84] text-[#0e100f] text-xs font-mono font-bold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-lg">
                   {plan.badge}
                 </div>
               )}
 
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
-                <p className="text-gray-400 text-sm min-h-[40px]">{plan.description}</p>
+                <h3 className="text-xl font-black text-[#fffce1] mb-2 font-[Outfit]">{plan.name}</h3>
+                <p className="text-[#7c7c6f] text-sm min-h-[40px] leading-relaxed">{plan.description}</p>
               </div>
 
-              <div className="mb-6">
+              <div className="mb-6 pb-6 border-b border-[#42433d]/60">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold text-white tracking-tight">{plan.price}</span>
+                  <span className="text-4xl sm:text-5xl font-black text-[#fffce1] tracking-tight font-[Outfit]">{plan.price}</span>
                   {plan.originalPrice && (
-                    <span className="text-lg line-through text-gray-500 font-semibold">{plan.originalPrice}</span>
+                    <span className="text-lg line-through text-[#7c7c6f] font-semibold">{plan.originalPrice}</span>
                   )}
-                  <span className="text-gray-400 text-sm font-medium">{plan.period}</span>
+                  <span className="text-[#7c7c6f] text-sm font-medium">{plan.period}</span>
                 </div>
                 {plan.billingNote && (
-                  <p className={`text-xs mt-2 font-medium tracking-wide ${plan.highlighted ? "text-[#B1FA63]" : "text-gray-400"}`}>
+                  <p className={`text-xs mt-2 font-mono tracking-wide ${plan.highlighted ? "text-[#abff84]" : "text-[#7c7c6f]"}`}>
                     {plan.billingNote}
                   </p>
                 )}
@@ -188,13 +197,13 @@ export default function Pricing() {
                     feat.toLowerCase().includes("quote") ||
                     feat.toLowerCase().includes("invoice");
                   return (
-                    <li key={idx} className="flex items-center gap-3 text-sm text-gray-300">
+                    <li key={idx} className="flex items-center gap-3 text-sm text-[#fffce1]/90">
                       {isWhatsApp ? (
                         <span className="w-4 h-4 flex items-center justify-center text-[#25D366] flex-shrink-0">
                           <WhatsAppIcon className="w-4 h-4 fill-current" />
                         </span>
                       ) : (
-                        <Check className="w-4 h-4 text-[#FE7733] flex-shrink-0" />
+                        <Check className="w-4 h-4 text-[#abff84] flex-shrink-0" />
                       )}
                       <span className="flex items-center flex-wrap gap-1.5">
                         <span>{feat}</span>
@@ -211,10 +220,10 @@ export default function Pricing() {
 
               <a
                 href={plan.href}
-                className={`w-full text-center py-3.5 px-6 rounded-xl font-bold text-sm transition-all ${
+                className={`w-full text-center py-4 px-6 rounded-full font-black text-sm tracking-tight transition-all font-[Outfit] active:scale-95 cursor-pointer ${
                   plan.highlighted
-                    ? "bg-[#FE7733] hover:bg-[#E85F20] text-white shadow-lg shadow-[#FE7733]/25"
-                    : "bg-white/5 hover:bg-white/10 text-white border border-white/10"
+                    ? "bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] shadow-xl hover:shadow-[0_0_30px_rgba(171,255,132,0.35)]"
+                    : "bg-[#141513] hover:bg-[#191919] text-[#fffce1] border border-[#42433d] hover:border-[#abff84]"
                 }`}
               >
                 {plan.cta}

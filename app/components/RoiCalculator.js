@@ -26,33 +26,35 @@ export default function RoiCalculator() {
   };
 
   return (
-    <section id="roi-calculator" className="py-20 sm:py-28 bg-dark-900/60 border-y border-white/5 relative overflow-hidden">
+    <section id="roi-calculator" className="py-20 sm:py-28 bg-[#0e100f] border-t border-[#42433d]/40 relative overflow-hidden">
       {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-amber-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#0ae448]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-10 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
-            <Calculator size={13} />
-            <span>{t("calc.roi.badge")}</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433d] bg-[#141513] mb-4 shadow-lg shadow-black/40">
+            <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
+            <span className="text-xs text-[#abff84] tracking-[0.2em] uppercase font-mono font-semibold">
+              {t("calc.roi.badge") || "WORKSHOP ROI BENCHMARK"}
+            </span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black font-[Outfit] text-white tracking-tight mb-3">
+          <h2 className="text-3xl sm:text-5xl font-black font-[Outfit] text-[#fffce1] tracking-[-0.04em] mb-3">
             {t("calc.roi.title")}
           </h2>
-          <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto">
+          <p className="text-[#7c7c6f] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
             {t("calc.roi.subtitle")}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-dark-950/90 backdrop-blur-xl p-5 sm:p-8 md:p-10 shadow-2xl">
+        <div className="rounded-[28px] border border-[#42433d] bg-[#141513] p-5 sm:p-8 md:p-10 shadow-2xl">
           <div className="grid sm:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-10">
             {/* Slider 1: Sheets per month */}
-            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 sm:p-5">
+            <div className="bg-[#0e100f] border border-[#42433d]/60 rounded-2xl p-4 sm:p-5">
               <div className="flex justify-between items-center mb-2">
-                <label htmlFor="sheets-per-month" className="text-xs text-gray-400 font-semibold uppercase tracking-wide">
+                <label htmlFor="sheets-per-month" className="text-xs text-[#7c7c6f] font-mono uppercase tracking-wide">
                   {t("calc.roi.sheetsLabel")}
                 </label>
-                <span className="text-base sm:text-lg font-black text-amber-400 font-[Outfit]">
+                <span className="text-base sm:text-lg font-black text-[#abff84] font-[Outfit]">
                   {sheetsPerMonth} {t("calc.roi.sheetsSuffix")}
                 </span>
               </div>
@@ -127,15 +129,15 @@ export default function RoiCalculator() {
               </span>
             </div>
 
-            <div className="sm:border-l sm:border-white/10 sm:pl-6">
-              <span className="text-xs text-emerald-400 block font-semibold mb-1">
+            <div className="sm:border-l sm:border-[#42433d]/60 sm:pl-6">
+              <span className="text-xs text-[#abff84] block font-mono font-semibold mb-1">
                 {t("calc.roi.totalGain")}
               </span>
-              <span className="text-3xl sm:text-4xl font-black text-emerald-400 font-[Outfit]">
+              <span className="text-3xl sm:text-4xl font-black text-[#abff84] font-[Outfit]">
                 +${totalMonthlyGain.toFixed(0)}{" "}
-                <span className="text-xs font-normal text-emerald-200">{t("calc.roi.perMonth")}</span>
+                <span className="text-xs font-normal text-[#fffce1]">{t("calc.roi.perMonth")}</span>
               </span>
-              <span className="text-[11px] text-emerald-300 font-semibold block mt-1">
+              <span className="text-[11px] text-[#abff84]/80 font-mono font-semibold block mt-1">
                 (+${annualGain.toLocaleString()} {t("calc.roi.annualGain")})
               </span>
             </div>
@@ -145,9 +147,10 @@ export default function RoiCalculator() {
             <a
               href="https://app.0machine.com/register?ref=roi_calculator"
               onClick={handleCta}
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black shadow-lg shadow-amber-500/25 transition-all cursor-pointer w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-black text-sm tracking-tight bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] shadow-xl hover:shadow-[0_0_30px_rgba(171,255,132,0.35)] transition-all font-[Outfit] active:scale-95 cursor-pointer w-full sm:w-auto"
             >
               <span>{t("calc.roi.cta")}</span>
+              <span>→</span>
             </a>
           </div>
         </div>

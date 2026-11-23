@@ -31,8 +31,8 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-white/5 pt-16 pb-8">
-      <div className="absolute inset-0 gradient-mesh opacity-20" />
+    <footer className="relative border-t border-[#42433d]/40 bg-[#0e100f] pt-16 pb-12">
+      <div className="absolute inset-0 grid-pattern opacity-15 pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
@@ -44,14 +44,14 @@ export default function Footer() {
                 alt="0Machine Logo" 
                 width={150}
                 height={36}
-                className="h-9 w-auto object-contain" 
+                className="h-9 w-auto object-contain brightness-110" 
               />
             </a>
-            <p className="text-sm text-gray-500 leading-relaxed mb-4">
+            <p className="text-sm text-[#7c7c6f] leading-relaxed mb-4">
               {t("foot.desc")}
             </p>
-            <div className="space-y-1.5 text-xs text-gray-500">
-              <p className="font-semibold text-gray-400">COOLDELO LABS LLC</p>
+            <div className="space-y-1.5 text-xs text-[#7c7c6f]">
+              <p className="font-semibold text-[#fffce1]">COOLDELO LABS LLC</p>
               <p>📍 1209 Mountain Rd Pl NE, Ste R, Albuquerque, NM 87110, United States</p>
               <p>📞 +1 (917) 814-3657</p>
               <p>✉️ support@0machine.com</p>
@@ -62,13 +62,13 @@ export default function Footer() {
           {/* Link columns */}
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
-              <p className="text-sm font-semibold text-white mb-4">{title}</p>
+              <p className="text-sm font-bold text-[#fffce1] mb-4 font-[Outfit] tracking-tight">{title}</p>
               <ul className="space-y-2.5">
                 {links.map((link) => (
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-sm text-gray-500 hover:text-accent-400 transition-colors"
+                      className="text-sm text-[#7c7c6f] hover:text-[#fffce1] transition-colors"
                     >
                       {link.label}
                     </a>
@@ -80,18 +80,18 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
-          <p className="text-xs text-gray-600">
+        <div className="border-t border-[#42433d]/30 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
+          <p className="text-xs text-[#7c7c6f]">
             {t("foot.copyright")}
           </p>
           <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-4">
-            <span className="text-xs text-gray-600">
+            <span className="text-xs text-[#7c7c6f]">
               {t("foot.payments")}
             </span>
-            <span className="text-xs text-gray-700 hidden sm:inline">•</span>
-            <span className="text-xs text-gray-600">{t("foot.billed")}</span>
-            <span className="text-xs text-gray-700 hidden sm:inline">•</span>
-            <span className="text-xs text-gray-600">{t("foot.cancel")}</span>
+            <span className="text-xs text-[#42433d] hidden sm:inline">•</span>
+            <span className="text-xs text-[#7c7c6f]">{t("foot.billed")}</span>
+            <span className="text-xs text-[#42433d] hidden sm:inline">•</span>
+            <span className="text-xs text-[#7c7c6f]">{t("foot.cancel")}</span>
           </div>
         </div>
       </div>

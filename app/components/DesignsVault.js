@@ -183,66 +183,68 @@ export default function DesignsVault() {
   });
 
   return (
-    <section id="designs-vault" className="relative py-28 bg-[#0D0F12] text-gray-200 overflow-hidden border-t border-b border-white/5">
-      {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#FE7733]/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#B1FA63]/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+    <section id="designs-vault" className="relative py-28 bg-[#0e100f] text-[#fffce1] overflow-hidden border-t border-[#42433d]/40">
+      {/* Background glow effects (GSAP Lime + Laser Orange) */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#0ae448]/10 rounded-full blur-[150px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-[#ff8709]/10 rounded-full blur-[130px] pointer-events-none -z-10" />
       <div className="absolute inset-0 grid-pattern opacity-25 pointer-events-none -z-10" />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FE7733]/10 border border-[#FE7733]/25 text-[#FE7733] text-xs font-extrabold uppercase tracking-[0.2em] mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#141513] border border-[#42433d] text-[#abff84] text-[11px] font-mono font-semibold uppercase tracking-widest mb-4">
             <Sparkles size={13} />
-            <span>{t("vault.badge")}</span>
+            <span>300,000+ COMMERCIAL VECTORS</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-[Outfit] text-white tracking-tight mb-5">
-            {t("vault.title1")} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FE7733] via-[#FFA559] to-[#B1FA63]">
-              {t("vault.titleAccent")}
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-[#fffce1] tracking-[-0.03em] mb-5 leading-[1.05]">
+            CURATED DESIGNS. <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
+              BUILT TO CUT & SELL.
             </span>
           </h2>
 
-          <p className="text-gray-400 text-base sm:text-lg leading-relaxed">
+          <p className="text-[#7c7c6f] text-base sm:text-lg leading-relaxed">
             {t("vault.subtitle")}
           </p>
 
           {/* Social Proof Metric Pill */}
-          <div className="flex flex-wrap items-center justify-center gap-6 mt-8 pt-6 border-t border-white/10 text-xs">
+          <div className="flex flex-wrap items-center justify-center gap-6 mt-8 pt-6 border-t border-[#42433d]/40 text-xs">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-              <span className="text-white font-bold">{t("vault.proof.sales")}</span>
+              <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
+              <span className="text-[#fffce1] font-bold">{t("vault.proof.sales")}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <ShieldCheck size={14} className="text-[#B1FA63]" />
+            <div className="flex items-center gap-2 text-[#7c7c6f]">
+              <ShieldCheck size={14} className="text-[#abff84]" />
               <span>{t("vault.proof.license")}</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-400">
-              <Check size={14} className="text-[#FE7733]" />
+            <div className="flex items-center gap-2 text-[#7c7c6f]">
+              <Check size={14} className="text-[#ff8709]" />
               <span>{t("vault.proof.ready")}</span>
             </div>
           </div>
         </div>
 
-        {/* Category Filter Pills */}
+        {/* Category Filter Pills (GSAP Pill Island) */}
         <div className="flex items-center justify-center gap-2 flex-wrap mb-12">
-          {CATEGORY_ITEMS.map((cat) => {
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  isSelected
-                    ? "bg-[#FE7733] text-white shadow-lg shadow-[#FE7733]/20 scale-105"
-                    : "bg-[#1A1D21] text-gray-400 hover:text-white border border-white/10 hover:border-white/20"
-                }`}
-              >
-                {t(cat.key) || cat.label}
-              </button>
-            );
-          })}
+          <div className="inline-flex p-1.5 rounded-full bg-[#141513] border border-[#42433d] backdrop-blur-xl gap-1.5 flex-wrap justify-center">
+            {CATEGORY_ITEMS.map((cat) => {
+              const isSelected = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    isSelected
+                      ? "bg-[#abff84] text-[#0e100f] shadow-lg shadow-[#abff84]/20 scale-105"
+                      : "text-[#7c7c6f] hover:text-[#fffce1] hover:bg-[#191919]"
+                  }`}
+                >
+                  {t(cat.key) || cat.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Designs Grid */}
@@ -254,7 +256,7 @@ export default function DesignsVault() {
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
-              className="bg-[#16181D] border border-white/10 hover:border-[#FE7733]/50 rounded-2xl overflow-hidden flex flex-col justify-between group transition-all duration-300 hover:shadow-2xl hover:shadow-[#FE7733]/10"
+              className="bg-[#141513] border border-[#42433d] hover:border-[#abff84]/60 rounded-3xl overflow-hidden flex flex-col justify-between group transition-all duration-300 hover:shadow-2xl hover:shadow-[#abff84]/5"
             >
               <div>
                 {/* Image Thumbnail Container */}
@@ -265,51 +267,51 @@ export default function DesignsVault() {
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#16181D] via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#141513] via-transparent to-transparent opacity-80" />
 
                   {/* Top Badges */}
                   <div className="absolute top-3 left-3 flex items-center gap-2">
                     {pack.bestseller && (
-                      <span className="px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase tracking-wider bg-[#FE7733] text-white shadow">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#ff8709] text-white shadow">
                         ★ Bestseller
                       </span>
                     )}
-                    <span className="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-[#B1FA63] border border-white/10">
+                    <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-[#0e100f]/80 backdrop-blur-md text-[#abff84] border border-[#42433d]">
                       {pack.category}
                     </span>
                   </div>
 
                   {/* Quick Format Badge */}
-                  <div className="absolute bottom-3 left-3 text-[11px] font-mono text-gray-300 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10">
+                  <div className="absolute bottom-3 left-3 text-[11px] font-mono text-[#fffce1] bg-[#0e100f]/85 backdrop-blur-md px-3 py-1 rounded-full border border-[#42433d]">
                     {pack.format}
                   </div>
                 </div>
 
                 {/* Card Content */}
                 <div className="p-6">
-                  <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-                    <span className="flex items-center gap-1 text-[#F59E0B] font-bold">
-                      <Star size={12} fill="#F59E0B" /> {pack.rating}
+                  <div className="flex items-center justify-between text-xs text-[#7c7c6f] mb-2">
+                    <span className="flex items-center gap-1 text-[#ff8709] font-bold">
+                      <Star size={12} fill="#ff8709" /> {pack.rating}
                     </span>
-                    <span className="text-gray-500 font-mono">{pack.downloads} cuts</span>
+                    <span className="text-[#7c7c6f] font-mono">{pack.downloads} cuts</span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-white mb-2 font-[Outfit] leading-snug group-hover:text-[#FFA559] transition-colors">
+                  <h3 className="text-lg font-bold text-[#fffce1] mb-2 font-[Outfit] leading-snug group-hover:text-[#abff84] transition-colors">
                     {pack.title}
                   </h3>
 
-                  <p className="text-gray-400 text-xs leading-relaxed line-clamp-2 mb-4">
+                  <p className="text-[#7c7c6f] text-xs leading-relaxed line-clamp-2 mb-4">
                     {pack.desc}
                   </p>
 
-                  <div className="space-y-1.5 pt-3 border-t border-white/5 text-[11px]">
+                  <div className="space-y-1.5 pt-3 border-t border-[#42433d]/40 text-[11px]">
                     <div className="flex justify-between">
-                      <span className="text-gray-500">{t("vault.card.material")}</span>
-                      <span className="text-gray-300 font-medium">{pack.material}</span>
+                      <span className="text-[#7c7c6f]">{t("vault.card.material")}</span>
+                      <span className="text-[#fffce1] font-medium">{pack.material}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">{t("vault.card.profit")}</span>
-                      <span className="text-[#B1FA63] font-bold">{pack.resalePrice}</span>
+                      <span className="text-[#7c7c6f]">{t("vault.card.profit")}</span>
+                      <span className="text-[#abff84] font-mono font-bold">{pack.resalePrice}</span>
                     </div>
                   </div>
                 </div>
@@ -319,7 +321,7 @@ export default function DesignsVault() {
               <div className="p-6 pt-0">
                 <button
                   onClick={() => setActiveModalDesign(pack)}
-                  className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-white/5 hover:bg-[#FE7733] text-white border border-white/10 hover:border-[#FE7733] transition-all flex items-center justify-center gap-2 group-hover:shadow-lg group-hover:shadow-[#FE7733]/20 cursor-pointer"
+                  className="w-full py-3 px-4 rounded-full text-xs font-bold bg-[#191919] hover:bg-[#fffce1] text-[#fffce1] hover:text-[#0e100f] border border-[#42433d] hover:border-[#fffce1] transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95 shadow-md shadow-black/20"
                 >
                   <Eye size={14} />
                   <span>{t("vault.card.inspect")}</span>
@@ -329,29 +331,29 @@ export default function DesignsVault() {
           ))}
         </div>
 
-        {/* Vault Banner Call-To-Action */}
-        <div className="bg-gradient-to-r from-[#1A1D21] via-[#23262C] to-[#1A1D21] border border-[#FE7733]/30 rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl">
-          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-[#FE7733]/15 rounded-full blur-[100px] pointer-events-none" />
+        {/* Vault Banner Call-To-Action (GSAP Studio Atelier Surface) */}
+        <div className="bg-gradient-to-r from-[#141513] via-[#191919] to-[#141513] border border-[#42433d] rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl">
+          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-[#0ae448]/10 rounded-full blur-[120px] pointer-events-none" />
           
-          <span className="text-xs font-extrabold text-[#B1FA63] uppercase tracking-[0.25em]">{t("vault.banner.badge")}</span>
-          <h3 className="text-3xl sm:text-4xl font-bold text-white mt-2 mb-4 font-[Outfit]">
+          <span className="text-[11px] font-mono font-bold text-[#abff84] uppercase tracking-widest">{t("vault.banner.badge")}</span>
+          <h3 className="text-3xl sm:text-4xl font-black text-[#fffce1] mt-2 mb-4 font-[Outfit] tracking-tight">
             {t("vault.banner.title")}
           </h3>
-          <p className="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-[#7c7c6f] text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
             {t("vault.banner.sub")}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="https://app.0machine.com"
-              className="w-full sm:w-auto px-8 py-4 bg-[#FE7733] hover:bg-[#E85F20] text-white font-extrabold rounded-xl text-sm transition-all shadow-xl shadow-[#FE7733]/30 flex items-center justify-center gap-2 scale-105"
+              className="w-full sm:w-auto px-8 py-4 bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] font-black rounded-full text-sm transition-all shadow-xl hover:shadow-[0_0_25px_rgba(171,255,132,0.35)] flex items-center justify-center gap-2 active:scale-95 cursor-pointer font-[Outfit]"
             >
               <span>{t("vault.banner.ctaPro")}</span>
               <ArrowRight size={16} />
             </a>
             <a
               href="#pricing"
-              className="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl text-sm border border-white/10 transition-all"
+              className="w-full sm:w-auto px-8 py-4 bg-[#141513] hover:bg-[#191919] text-[#fffce1] font-bold rounded-full text-sm border border-[#42433d] hover:border-[#abff84] transition-all cursor-pointer font-[Outfit]"
             >
               {t("vault.banner.ctaPlans")}
             </a>

@@ -2295,3 +2295,26 @@
 - **Test Results**: All tests PASS (100%).
 - **Current Status**: COMPLETE
 - **Known Issues**: None.
+
+
+## [2026-11-23 22:15:00] - GSAP-Inspired Website Redesign & Bespoke Studio Aperture Viewport
+- **Task**: Execute the visual redesign of `0machine-landing` based on the approved GSAP-Inspired Creative Studio Master Plan (`0MACHINE_GSAP_REDESIGN_PROMPT.md`) and the user's uploaded retro-futuristic aperture viewport frame reference.
+- **Files Changed**:
+  - `0machine-landing/app/components/StudioApertureViewport.js` (Created): Bespoke SVG-masked atelier viewport featuring warm vintage cream body (`#f3ebd8`), central circular cutout lens (`r=398`), twin concentric coral hairline arcs (`#d3534a`, `r=426`), technical telemetry markings ("0M // ATELIER CAD LENS", "LIGHTBURN C00", "SCALE 1:1"), and responsive framing for live studio screenshots.
+  - `0machine-landing/app/components/Hero.js` (Modified): Integrated `StudioApertureViewport` replacing generic Mac browser frame, updated editorial headline to "300,000+ DESIGNS. ONE CREATIVE ATELIER." with cream `#fffce1` and electric lime `#0ae448`/`#abff84`, GSAP hairline pill badges, and outlined pill CTAs.
+  - `0machine-landing/app/components/Navbar.js` (Modified): Transformed into floating studio island (`#0e100f`/90 blur, `#42433d` hairline border), warm stone navigation links, and cream/lime outlined pill CTA.
+  - `0machine-landing/app/components/DesignsVault.js` (Modified): Re-styled into GSAP dark atelier gallery (`#0e100f` / `#141513`), cream titles, rounded-full category filter island, and resale benchmark metrics.
+  - `0machine-landing/app/components/Pricing.js` (Modified): Refactored to GSAP dark obsidian (`#0e100f`), rounded-full cycle toggle island (`#141513` / `#42433d`), highlighted Starter card with glowing lime border (`#abff84`), and `.gsap-pill-primary` buttons.
+  - `0machine-landing/app/components/Benefits.js` (Modified): Styled with `#0e100f` dark atelier background, `#141513` card surfaces, `#abff84` badges, and cream typography.
+  - `0machine-landing/app/components/FeatureShowcase.js` (Modified): Harmonized tabs and browser chrome to `#141513` and `#42433d` with lime status indicators.
+  - `0machine-landing/app/components/RoiCalculator.js` (Modified): Styled benchmark cards with `#141513` surface, `#abff84` gain metrics, and outlined pill CTA.
+  - `0machine-landing/app/components/FinalCTA.js` (Modified): Redesigned with GSAP Atelier Pass banner, cream typography, and outlined pill CTAs.
+  - `0machine-landing/app/components/Footer.js` (Modified): Styled as dark studio footer (`#0e100f`), warm cream headings, and muted stone links.
+  - `0machine-landing/app/globals.css` (Modified): Added GSAP color tokens, `.gsap-pill-btn`, `.gsap-pill-primary`, and utility classes.
+- **Tests Performed**:
+  - Next.js production build check (`npm run build` in `0machine-landing`): PASS (65/65 routes compiled with 0 errors in 5.8s).
+  - Headless Chrome visual rendering verification (`hero_studio_viewport_verified.png`): PASS (verified responsive 1440px desktop rendering of aperture frame, cream wings, red arc rings, typography, and screenshots).
+  - Mobile responsiveness check (`hero_studio_viewport_mobile.png`): PASS (verified 375px mobile viewport layout without horizontal overflow).
+- **Test Results**: All tests PASS (100%).
+- **Current Status**: COMPLETE
+- **Known Issues**: None.

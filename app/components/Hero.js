@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { trackEvent } from "../lib/analytics";
+import StudioApertureViewport from "./StudioApertureViewport";
 
 const HERO_TABS = [
   {
@@ -104,57 +105,66 @@ export default function Hero() {
       <div className="absolute inset-0 gradient-mesh opacity-70 pointer-events-none -z-10" />
       <div className="absolute inset-0 grid-pattern opacity-40 pointer-events-none -z-10" />
 
-      {/* Radial soft laser ambient glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-accent-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-1/4 w-[450px] h-[450px] bg-brand-lime/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+      {/* Radial soft laser ambient glow (GSAP Lime + Laser Orange) */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-[#0ae448]/10 rounded-full blur-[150px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 left-1/4 w-[450px] h-[450px] bg-[#ff8709]/10 rounded-full blur-[130px] pointer-events-none -z-10" />
 
       <div
         className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center"
       >
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-accent-500/30 bg-accent-500/10 backdrop-blur-md mb-6 sm:mb-8 shadow-lg shadow-accent-500/10 max-w-full">
-          <span className="w-2 h-2 rounded-full bg-accent-400 animate-pulse flex-shrink-0" />
-          <span className="text-[11px] sm:text-xs text-accent-300 font-semibold tracking-wide truncate sm:whitespace-normal">
-            {t("hero.badge")}
+        {/* Badge (GSAP Outlined Pill) */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 sm:py-2 rounded-full border border-[#42433d] bg-[#141513] backdrop-blur-md mb-6 sm:mb-8 shadow-lg shadow-black/40 max-w-full">
+          <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse flex-shrink-0" />
+          <span className="text-[11px] sm:text-xs text-[#abff84] font-mono font-semibold tracking-wider uppercase truncate sm:whitespace-normal">
+            300,000+ DESIGNS · CREATIVE ATELIER
           </span>
         </div>
 
-        {/* Headline */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-[Outfit] leading-[1.12] sm:leading-[1.06] tracking-tight mb-5 sm:mb-6 max-w-5xl mx-auto">
-          <span className="text-white">{t("hero.title1")}</span>
+        {/* Editorial Headline (GSAP Warm Cream + Tight Tracking) */}
+        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black font-[Outfit] leading-[0.96] sm:leading-[0.92] tracking-[-0.04em] mb-6 max-w-6xl mx-auto text-[#fffce1]">
+          300,000+ DESIGNS.
           <br className="hidden sm:inline" />{" "}
-          <span className="text-white">{t("hero.title2")}</span>
-          <span className="gradient-text-accent">{t("hero.titleAccent")}</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
+            ONE CREATIVE ATELIER.
+          </span>
         </h1>
 
-        {/* Subheadline */}
-        <p className="text-sm sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed font-normal px-2 sm:px-0">
-          {t("hero.subtitle")}
+        {/* Subheadline (GSAP Muted Stone #7c7c6f) */}
+        <p className="text-base sm:text-lg lg:text-xl text-[#7c7c6f] max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed font-normal px-2 sm:px-0">
+          Discover an extensive collection of laser-ready SVG, DXF, CDR, EPS and creative files for laser cutting, CNC and crafting projects — powered by LaserAI CAD engine and True-Shape nesting.
         </p>
 
-        {/* CTAs */}
+        {/* Feature Tags (GSAP Hairline Pill Badges) */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-8 sm:mb-10 max-w-3xl mx-auto">
+          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">⚡ 300,000+ Vectors</span>
+          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">Commercial Resale License</span>
+          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">LightBurn C00/C01 Ready</span>
+          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">Instant SVG · DXF · CDR · EPS</span>
+        </div>
+
+        {/* CTAs (GSAP Outlined Pill Buttons) */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-4 max-w-md mx-auto sm:max-w-none w-full">
           <a
             href="#designs-vault"
             onClick={() => trackEvent("cta_click", { button: "hero_designs_vault" })}
-            className="glow-btn text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 w-full sm:w-auto shadow-xl shadow-accent-500/25 flex items-center justify-center gap-2 font-semibold"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] font-black text-sm sm:text-base tracking-tight transition-all font-[Outfit] shadow-xl hover:shadow-[0_0_30px_rgba(171,255,132,0.35)] active:scale-95 cursor-pointer"
           >
-            <span>💎 {t("hero.ctaVault")}</span>
+            <span>💎 Explore 300K+ Vault</span>
             <span className="text-xs">↓</span>
           </a>
           <a
-            href="#laser-ai-video"
+            href="#laser-ai"
             onClick={() => trackEvent("cta_click", { button: "hero_laser_ai" })}
-            className="glow-btn-outline text-sm sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 w-full sm:w-auto text-gray-200 border-white/20 hover:border-accent-500/50 flex items-center justify-center gap-2 font-semibold"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#141513] hover:bg-[#191919] border border-[#42433d] hover:border-[#abff84] text-[#fffce1] font-bold text-sm sm:text-base tracking-tight transition-all font-[Outfit] hover:shadow-[0_0_20px_rgba(171,255,132,0.18)] active:scale-95 cursor-pointer"
           >
-            <span>🤖 {t("hero.ctaLaserAi")}</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#FE7733]/20 text-[#FE7733] border border-[#FE7733]/30 font-bold ml-1">
-              ▶ {t("hero.videoBadge")}
+            <span>🤖 Try LaserAI Studio</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0ae448]/15 text-[#abff84] border border-[#0ae448]/30 font-bold ml-1">
+              ⚡ LIVE CAD
             </span>
           </a>
         </div>
 
-        <p className="text-xs sm:text-sm text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto">
+        <p className="text-xs sm:text-sm text-[#7c7c6f] mb-8 sm:mb-12 max-w-2xl mx-auto">
           {t("hero.trialNote")}
         </p>
 
@@ -165,7 +175,7 @@ export default function Hero() {
         >
           {/* Mockup Quick Toggle Tabs */}
           <div className="flex items-center justify-center mb-4 w-full">
-            <div className="inline-flex p-1.5 rounded-2xl bg-dark-900/90 border border-white/10 backdrop-blur-xl shadow-2xl gap-1 max-w-full overflow-x-auto scrollbar-none justify-start sm:justify-center">
+            <div className="inline-flex p-1.5 rounded-full bg-[#141513] border border-[#42433d] backdrop-blur-xl shadow-2xl gap-1 max-w-full overflow-x-auto scrollbar-none justify-start sm:justify-center">
               {HERO_TABS.map((tab, idx) => {
                 const isActive = activeTab === idx;
                 const tabLabel = t(tab.labelKey) || tab.label;
@@ -175,16 +185,16 @@ export default function Hero() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(idx)}
-                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-300 ${
+                    className={`flex items-center gap-1.5 sm:gap-2 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-300 cursor-pointer ${
                       isActive
-                        ? "bg-accent-500 text-white shadow-lg shadow-accent-500/30"
-                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                        ? "bg-[#abff84] text-[#0e100f] shadow-lg shadow-[#abff84]/20"
+                        : "text-[#7c7c6f] hover:text-[#fffce1] hover:bg-[#191919]"
                     }`}
                   >
                     <span className="hidden sm:inline">{tabLabel}</span>
                     <span className="sm:hidden">{tabShort}</span>
                     {isActive && (
-                      <span className="hidden md:inline-block text-[10px] px-2 py-0.5 rounded-full bg-black/25 text-white font-medium border border-white/15">
+                      <span className="hidden md:inline-block text-[10px] px-2 py-0.5 rounded-full bg-black/25 text-[#0e100f] font-mono font-bold border border-black/20">
                         {tabTag}
                       </span>
                     )}
@@ -195,81 +205,32 @@ export default function Hero() {
           </div>
 
           {/* Glow behind mockup */}
-          <div className="absolute inset-0 bg-accent-500/15 rounded-3xl blur-[70px] -z-10 scale-95" />
+          <div className="absolute inset-0 bg-[#0ae448]/10 rounded-3xl blur-[70px] -z-10 scale-95" />
 
-          {/* Mac Browser Frame with Real Screenshot */}
-          <div className="relative rounded-2xl overflow-hidden border border-white/15 shadow-2xl shadow-black/90 bg-dark-950">
-            {/* Mac Browser Chrome Header */}
-            <div className="bg-dark-900/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                </div>
-                <div className="hidden sm:flex items-center gap-2 ml-4 text-[11px] font-mono text-gray-500">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                  <span>app.0machine.com</span>
-                </div>
-              </div>
-
-              {/* Realistic SSL Address Pill */}
-              <div className="bg-dark-950/90 border border-white/10 rounded-lg px-4 py-1 text-xs text-gray-300 font-mono flex items-center gap-2 max-w-sm sm:max-w-md w-full justify-center">
-                <span className="text-green-400 text-[10px]">🔒 https://</span>
-                <span className="text-white font-medium truncate">{currentTab.path}</span>
-              </div>
-
-              {/* Live Link Button */}
-              <div className="flex items-center gap-2">
-                <a
-                  href="https://app.0machine.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold text-accent-400 hover:text-accent-300 bg-accent-500/10 border border-accent-500/20 px-3 py-1 rounded-lg transition-colors"
-                >
-                  <span>{t("hero.launchLive")}</span>
-                  <span>↗</span>
-                </a>
-              </div>
-            </div>
-
-            {/* High-Resolution Screenshot Frame */}
-            <div className="relative aspect-[16/10] w-full overflow-hidden bg-dark-950">
-              <picture>
-                <source media="(max-width: 768px)" srcSet={currentTab.mobileSrc || currentTab.src} type="image/webp" />
-                <img
-                  key={currentTab.id}
-                  src={currentTab.src}
-                  alt={currentTab.alt}
-                  width={1400}
-                  height={875}
-                  decoding="async"
-                  fetchPriority={activeTab === 0 ? "high" : "low"}
-                  className="w-full h-full object-cover object-top block"
-                  loading={activeTab === 0 ? "eager" : "lazy"}
-                />
-              </picture>
-
-              {/* Bottom depth subtle fade */}
-              <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-dark-950/80 to-transparent pointer-events-none" />
-            </div>
-          </div>
+          {/* Bespoke Retro-Futuristic Studio Aperture Viewport (GSAP Creative Atelier Frame) */}
+          <StudioApertureViewport
+            currentTab={currentTab}
+            activeTab={activeTab}
+            tabs={HERO_TABS}
+            onSelectTab={setActiveTab}
+            t={t}
+          />
 
           {/* Floating HUD Card 1: Commercial Designs Vault */}
           <motion.div
             animate={{ y: [-8, 8, -8] }}
             transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -right-4 -bottom-6 sm:-right-8 sm:bottom-12 glass-card p-3.5 hidden sm:block border-accent-500/30 shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
+            className="absolute -right-4 -bottom-6 sm:-right-8 sm:bottom-12 p-4 hidden sm:block rounded-2xl bg-[#141513]/90 border border-[#42433d] shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
           >
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-ping" />
-              <p className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase">
-                {t("vault.badge")}
+              <span className="w-2 h-2 rounded-full bg-[#abff84] animate-ping" />
+              <p className="text-[10px] text-[#abff84] font-mono font-semibold tracking-wider uppercase">
+                {t("vault.badge") || "DESIGNS VAULT"}
               </p>
             </div>
-            <p className="text-sm font-bold text-white">300,000+ Ready-to-Cut Vectors</p>
-            <p className="text-[10px] text-accent-400 font-semibold mt-0.5">
-              Full Resale License · SVG, DXF, PDF, AI
+            <p className="text-sm font-bold text-[#fffce1] font-[Outfit]">300,000+ Ready-to-Cut Vectors</p>
+            <p className="text-[10px] text-[#7c7c6f] font-mono mt-0.5">
+              Full Resale License · SVG, DXF, CDR, EPS
             </p>
           </motion.div>
 
@@ -277,17 +238,17 @@ export default function Hero() {
           <motion.div
             animate={{ y: [8, -8, 8] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-            className="absolute -left-4 -top-6 sm:-left-8 sm:top-28 glass-card p-3.5 hidden sm:block border-brand-lime/30 shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
+            className="absolute -left-4 -top-6 sm:-left-8 sm:top-28 p-4 hidden sm:block rounded-2xl bg-[#141513]/90 border border-[#42433d] shadow-2xl shadow-black/80 z-20 backdrop-blur-xl text-left"
           >
             <div className="flex items-center gap-2 mb-1">
               <span className="text-xs">⚡</span>
-              <p className="text-[10px] text-brand-lime font-semibold tracking-wider uppercase">
+              <p className="text-[10px] text-[#abff84] font-mono font-semibold tracking-wider uppercase">
                 LaserAI Vector Studio
               </p>
             </div>
-            <p className="text-sm font-bold text-white">Prompt → Closed SVG/DXF</p>
-            <p className="text-[10px] text-gray-400 font-medium mt-0.5">
-              Cut (Red) + Engrave (Black) split layers
+            <p className="text-sm font-bold text-[#fffce1] font-[Outfit]">Prompt → Closed SVG/DXF</p>
+            <p className="text-[10px] text-[#7c7c6f] font-mono mt-0.5">
+              Cut (Red) + Engrave (Burnt) split layers
             </p>
           </motion.div>
         </motion.div>
