@@ -162,17 +162,17 @@ export default function FeatureShowcase() {
           transition={{ duration: 0.8 }}
           className="text-center mb-14 sm:mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433d] bg-[#141513] mb-4 shadow-lg shadow-black/40">
-            <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
-            <span className="text-xs text-[#abff84] tracking-[0.2em] uppercase font-mono font-semibold">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433D] bg-[#141513] mb-4 shadow-lg shadow-black/40">
+            <span className="w-2 h-2 rounded-full bg-[#FE7733] animate-pulse" />
+            <span className="text-xs text-[#FFA266] tracking-[0.2em] uppercase font-mono font-semibold">
               {t("features.badge") || "CORE WORKSHOP ENGINES"}
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-[#fffce1] mt-2 mb-4 tracking-[-0.04em] leading-[1.05]">
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-[#FFFCE1] mt-2 mb-4 tracking-[-0.04em] leading-[1.05]">
             {t("features.title")}
           </h2>
-          <p className="text-[#7c7c6f] max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
+          <p className="text-[#8B95A8] max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
             {t("features.subtitle")}
           </p>
         </motion.div>
@@ -196,17 +196,19 @@ export default function FeatureShowcase() {
                     onClick={() => setActive(i)}
                     className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl text-left whitespace-nowrap transition-all duration-300 border cursor-pointer ${
                       isActive
-                        ? "bg-[#141513] border-[#abff84] shadow-xl shadow-[#abff84]/10 text-[#fffce1]"
-                        : "bg-[#0e100f] hover:bg-[#141513] border-[#42433d]/60 text-[#7c7c6f] hover:text-[#fffce1]"
+                        ? "bg-[#141513] border-[#FE7733] shadow-xl shadow-[#FE7733]/15 text-[#FFFCE1]"
+                        : "bg-[#0e100f] hover:bg-[#141513] border-[#42433D]/60 text-[#8B95A8] hover:text-[#FFFCE1]"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-[#0e100f] border border-[#42433d] flex items-center justify-center text-[#abff84] shrink-0">
+                      <div className={`w-8 h-8 rounded-lg bg-[#0e100f] border border-[#42433D] flex items-center justify-center shrink-0 ${
+                        isActive ? "text-[#FE7733]" : "text-[#8B95A8]"
+                      }`}>
                         <Icon size={16} strokeWidth={1.75} />
                       </div>
                       <div>
                         <span className="text-sm font-bold block font-[Outfit]">{f.label}</span>
-                        <span className="text-[11px] text-[#7c7c6f] block font-mono">
+                        <span className="text-[11px] text-[#8B95A8] block font-mono">
                           {f.badge}
                         </span>
                       </div>
@@ -214,7 +216,7 @@ export default function FeatureShowcase() {
                     <div className="hidden sm:flex items-center">
                       <span
                         className={`w-2 h-2 rounded-full transition-colors ${
-                          isActive ? "bg-[#abff84] animate-pulse" : "bg-[#42433d]"
+                          isActive ? "bg-[#FE7733] animate-pulse" : "bg-[#42433D]"
                         }`}
                       />
                     </div>
@@ -286,9 +288,9 @@ export default function FeatureShowcase() {
                     </div>
 
                     {/* Address Bar */}
-                    <div className="bg-[#0e100f] border border-[#42433d] rounded-full px-4 py-1 text-xs text-[#7c7c6f] font-mono flex items-center gap-2 max-w-sm w-full justify-center">
-                      <Lock size={11} className="text-[#abff84] shrink-0" />
-                      <span className="truncate text-[#fffce1]">{currentFeature.url}</span>
+                    <div className="bg-[#0e100f] border border-[#42433D] rounded-full px-4 py-1 text-xs text-[#8B95A8] font-mono flex items-center gap-2 max-w-sm w-full justify-center">
+                      <Lock size={11} className="text-[#B1FA63] shrink-0" />
+                      <span className="truncate text-[#FFFCE1]">{currentFeature.url}</span>
                     </div>
 
                     {/* Direct Launch Link */}
@@ -296,7 +298,7 @@ export default function FeatureShowcase() {
                       href="https://app.0machine.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[11px] font-semibold text-[#abff84] hover:text-[#fffce1] flex items-center gap-1 transition-colors px-2.5 py-1 rounded-full bg-[#abff84]/10 border border-[#abff84]/20"
+                      className="text-[11px] font-semibold text-[#FE7733] hover:text-[#FFA266] flex items-center gap-1 transition-colors px-2.5 py-1 rounded-full bg-[#FE7733]/10 border border-[#FE7733]/25"
                     >
                       <span className="hidden sm:inline">Try Studio</span>
                       <span>↗</span>

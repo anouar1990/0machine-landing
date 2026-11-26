@@ -43,9 +43,9 @@ export default function Footer() {
               <img 
                 src="/logo.webp" 
                 alt="0Machine Logo" 
-                width={150}
-                height={36}
-                className="h-9 w-auto object-contain brightness-110" 
+                width={160}
+                height={40}
+                className="h-9 w-auto object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(254,119,51,0.45)]" 
               />
             </a>
             <p className="text-sm text-[#7c7c6f] leading-relaxed mb-4">

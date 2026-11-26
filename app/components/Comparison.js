@@ -38,17 +38,17 @@ export default function Comparison() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433d] bg-[#141513] mb-4 shadow-lg shadow-black/40">
-            <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
-            <span className="text-xs text-[#abff84] tracking-[0.2em] uppercase font-mono font-semibold">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433D] bg-[#141513] mb-4 shadow-lg shadow-black/40">
+            <span className="w-2 h-2 rounded-full bg-[#FE7733] animate-pulse" />
+            <span className="text-xs text-[#FFA266] tracking-[0.2em] uppercase font-mono font-semibold">
               {t("comp.badge") || "WORKSHOP COMPARISON"}
             </span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-[#fffce1] mt-2 mb-4 tracking-[-0.04em] leading-[1.05]">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-[#FFFCE1] mt-2 mb-4 tracking-[-0.04em] leading-[1.05]">
             {t("comp.title")}
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] via-[#FE7733] to-[#FFA266]">
               {t("comp.titleAccent")}
             </span>
           </h2>

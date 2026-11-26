@@ -24,13 +24,13 @@ export default function StudioApertureViewport({
           </div>
 
           {/* Center: URL & Status Pill */}
-          <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 rounded-full bg-[#0e100f] border border-[#2a2b27] text-[11px] sm:text-xs font-mono text-[#7c7c6f] max-w-[65%] sm:max-w-none truncate">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#abff84] animate-pulse flex-shrink-0" />
-            <span className="text-[#fffce1] font-medium truncate">
+          <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 rounded-full bg-[#0e100f] border border-[#2a2b27] text-[11px] sm:text-xs font-mono text-[#8B95A8] max-w-[65%] sm:max-w-none truncate">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FE7733] animate-pulse flex-shrink-0" />
+            <span className="text-[#FFFCE1] font-medium truncate">
               {currentTab.path || "app.0machine.com"}
             </span>
             <span className="hidden sm:inline text-[#42433d]">·</span>
-            <span className="hidden sm:inline text-[10px] text-[#abff84] font-semibold tracking-wide uppercase">
+            <span className="hidden sm:inline text-[10px] text-[#B1FA63] font-semibold tracking-wide uppercase">
               {currentTab.badge || "PRO"}
             </span>
           </div>
@@ -41,11 +41,11 @@ export default function StudioApertureViewport({
               href="https://app.0machine.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full bg-[#1c1d19] hover:bg-[#252722] border border-[#33352e] hover:border-[#abff84]/50 text-[#fffce1] text-[11px] sm:text-xs font-medium font-[Outfit] transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full bg-[#1c1d19] hover:bg-[#252722] border border-[#33352e] hover:border-[#FE7733]/50 text-[#FFFCE1] text-[11px] sm:text-xs font-medium font-[Outfit] transition-colors cursor-pointer"
             >
               <span className="hidden xs:inline">Open</span>
               <span className="xs:hidden">App</span>
-              <span className="text-[#abff84] text-xs">↗</span>
+              <span className="text-[#FE7733] text-xs font-bold">↗</span>
             </a>
           </div>
         </div>
@@ -82,19 +82,19 @@ export default function StudioApertureViewport({
         </div>
 
         {/* Bottom Technical Status Bar */}
-        <div className="flex items-center justify-between px-3.5 sm:px-5 py-2 sm:py-2.5 bg-[#141513] border-t border-[#262724] text-[10px] sm:text-xs font-mono text-[#7c7c6f]">
+        <div className="flex items-center justify-between px-3.5 sm:px-5 py-2 sm:py-2.5 bg-[#141513] border-t border-[#262724] text-[10px] sm:text-xs font-mono text-[#8B95A8]">
           <div className="flex items-center gap-2 sm:gap-3 truncate">
             <span className="flex items-center gap-1.5 flex-shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#abff84]" />
-              <span className="text-[#fffce1] font-semibold">{currentTab.label}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FE7733]" />
+              <span className="text-[#FFFCE1] font-semibold">{currentTab.label}</span>
             </span>
             <span className="hidden sm:inline text-[#42433d]">|</span>
-            <span className="hidden md:inline text-[#7c7c6f] truncate">{currentTab.specs || currentTab.tag}</span>
+            <span className="hidden md:inline text-[#8B95A8] truncate">{currentTab.specs || currentTab.tag}</span>
           </div>
 
           <div className="flex items-center gap-3 flex-shrink-0">
-            <span className="hidden sm:inline text-[#7c7c6f]">SVG · DXF · LightBurn C00</span>
-            <span className="text-[#abff84] font-semibold flex items-center gap-1">
+            <span className="hidden sm:inline text-[#8B95A8]">SVG · DXF · LightBurn C00</span>
+            <span className="text-[#B1FA63] font-semibold flex items-center gap-1">
               Active Studio
             </span>
           </div>

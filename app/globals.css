@@ -17,26 +17,26 @@
   --color-gsap-border: #42433d;
   --color-gsap-border-subtle: #292a26;
   --color-gsap-green: #0ae448;
-  --color-gsap-lime: #abff84;
-  --color-gsap-orange: #ff8709;
+  --color-gsap-lime: #b1fa63;
+  --color-gsap-orange: #fe7733;
   --color-gsap-lilac: #9d95ff;
   --color-gsap-cyan: #00bae2;
   --color-gsap-pink: #fec5fb;
-  --color-accent-500: #ff8709;
-  --color-accent-400: #ffa526;
+  --color-accent-500: #fe7733;
+  --color-accent-400: #ffa266;
   --color-accent-600: #e85f20;
   --color-accent-300: #ffc27d;
-  --color-brand-orange: #ff8709;
-  --color-brand-orange-light: #ffa526;
+  --color-brand-orange: #fe7733;
+  --color-brand-orange-light: #ffa266;
   --color-brand-orange-dark: #e85f20;
-  --color-brand-lime: #abff84;
+  --color-brand-lime: #b1fa63;
   --color-brand-lime-dark: #0ae448;
-  --color-brand-lime-glow: rgba(171, 255, 132, 0.35);
-  --color-neon-lime: #abff84;
+  --color-brand-lime-glow: rgba(177, 250, 99, 0.35);
+  --color-neon-lime: #b1fa63;
   --color-neon-sprout: #0ae448;
-  --color-glow: rgba(255, 135, 9, 0.4);
-  --color-glow-subtle: rgba(255, 135, 9, 0.15);
-  --color-glow-neon: rgba(171, 255, 132, 0.3);
+  --color-glow: rgba(254, 119, 51, 0.4);
+  --color-glow-subtle: rgba(254, 119, 51, 0.15);
+  --color-glow-neon: rgba(177, 250, 99, 0.3);
   --color-glass: rgba(255, 252, 225, 0.04);
   --color-glass-border: rgba(66, 67, 61, 0.6);
   --font-sans: var(--font-inter), 'Inter', 'system-ui', sans-serif;
@@ -85,15 +85,16 @@ body {
   transform: translateY(-1px);
 }
 .gsap-pill-primary {
-  background: #fffce1;
+  background: #fe7733;
   color: #0e100f;
-  border-color: #fffce1;
+  border-color: #fe7733;
+  box-shadow: 0 0 20px rgba(254, 119, 51, 0.25);
 }
 .gsap-pill-primary:hover {
-  background: #abff84;
-  border-color: #abff84;
+  background: #ffa266;
+  border-color: #ffa266;
   color: #0e100f;
-  box-shadow: 0 0 25px rgba(171, 255, 132, 0.35);
+  box-shadow: 0 0 28px rgba(254, 119, 51, 0.45);
   transform: translateY(-1px);
 }
 .gsap-card {

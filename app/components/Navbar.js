@@ -66,22 +66,22 @@ export default function Navbar() {
             <img 
               src="/logo.webp" 
               alt="0Machine Logo" 
-              width={150}
-              height={36}
-              className="h-9 w-auto object-contain brightness-110" 
+              width={160}
+              height={40}
+              className="h-9 sm:h-10 w-auto object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_14px_rgba(254,119,51,0.45)]" 
             />
           </a>
 
-          {/* Desktop Links (GSAP Warm Stone to Cream Hover) */}
+          {/* Desktop Links (Warm Slate with Electric Orange Accent Underline) */}
           <div className="hidden md:flex items-center gap-7 lg:gap-8">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="text-sm font-medium text-[#7c7c6f] hover:text-[#fffce1] transition-colors relative group py-1"
+                className="text-sm font-medium text-[#8B95A8] hover:text-[#FFFCE1] transition-colors relative group py-1"
               >
                 {link.label}
-                <span className="absolute -bottom-0.5 left-0 w-0 h-[2px] bg-gradient-to-r from-[#abff84] to-[#0ae448] group-hover:w-full transition-all duration-300 rounded-full" />
+                <span className="absolute -bottom-0.5 left-0 w-0 h-[2px] bg-gradient-to-r from-[#FE7733] to-[#FFA266] group-hover:w-full transition-all duration-300 rounded-full" />
               </a>
             ))}
           </div>
@@ -94,7 +94,7 @@ export default function Navbar() {
                 onClick={() => setLangOpen(!langOpen)}
                 aria-label="Select language"
                 aria-expanded={langOpen}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-[#7c7c6f] hover:text-[#fffce1] border border-[#42433d] bg-[#141513] hover:border-[#abff84]/50 transition-all font-medium font-[Outfit] cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-[#8B95A8] hover:text-[#FFFCE1] border border-[#42433D] bg-[#141513] hover:border-[#FE7733]/50 transition-all font-medium font-[Outfit] cursor-pointer"
               >
                 <span>{language ? language.toUpperCase() : "EN"}</span>
                 <svg
@@ -113,7 +113,7 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-36 rounded-2xl border border-[#42433d] bg-[#141513]/98 backdrop-blur-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-0.5"
+                    className="absolute right-0 mt-2 w-36 rounded-2xl border border-[#42433D] bg-[#141513]/98 backdrop-blur-2xl shadow-2xl p-1.5 z-50 flex flex-col gap-0.5"
                   >
                     {[
                       { code: "en", label: "English" },
@@ -128,8 +128,8 @@ export default function Navbar() {
                         }}
                         className={`flex items-center gap-2 w-full text-left px-3 py-2 rounded-xl text-xs transition-all cursor-pointer ${
                           language === lang.code
-                            ? "text-[#0e100f] bg-[#abff84] font-bold"
-                            : "text-[#7c7c6f] hover:text-[#fffce1] hover:bg-[#191919]"
+                            ? "text-[#0E100F] bg-[#FE7733] font-bold"
+                            : "text-[#8B95A8] hover:text-[#FFFCE1] hover:bg-[#191919]"
                         }`}
                       >
                         {lang.label}
@@ -143,17 +143,17 @@ export default function Navbar() {
             <a
               href="https://app.0machine.com"
               onClick={() => trackEvent('cta_click', { button: 'navbar_signin' })}
-              className="text-sm font-medium text-[#7c7c6f] hover:text-[#fffce1] transition-colors px-3 py-2 cursor-pointer"
+              className="text-sm font-medium text-[#8B95A8] hover:text-[#FFFCE1] transition-colors px-3 py-2 cursor-pointer"
             >
               {t("nav.signin")}
             </a>
             <a
               href="https://app.0machine.com"
               onClick={() => trackEvent('cta_click', { button: 'navbar_trial' })}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold tracking-tight text-[#0e100f] bg-[#fffce1] hover:bg-[#abff84] hover:shadow-[0_0_22px_rgba(171,255,132,0.35)] transition-all cursor-pointer font-[Outfit] active:scale-95 shadow-md shadow-black/20"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold tracking-tight text-[#0E100F] bg-[#FE7733] hover:bg-[#FF8A47] hover:shadow-[0_0_24px_rgba(254,119,51,0.45)] transition-all cursor-pointer font-[Outfit] active:scale-95 shadow-md shadow-black/20"
             >
               <span>{t("nav.trial")}</span>
-              <span className="text-[10px] font-mono opacity-70">→</span>
+              <span className="text-[10px] font-mono opacity-80">→</span>
             </a>
           </div>
 
@@ -162,29 +162,29 @@ export default function Navbar() {
             <a
               href="https://app.0machine.com"
               onClick={() => trackEvent('cta_click', { button: 'navbar_signin_mobile_header' })}
-              className="text-xs font-semibold text-[#fffce1] bg-[#141513] hover:bg-[#191919] border border-[#42433d] px-3.5 py-1.5 min-h-[38px] flex items-center rounded-full transition-all font-[Outfit] cursor-pointer focus-visible:ring-2 focus-visible:ring-[#abff84] focus-visible:outline-none active:scale-95"
+              className="text-xs font-semibold text-[#FFFCE1] bg-[#141513] hover:bg-[#191919] border border-[#42433D] px-3.5 py-1.5 min-h-[38px] flex items-center rounded-full transition-all font-[Outfit] cursor-pointer focus-visible:ring-2 focus-visible:ring-[#FE7733] focus-visible:outline-none active:scale-95"
             >
               {t("nav.signin")}
             </a>
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="w-11 h-11 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-1.5 rounded-xl border border-[#42433d]/70 bg-[#141513] cursor-pointer focus-visible:ring-2 focus-visible:ring-[#abff84] focus-visible:outline-none active:scale-95"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-1.5 rounded-xl border border-[#42433D]/70 bg-[#141513] cursor-pointer focus-visible:ring-2 focus-visible:ring-[#FE7733] focus-visible:outline-none active:scale-95"
               aria-label="Toggle navigation menu"
             >
               <motion.span
                 animate={mobileOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-                className="w-5 h-0.5 bg-[#fffce1] block rounded-full"
+                className="w-5 h-0.5 bg-[#FFFCE1] block rounded-full"
               />
               <motion.span
                 animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
-                className="w-5 h-0.5 bg-[#fffce1] block rounded-full"
+                className="w-5 h-0.5 bg-[#FFFCE1] block rounded-full"
               />
               <motion.span
                 animate={
                   mobileOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
                 }
-                className="w-5 h-0.5 bg-[#fffce1] block rounded-full"
+                className="w-5 h-0.5 bg-[#FFFCE1] block rounded-full"
               />
             </button>
           </div>
@@ -198,7 +198,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-[#0e100f]/98 backdrop-blur-2xl pt-24 px-6 md:hidden flex flex-col justify-between pb-8 overflow-y-auto overscroll-contain"
+            className="fixed inset-0 z-40 bg-[#0E100F]/98 backdrop-blur-2xl pt-24 px-6 md:hidden flex flex-col justify-between pb-8 overflow-y-auto overscroll-contain"
           >
             <div className="flex flex-col gap-5">
               {navLinks.map((link, i) => (
@@ -209,7 +209,7 @@ export default function Navbar() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.06 }}
-                  className="text-2xl font-bold text-[#fffce1] hover:text-[#abff84] transition-colors font-[Outfit] tracking-tight"
+                  className="text-2xl font-bold text-[#FFFCE1] hover:text-[#FE7733] transition-colors font-[Outfit] tracking-tight"
                 >
                   {link.label}
                 </motion.a>
@@ -220,9 +220,9 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.25 }}
-                className="mt-2 border-t border-[#42433d]/40 pt-5"
+                className="mt-2 border-t border-[#42433D]/40 pt-5"
               >
-                <p className="text-[11px] font-mono text-[#7c7c6f] mb-3 font-semibold tracking-widest uppercase">Language</p>
+                <p className="text-[11px] font-mono text-[#8B95A8] mb-3 font-semibold tracking-widest uppercase">Language</p>
                 <div className="flex gap-2">
                   {[
                     { code: "en", label: "EN" },
@@ -237,8 +237,8 @@ export default function Navbar() {
                       }}
                       className={`flex-1 py-2.5 px-3 rounded-full text-xs text-center font-bold border transition-all cursor-pointer ${
                         language === lang.code
-                          ? "bg-[#abff84] border-[#abff84] text-[#0e100f] shadow-lg shadow-[#abff84]/20"
-                          : "bg-[#141513] border-[#42433d] text-[#7c7c6f] hover:text-[#fffce1]"
+                          ? "bg-[#FE7733] border-[#FE7733] text-[#0E100F] shadow-lg shadow-[#FE7733]/25"
+                          : "bg-[#141513] border-[#42433D] text-[#8B95A8] hover:text-[#FFFCE1]"
                       }`}
                     >
                       {lang.label}
@@ -259,7 +259,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="w-full text-center py-3.5 rounded-full border border-[#42433d] bg-[#141513] hover:bg-[#191919] text-[#fffce1] font-bold text-sm transition-all font-[Outfit]"
+                className="w-full text-center py-3.5 rounded-full border border-[#42433D] bg-[#141513] hover:bg-[#191919] text-[#FFFCE1] font-bold text-sm transition-all font-[Outfit]"
               >
                 {t("nav.signin")}
               </motion.a>
@@ -273,7 +273,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.35 }}
-                className="w-full text-center py-3.5 rounded-full bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] font-black text-sm tracking-tight transition-all font-[Outfit] shadow-lg shadow-black/30"
+                className="w-full text-center py-3.5 rounded-full bg-[#FE7733] hover:bg-[#FF8A47] text-[#0E100F] font-black text-sm tracking-tight transition-all font-[Outfit] shadow-lg shadow-[#FE7733]/30"
               >
                 {t("nav.trial")}
               </motion.a>

@@ -190,29 +190,29 @@ export default function DesignsVault() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#141513] border border-[#42433d] text-[#abff84] text-[11px] font-mono font-semibold uppercase tracking-widest mb-4">
-            <Sparkles size={13} />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#141513] border border-[#42433D] text-[#FFA266] text-[11px] font-mono font-semibold uppercase tracking-widest mb-4">
+            <Sparkles size={13} className="text-[#FE7733]" />
             <span>300,000+ COMMERCIAL VECTORS</span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-[#fffce1] tracking-[-0.03em] mb-5 leading-[1.05]">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black font-[Outfit] text-[#FFFCE1] tracking-[-0.03em] mb-5 leading-[1.05]">
             CURATED DESIGNS. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] via-[#FE7733] to-[#FFA266]">
               BUILT TO CUT & SELL.
             </span>
           </h2>
 
-          <p className="text-[#7c7c6f] text-base sm:text-lg leading-relaxed">
+          <p className="text-[#8B95A8] text-base sm:text-lg leading-relaxed">
             {t("vault.subtitle")}
           </p>
 
           {/* Social Proof Metric Pill */}
-          <div className="flex flex-wrap items-center justify-center gap-6 mt-8 pt-6 border-t border-[#42433d]/40 text-xs">
+          <div className="flex flex-wrap items-center justify-center gap-6 mt-8 pt-6 border-t border-[#42433D]/40 text-xs">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
-              <span className="text-[#fffce1] font-bold">{t("vault.proof.sales")}</span>
+              <span className="w-2 h-2 rounded-full bg-[#FE7733] animate-pulse" />
+              <span className="text-[#FFFCE1] font-bold">{t("vault.proof.sales")}</span>
             </div>
-            <div className="flex items-center gap-2 text-[#7c7c6f]">
+            <div className="flex items-center gap-2 text-[#8B95A8]">
               <ShieldCheck size={14} className="text-[#abff84]" />
               <span>{t("vault.proof.license")}</span>
             </div>

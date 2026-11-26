@@ -111,60 +111,75 @@ export default function Hero() {
       <div
         className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 text-center"
       >
-        {/* Badge (GSAP Outlined Pill) */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 sm:py-2 rounded-full border border-[#42433d] bg-[#141513] backdrop-blur-md mb-6 sm:mb-8 shadow-lg shadow-black/40 max-w-full">
-          <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse flex-shrink-0" />
-          <span className="text-[11px] sm:text-xs text-[#abff84] font-mono font-semibold tracking-wider uppercase truncate sm:whitespace-normal">
-            0MACHINE // CREATIVE ATELIER OS
+        {/* Badge (Laser Workshop OS Pill) */}
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 sm:py-2 rounded-full border border-[#42433D] bg-[#141513] backdrop-blur-md mb-6 sm:mb-8 shadow-lg shadow-black/40 max-w-full">
+          <span className="w-2 h-2 rounded-full bg-[#FE7733] animate-pulse flex-shrink-0" />
+          <span className="text-[11px] sm:text-xs text-[#FFA266] font-mono font-semibold tracking-wider uppercase truncate sm:whitespace-normal">
+            0MACHINE // LASER WORKSHOP OS
           </span>
         </div>
 
-        {/* Editorial Headline (GSAP Warm Cream + Precision Typography) */}
-        <h1 className="text-[28px] xs:text-[32px] sm:text-5xl md:text-7xl lg:text-8xl font-bold font-[Outfit] leading-[1.08] sm:leading-[0.98] tracking-[-0.03em] mb-6 max-w-5xl mx-auto text-[#fffce1] px-2 sm:px-0">
-          Design. Nest. Cut.
+        {/* Editorial Headline (Outcome-Focused 5-Second Formula) */}
+        <h1 className="text-[32px] xs:text-[36px] sm:text-5xl md:text-7xl lg:text-8xl font-black font-[Outfit] leading-[1.08] sm:leading-[0.98] tracking-[-0.03em] mb-6 max-w-5xl mx-auto text-[#FFFCE1] px-2 sm:px-0">
+          Design, Nest & Cut.
           <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
-            At Studio Precision.
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] via-[#FE7733] to-[#FFA266]">
+            At Laser Precision.
           </span>
         </h1>
 
-        {/* Subheadline (GSAP Muted Stone #7c7c6f) */}
-        <p className="text-sm sm:text-lg lg:text-xl text-[#7c7c6f] max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed font-normal px-4 sm:px-0">
-          Transform text briefs into kerf-compensated vector CAD, maximize sheet yield with automated nesting, and access a curated 300,000+ commercial cut library.
+        {/* Subheadline (Outcome-Focused 20 Words) */}
+        <p className="text-sm sm:text-lg lg:text-xl text-[#8B95A8] max-w-3xl mx-auto mb-6 sm:mb-8 leading-relaxed font-normal px-4 sm:px-0">
+          Transform text briefs into kerf-compensated vector CAD, cut material scrap by 35% with automated nesting, and access a curated 300,000+ commercial laser cut library.
         </p>
 
         {/* Feature Tags (Minimal Hairline Pill Badges) */}
         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-8 sm:mb-10 max-w-3xl mx-auto">
-          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">300,000+ Vectors</span>
-          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">Commercial Resale License</span>
-          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">LightBurn C00/C01 Ready</span>
-          <span className="text-[11px] font-mono text-[#fffce1] bg-[#141513] border border-[#42433d] px-3.5 py-1.5 rounded-full">SVG · DXF · CDR · EPS</span>
+          <span className="text-[11px] font-mono text-[#FFFCE1] bg-[#141513] border border-[#42433D] px-3.5 py-1.5 rounded-full flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FE7733]" />
+            300,000+ Vectors
+          </span>
+          <span className="text-[11px] font-mono text-[#FFFCE1] bg-[#141513] border border-[#42433D] px-3.5 py-1.5 rounded-full flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA63]" />
+            Commercial Resale License
+          </span>
+          <span className="text-[11px] font-mono text-[#FFFCE1] bg-[#141513] border border-[#42433D] px-3.5 py-1.5 rounded-full flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FE7733]" />
+            LightBurn C00/C01 Ready
+          </span>
+          <span className="text-[11px] font-mono text-[#FFFCE1] bg-[#141513] border border-[#42433D] px-3.5 py-1.5 rounded-full flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B1FA63]" />
+            SVG · DXF · CDR · EPS
+          </span>
         </div>
 
-        {/* CTAs (Crisp Outlined Pill Buttons) */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-4 max-w-md mx-auto sm:max-w-none w-full">
+        {/* CTAs (High-Contrast Primary Orange Button + Secondary Lime Badge) */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-3 max-w-md mx-auto sm:max-w-none w-full">
           <a
             href="#designs-vault"
             onClick={() => trackEvent("cta_click", { button: "hero_designs_vault" })}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] font-bold text-sm sm:text-base tracking-tight transition-all font-[Outfit] shadow-lg hover:shadow-[0_0_24px_rgba(171,255,132,0.25)] active:scale-95 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#FE7733] hover:bg-[#FF8A47] text-[#0E100F] font-black text-sm sm:text-base tracking-tight transition-all font-[Outfit] shadow-[0_0_28px_rgba(254,119,51,0.35)] hover:shadow-[0_0_38px_rgba(254,119,51,0.55)] active:scale-95 cursor-pointer"
           >
-            <span>Explore 300K+ Vault</span>
-            <span className="text-xs">↓</span>
+            <span>Explore 300K+ Vault Free</span>
+            <span className="text-xs font-mono">↓</span>
           </a>
           <a
             href="#laser-ai"
             onClick={() => trackEvent("cta_click", { button: "hero_laser_ai" })}
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#141513] hover:bg-[#191919] border border-[#42433d] hover:border-[#abff84] text-[#fffce1] font-bold text-sm sm:text-base tracking-tight transition-all font-[Outfit] hover:shadow-[0_0_16px_rgba(171,255,132,0.15)] active:scale-95 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 w-full sm:w-auto rounded-full bg-[#141513] hover:bg-[#191919] border border-[#42433D] hover:border-[#B1FA63] text-[#FFFCE1] font-bold text-sm sm:text-base tracking-tight transition-all font-[Outfit] hover:shadow-[0_0_18px_rgba(177,250,99,0.2)] active:scale-95 cursor-pointer"
           >
             <span>Try LaserAI Studio</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0ae448]/15 text-[#abff84] border border-[#0ae448]/30 font-bold ml-1">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#B1FA63]/15 text-[#B1FA63] border border-[#B1FA63]/30 font-bold ml-1">
               LIVE CAD
             </span>
           </a>
         </div>
 
-        <p className="text-xs sm:text-sm text-[#7c7c6f] mb-8 sm:mb-12 max-w-2xl mx-auto">
-          {t("hero.trialNote")}
+        {/* Social Proof Line (Trust & Credibility) */}
+        <p className="text-xs sm:text-sm text-[#8B95A8] mb-8 sm:mb-12 max-w-2xl mx-auto flex items-center justify-center gap-2 flex-wrap">
+          <span>Trusted by 10,000+ Laser Workshops & Makers</span>
+          <span className="text-[#42433D]">·</span>
+          <span className="text-[#B1FA63] font-medium">No Credit Card Required</span>
         </p>
 
         {/* MOCKUP SECTION WITH SCREENSHOT TABS */}
@@ -174,7 +189,7 @@ export default function Hero() {
         >
           {/* Mockup Quick Toggle Tabs */}
           <div className="flex items-center justify-center mb-4 w-full">
-            <div className="inline-flex p-1.5 rounded-full bg-[#141513] border border-[#42433d] backdrop-blur-xl shadow-2xl gap-1 max-w-full overflow-x-auto scrollbar-none justify-start sm:justify-center">
+            <div className="inline-flex p-1.5 rounded-full bg-[#141513] border border-[#42433D] backdrop-blur-xl shadow-2xl gap-1 max-w-full overflow-x-auto scrollbar-none justify-start sm:justify-center">
               {HERO_TABS.map((tab, idx) => {
                 const isActive = activeTab === idx;
                 const tabLabel = t(tab.labelKey) || tab.label;
@@ -186,14 +201,14 @@ export default function Hero() {
                     onClick={() => setActiveTab(idx)}
                     className={`flex items-center gap-1.5 sm:gap-2 px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-300 cursor-pointer ${
                       isActive
-                        ? "bg-[#abff84] text-[#0e100f] shadow-lg shadow-[#abff84]/20"
-                        : "text-[#7c7c6f] hover:text-[#fffce1] hover:bg-[#191919]"
+                        ? "bg-[#FE7733] text-[#0E100F] shadow-lg shadow-[#FE7733]/25"
+                        : "text-[#8B95A8] hover:text-[#FFFCE1] hover:bg-[#191919]"
                     }`}
                   >
                     <span className="hidden sm:inline">{tabLabel}</span>
                     <span className="sm:hidden">{tabShort}</span>
                     {isActive && (
-                      <span className="hidden md:inline-block text-[10px] px-2 py-0.5 rounded-full bg-black/25 text-[#0e100f] font-mono font-bold border border-black/20">
+                      <span className="hidden md:inline-block text-[10px] px-2 py-0.5 rounded-full bg-black/20 text-[#0E100F] font-mono font-bold border border-black/15">
                         {tabTag}
                       </span>
                     )}
@@ -203,8 +218,8 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Glow behind mockup */}
-          <div className="absolute inset-0 bg-[#0ae448]/10 rounded-3xl blur-[70px] -z-10 scale-95" />
+          {/* Glow behind mockup (Vibrant Dual Brand Glow) */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FE7733]/15 via-[#B1FA63]/10 to-[#FE7733]/15 rounded-3xl blur-[75px] -z-10 scale-95" />
 
           {/* Bespoke Retro-Futuristic Studio Aperture Viewport (GSAP Creative Atelier Frame) */}
           <StudioApertureViewport

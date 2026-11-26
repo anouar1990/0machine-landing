@@ -101,20 +101,20 @@ export default function Pricing() {
           transition={{ duration: 0.8 }}
           className="text-center mb-14"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433d] bg-[#141513] mb-4 shadow-lg shadow-black/40">
-            <span className="w-2 h-2 rounded-full bg-[#abff84] animate-pulse" />
-            <span className="text-xs text-[#abff84] tracking-[0.2em] uppercase font-mono font-semibold">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#42433D] bg-[#141513] mb-4 shadow-lg shadow-black/40">
+            <span className="w-2 h-2 rounded-full bg-[#FE7733] animate-pulse" />
+            <span className="text-xs text-[#FFA266] tracking-[0.2em] uppercase font-mono font-semibold">
               {t("price.badge") || "TRANSPARENT PRICING"}
             </span>
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#fffce1] mb-4 font-[Outfit] tracking-[-0.04em] leading-[1.05]">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#FFFCE1] mb-4 font-[Outfit] tracking-[-0.04em] leading-[1.05]">
             {t("price.title") || "Run Your Entire Laser Workshop"} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#fffce1] via-[#abff84] to-[#0ae448]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFFFFF] via-[#FE7733] to-[#FFA266]">
               {t("price.titleAccent") || "From One Studio Atelier."}
             </span>
           </h2>
-          <p className="text-[#7c7c6f] max-w-2xl mx-auto text-base sm:text-lg">
+          <p className="text-[#8B95A8] max-w-2xl mx-auto text-base sm:text-lg">
             {t("price.subtitle") || "Start free forever. Upgrade anytime as your workshop grows."}
           </p>
 
@@ -159,31 +159,31 @@ export default function Pricing() {
               transition={{ delay: i * 0.12, duration: 0.6 }}
               className={`relative flex flex-col h-full rounded-[28px] p-6 sm:p-8 border transition-all ${
                 plan.highlighted
-                  ? "bg-[#161814] border-2 border-[#abff84] shadow-2xl shadow-[#abff84]/15 md:scale-105 z-10"
-                  : "bg-[#141513] border-[#42433d] hover:border-[#7c7c6f]"
+                  ? "bg-[#161814] border-2 border-[#FE7733] shadow-2xl shadow-[#FE7733]/20 md:scale-105 z-10"
+                  : "bg-[#141513] border-[#42433D] hover:border-[#7c7c6f]"
               }`}
             >
               {plan.badge && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#abff84] text-[#0e100f] text-xs font-mono font-bold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#FE7733] text-[#0E100F] text-xs font-mono font-bold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-lg">
                   {plan.badge}
                 </div>
               )}
 
               <div className="mb-6">
-                <h3 className="text-xl font-black text-[#fffce1] mb-2 font-[Outfit]">{plan.name}</h3>
-                <p className="text-[#7c7c6f] text-sm min-h-[40px] leading-relaxed">{plan.description}</p>
+                <h3 className="text-xl font-black text-[#FFFCE1] mb-2 font-[Outfit]">{plan.name}</h3>
+                <p className="text-[#8B95A8] text-sm min-h-[40px] leading-relaxed">{plan.description}</p>
               </div>
 
-              <div className="mb-6 pb-6 border-b border-[#42433d]/60">
+              <div className="mb-6 pb-6 border-b border-[#42433D]/60">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl sm:text-5xl font-black text-[#fffce1] tracking-tight font-[Outfit]">{plan.price}</span>
+                  <span className="text-4xl sm:text-5xl font-black text-[#FFFCE1] tracking-tight font-[Outfit]">{plan.price}</span>
                   {plan.originalPrice && (
-                    <span className="text-lg line-through text-[#7c7c6f] font-semibold">{plan.originalPrice}</span>
+                    <span className="text-lg line-through text-[#8B95A8] font-semibold">{plan.originalPrice}</span>
                   )}
-                  <span className="text-[#7c7c6f] text-sm font-medium">{plan.period}</span>
+                  <span className="text-[#8B95A8] text-sm font-medium">{plan.period}</span>
                 </div>
                 {plan.billingNote && (
-                  <p className={`text-xs mt-2 font-mono tracking-wide ${plan.highlighted ? "text-[#abff84]" : "text-[#7c7c6f]"}`}>
+                  <p className={`text-xs mt-2 font-mono tracking-wide ${plan.highlighted ? "text-[#FFA266]" : "text-[#8B95A8]"}`}>
                     {plan.billingNote}
                   </p>
                 )}
@@ -196,13 +196,13 @@ export default function Pricing() {
                     feat.toLowerCase().includes("quote") ||
                     feat.toLowerCase().includes("invoice");
                   return (
-                    <li key={idx} className="flex items-center gap-3 text-sm text-[#fffce1]/90">
+                    <li key={idx} className="flex items-center gap-3 text-sm text-[#FFFCE1]/90">
                       {isWhatsApp ? (
                         <span className="w-4 h-4 flex items-center justify-center text-[#25D366] flex-shrink-0">
                           <WhatsAppIcon className="w-4 h-4 fill-current" />
                         </span>
                       ) : (
-                        <Check className="w-4 h-4 text-[#abff84] flex-shrink-0" />
+                        <Check className="w-4 h-4 text-[#B1FA63] flex-shrink-0" />
                       )}
                       <span className="flex items-center flex-wrap gap-1.5">
                         <span>{feat}</span>
@@ -221,8 +221,8 @@ export default function Pricing() {
                 href={plan.href}
                 className={`w-full text-center py-4 px-6 rounded-full font-black text-sm tracking-tight transition-all font-[Outfit] active:scale-95 cursor-pointer ${
                   plan.highlighted
-                    ? "bg-[#fffce1] hover:bg-[#abff84] text-[#0e100f] shadow-xl hover:shadow-[0_0_30px_rgba(171,255,132,0.35)]"
-                    : "bg-[#141513] hover:bg-[#191919] text-[#fffce1] border border-[#42433d] hover:border-[#abff84]"
+                    ? "bg-[#FE7733] hover:bg-[#FF8A47] text-[#0E100F] shadow-xl shadow-[#FE7733]/25 hover:shadow-[0_0_30px_rgba(254,119,51,0.45)]"
+                    : "bg-[#141513] hover:bg-[#191919] text-[#FFFCE1] border border-[#42433D] hover:border-[#FE7733]"
                 }`}
               >
                 {plan.cta}
